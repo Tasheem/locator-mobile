@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { Button, Image, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function App() {
@@ -48,7 +49,7 @@ export default function App() {
       </View>
 
       <View style={styles.resultsContainer}>
-        <Image source={require('./assets/favicon.png')} />
+        <Image style={styles.thumbnail} source={require('./assets/favicon.png')} />
         <View style={styles.informationContainer}>
           <Text>
             <Text style={styles.label}>Name:</Text>
@@ -65,6 +66,13 @@ export default function App() {
             <Text>Coffee shop</Text>
           </Text>
         </View>
+        <BouncyCheckbox
+          size={25}
+          fillColor="#007AFF"
+          unfillColor="#FFFFFF"
+          iconStyle={{ borderColor: "#007AFF" }}
+          innerIconStyle={{ borderWidth: 2 }}
+        />
       </View>
 
       <StatusBar style="auto" />
@@ -105,16 +113,18 @@ const styles = StyleSheet.create({
   resultsContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-evenly'
   },
   thumbnail: {
-    width: 50,
-    height: 50
+    width: 70,
+    height: 70
   },
   label: {
     fontWeight: 'bold'
   },
   informationContainer: {
-
+    height: 70,
+    justifyContent: 'space-between'
   }
 });
