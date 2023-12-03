@@ -16,6 +16,38 @@ type SectionData = {
   type: string
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  formContainer: {
+    flexDirection: 'row',
+    marginLeft: 5,
+    marginBottom: 20,
+    zIndex: 2
+  },
+  inputContainer: {
+    flex: 2,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    rowGap: 5,
+  },
+  inputField: {
+    flex: 1,
+    justifyContent: 'space-between',
+    borderColor: '#bfbfbf',
+    borderWidth: 1,
+    height: 40,
+    paddingLeft: 5
+  },
+  formBtnContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+});
+
 export default function App() {
   const [diet, setDiet] = useState('');
   const [location, setLocation] = useState<string | null>(null);
@@ -59,69 +91,6 @@ export default function App() {
     console.log(`Diet: ${diet}`)
     console.log(`Location: ${location}`);
   }, [diet, location]);
-
-  const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionData) => {
-    const resultsStyle = StyleSheet.create({
-      resultsRowContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: 10,
-        zIndex: 1
-      },
-      thumbnail: {
-        width: 70,
-        height: 70
-      },
-      informationContainer: {
-        height: 70,
-        justifyContent: 'space-between',
-        flex: 4,
-        paddingLeft: 20
-      },
-      detailsRow: {
-        flexDirection: 'row'
-      },
-      label: {
-        fontWeight: 'bold',
-        paddingRight: 5
-      },
-      checkbox: {
-        flex: 1
-      }
-    });
-
-    return (
-      <View style={resultsStyle.resultsRowContainer}>
-        <Image style={resultsStyle.thumbnail} source={require('./assets/favicon.png')} />
-        <View style={resultsStyle.informationContainer}>
-          <View style={resultsStyle.detailsRow}>
-            <Text style={resultsStyle.label}>Name:</Text>
-            <Text>{sectionData.item.name}</Text>
-          </View>
-
-          <View style={resultsStyle.detailsRow}>
-            <Text style={resultsStyle.label}>Address:</Text>
-            <Text>{sectionData.item.address}</Text>
-          </View>
-
-          <View style={resultsStyle.detailsRow}>
-            <Text style={resultsStyle.label}>Type:</Text>
-            <Text>{sectionData.item.type}</Text>
-          </View>
-        </View>
-        <BouncyCheckbox
-          size={25}
-          fillColor="#007AFF"
-          unfillColor="#FFFFFF"
-          iconStyle={{ borderColor: "#007AFF" }}
-          innerIconStyle={{ borderWidth: 2 }}
-          style={resultsStyle.checkbox}
-        />
-      </View>
-    )
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -168,34 +137,65 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  formContainer: {
-    flexDirection: 'row',
-    marginLeft: 5,
-    marginBottom: 20,
-    zIndex: 2
-  },
-  inputContainer: {
-    flex: 2,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    rowGap: 5,
-  },
-  inputField: {
-    flex: 1,
-    justifyContent: 'space-between',
-    borderColor: '#bfbfbf',
-    borderWidth: 1,
-    height: 40,
-    paddingLeft: 5
-  },
-  formBtnContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-});
+const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionData) => {
+  const resultsStyle = StyleSheet.create({
+    resultsRowContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: 10,
+      zIndex: 1
+    },
+    thumbnail: {
+      width: 70,
+      height: 70
+    },
+    informationContainer: {
+      height: 70,
+      justifyContent: 'space-between',
+      flex: 4,
+      paddingLeft: 20
+    },
+    detailsRow: {
+      flexDirection: 'row'
+    },
+    label: {
+      fontWeight: 'bold',
+      paddingRight: 5
+    },
+    checkbox: {
+      flex: 1
+    }
+  });
+
+  return (
+    <View style={resultsStyle.resultsRowContainer}>
+      <Image style={resultsStyle.thumbnail} source={require('./assets/favicon.png')} />
+      <View style={resultsStyle.informationContainer}>
+        <View style={resultsStyle.detailsRow}>
+          <Text style={resultsStyle.label}>Name:</Text>
+          <Text>{sectionData.item.name}</Text>
+        </View>
+
+        <View style={resultsStyle.detailsRow}>
+          <Text style={resultsStyle.label}>Address:</Text>
+          <Text>{sectionData.item.address}</Text>
+        </View>
+
+        <View style={resultsStyle.detailsRow}>
+          <Text style={resultsStyle.label}>Type:</Text>
+          <Text>{sectionData.item.type}</Text>
+        </View>
+      </View>
+      <BouncyCheckbox
+        size={25}
+        fillColor="#007AFF"
+        unfillColor="#FFFFFF"
+        iconStyle={{ borderColor: "#007AFF" }}
+        innerIconStyle={{ borderWidth: 2 }}
+        style={resultsStyle.checkbox}
+      />
+    </View>
+  )
+}
