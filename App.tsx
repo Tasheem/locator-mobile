@@ -34,9 +34,9 @@ const styles = StyleSheet.create({
   },
   inputField: {
     flex: 1,
-    justifyContent: 'space-between',
     borderColor: '#bfbfbf',
     borderWidth: 1,
+    borderRadius: 8,
     height: 40,
     paddingLeft: 5
   },
@@ -114,6 +114,9 @@ export default function App() {
               setOpen={setOpen}
               setValue={setLocation}
               setItems={setCities}
+              style={{
+                borderColor: '#bfbfbf'
+              }}
             />
           </View>
         </View>
@@ -149,7 +152,7 @@ const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionDat
       borderColor: '#bfbfbf',
       borderWidth: 2,
       margin: 10,
-      borderRadius: 10,
+      borderRadius: 20,
       shadowColor: '#bfbfbf',
       shadowOpacity: 0.8
     },
