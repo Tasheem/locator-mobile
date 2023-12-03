@@ -60,25 +60,56 @@ export default function App() {
     console.log(`Location: ${location}`);
   }, [diet, location]);
 
-  const renderResultRow: SectionListRenderItem<SectionData, Section> = (item) => {
+  const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionData) => {
+    const resultsStyle = StyleSheet.create({
+      resultsRowContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: 10,
+        zIndex: 1
+      },
+      thumbnail: {
+        width: 70,
+        height: 70
+      },
+      informationContainer: {
+        height: 70,
+        justifyContent: 'space-between',
+        flex: 4,
+        paddingLeft: 20
+      },
+      detailsRow: {
+        flexDirection: 'row'
+      },
+      label: {
+        fontWeight: 'bold',
+        paddingRight: 5
+      },
+      checkbox: {
+        flex: 1
+      }
+    });
+
     return (
-      <View style={styles.resultsRowContainer}>
-        <Image style={styles.thumbnail} source={require('./assets/favicon.png')} />
-        <View style={styles.informationContainer}>
-          <Text>
-            <Text style={styles.label}>Name:</Text>
-            <Text>item.name</Text>
-          </Text>
+      <View style={resultsStyle.resultsRowContainer}>
+        <Image style={resultsStyle.thumbnail} source={require('./assets/favicon.png')} />
+        <View style={resultsStyle.informationContainer}>
+          <View style={resultsStyle.detailsRow}>
+            <Text style={resultsStyle.label}>Name:</Text>
+            <Text>{sectionData.item.name}</Text>
+          </View>
 
-          <Text>
-            <Text style={styles.label}>Address:</Text>
-            <Text>item.address</Text>
-          </Text>
+          <View style={resultsStyle.detailsRow}>
+            <Text style={resultsStyle.label}>Address:</Text>
+            <Text>{sectionData.item.address}</Text>
+          </View>
 
-          <Text>
-            <Text style={styles.label}>Type:</Text>
-            <Text>item.type</Text>
-          </Text>
+          <View style={resultsStyle.detailsRow}>
+            <Text style={resultsStyle.label}>Type:</Text>
+            <Text>{sectionData.item.type}</Text>
+          </View>
         </View>
         <BouncyCheckbox
           size={25}
@@ -86,6 +117,7 @@ export default function App() {
           unfillColor="#FFFFFF"
           iconStyle={{ borderColor: "#007AFF" }}
           innerIconStyle={{ borderWidth: 2 }}
+          style={resultsStyle.checkbox}
         />
       </View>
     )
@@ -128,9 +160,8 @@ export default function App() {
         renderItem={renderResultRow}
         renderSectionHeader={({section: {title}}) => (
           <Text style={{ fontSize: 24 }}>{title}</Text>
-      )}
-      >
-      </SectionList>
+        )}
+      ></SectionList>
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -166,26 +197,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-
-  resultsRowContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    paddingTop: 10,
-    paddingBottom: 10,
-    zIndex: 1
-  },
-  thumbnail: {
-    width: 70,
-    height: 70
-  },
-  label: {
-    fontWeight: 'bold'
-  },
-  informationContainer: {
-    height: 70,
-    justifyContent: 'space-between'
   }
 });
