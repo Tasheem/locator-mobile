@@ -145,7 +145,13 @@ const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionDat
       alignItems: 'center',
       justifyContent: 'space-between',
       padding: 10,
-      zIndex: 1
+      zIndex: 1,
+      borderColor: '#bfbfbf',
+      borderWidth: 2,
+      margin: 10,
+      borderRadius: 10,
+      shadowColor: '#bfbfbf',
+      shadowOpacity: 0.8
     },
     thumbnail: {
       width: 70,
@@ -154,7 +160,7 @@ const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionDat
     informationContainer: {
       height: 70,
       justifyContent: 'space-between',
-      flex: 4,
+      flex: 5,
       paddingLeft: 20
     },
     detailsRow: {
