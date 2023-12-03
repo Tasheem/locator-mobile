@@ -56,8 +56,9 @@ export default function App() {
   ]
 
   useEffect(() => {
-    console.log(location);
-  }, [location]);
+    console.log(`Diet: ${diet}`)
+    console.log(`Location: ${location}`);
+  }, [diet, location]);
 
   const renderResultRow: SectionListRenderItem<SectionData, Section> = (item) => {
     return (
@@ -100,7 +101,10 @@ export default function App() {
               flexBasis: '100%'
             }
           ]}
-          placeholder='Diet' />
+          placeholder='Diet'
+          onChangeText={setDiet}
+          value={diet} />
+
           <View style={[ styles.inputField, { borderWidth: 0 } ]}>
             <DropDownPicker
               open={open}
@@ -112,6 +116,7 @@ export default function App() {
             />
           </View>
         </View>
+
         <View style={styles.formBtnContainer}>
           <Button title='Search' />
         </View>
@@ -139,7 +144,8 @@ const styles = StyleSheet.create({
   formContainer: {
     flexDirection: 'row',
     marginLeft: 5,
-    marginBottom: 20
+    marginBottom: 20,
+    zIndex: 2
   },
   inputContainer: {
     flex: 2,
@@ -168,7 +174,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 10,
+    zIndex: 1
   },
   thumbnail: {
     width: 70,
