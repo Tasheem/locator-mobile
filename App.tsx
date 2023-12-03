@@ -1,6 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, Image, SafeAreaView, SectionList, SectionListRenderItem, StyleSheet, Text, TextInput, View } from 'react-native';
+import { 
+  Button, 
+  Image, 
+  SafeAreaView, 
+  SectionList, 
+  SectionListRenderItem, 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  View,
+  Platform,
+  StatusBar as sb
+} from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SerpAPIResult } from './app/models/serpapi';
@@ -22,8 +34,9 @@ type SectionData = {
 const apiKey = '9de1f7091548075288f90f1f6b0d3bea6c57810b47ce67cbf885bbc39a473ff9';
 
 const styles = StyleSheet.create({
-  container: {
+  androidSafeArea: {
     flex: 1,
+    paddingTop: Platform.OS === 'android' ? sb.currentHeight : 0
   },
   formContainer: {
     flexDirection: 'row',
@@ -45,11 +58,18 @@ const styles = StyleSheet.create({
     height: 40,
     paddingLeft: 5
   },
+  dropdown: {
+    flex: 1,
+    borderColor: '#bfbfbf',
+    borderRadius: 8,
+    paddingLeft: 1,
+  },
   formBtnContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    height: '200%'
   }
 });
 
@@ -133,7 +153,7 @@ export default function App() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.androidSafeArea}>
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <TextInput style={[
@@ -146,19 +166,15 @@ export default function App() {
           onChangeText={setDiet}
           value={diet} />
 
-          <View style={[ styles.inputField, { borderWidth: 0 } ]}>
-            <DropDownPicker
-              open={open}
-              value={location}
-              items={cities}
-              setOpen={setOpen}
-              setValue={setLocation}
-              setItems={setCities}
-              style={{
-                borderColor: '#bfbfbf'
-              }}
-            />
-          </View>
+          <DropDownPicker
+            open={open}
+            value={location}
+            items={cities}
+            setOpen={setOpen}
+            setValue={setLocation}
+            setItems={setCities}
+            style={styles.dropdown}
+          />
         </View>
 
         <View style={styles.formBtnContainer}>
