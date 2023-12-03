@@ -100,7 +100,7 @@ export default function App() {
   }, [diet, location]);
 
   const fetchPlaces = () => {
-    const url = `https://serpapi.com/search.json?api_key=${apiKey}&q=${diet}&location=${location?.replace(' ', '+')}&hl=en&gl=us&google_domain=google.com`;
+    const url = `https://serpapi.com/search.json?api_key=${apiKey}&q=${diet + ' food'}&location=${location?.replace(' ', '+')}&hl=en&gl=us&google_domain=google.com`;
 
     fetch(url)
     .then((response) => response.json())
