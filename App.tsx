@@ -1,8 +1,20 @@
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { Button, Image, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, Image, SafeAreaView, SectionList, SectionListRenderItem, StyleSheet, Text, TextInput, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DropDownPicker from 'react-native-dropdown-picker';
+
+type Section = {
+  title: string
+  data: SectionData[]
+}
+
+type SectionData = {
+  imageSrc: string
+  name: string
+  address: string
+  type: string
+}
 
 export default function App() {
   const [diet, setDiet] = useState('');
@@ -17,9 +29,66 @@ export default function App() {
     {label: 'Atlanta', value: 'Atlanta, Georgia', parent: 'Georgia'}
   ]);
 
+  const sections: Section[] = [
+    {
+      title: 'Coffee',
+      data: [
+        {
+          imageSrc: './assets/favicon.png',
+          name: 'Starbucks',
+          address: '600 Congress Ave',
+          type: 'Coffee shop'
+        },
+        {
+          imageSrc: './assets/favicon.png',
+          name: 'Item 2',
+          address: 'Some Address',
+          type: 'Restaurant'
+        },
+        {
+          imageSrc: './assets/favicon.png',
+          name: 'Item 3',
+          address: 'Some Other Address',
+          type: 'Fast Food'
+        }
+      ]
+    }
+  ]
+
   useEffect(() => {
     console.log(location);
   }, [location]);
+
+  const renderResultRow: SectionListRenderItem<SectionData, Section> = (item) => {
+    return (
+      <View style={styles.resultsRowContainer}>
+        <Image style={styles.thumbnail} source={require('./assets/favicon.png')} />
+        <View style={styles.informationContainer}>
+          <Text>
+            <Text style={styles.label}>Name:</Text>
+            <Text>item.name</Text>
+          </Text>
+
+          <Text>
+            <Text style={styles.label}>Address:</Text>
+            <Text>item.address</Text>
+          </Text>
+
+          <Text>
+            <Text style={styles.label}>Type:</Text>
+            <Text>item.type</Text>
+          </Text>
+        </View>
+        <BouncyCheckbox
+          size={25}
+          fillColor="#007AFF"
+          unfillColor="#FFFFFF"
+          iconStyle={{ borderColor: "#007AFF" }}
+          innerIconStyle={{ borderWidth: 2 }}
+        />
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,32 +117,15 @@ export default function App() {
         </View>
       </View>
 
-      <View style={styles.resultsContainer}>
-        <Image style={styles.thumbnail} source={require('./assets/favicon.png')} />
-        <View style={styles.informationContainer}>
-          <Text>
-            <Text style={styles.label}>Name:</Text>
-            <Text>Starbucks</Text>
-          </Text>
-
-          <Text>
-            <Text style={styles.label}>Address:</Text>
-            <Text>600 Congress Ave</Text>
-          </Text>
-
-          <Text>
-            <Text style={styles.label}>Type:</Text>
-            <Text>Coffee shop</Text>
-          </Text>
-        </View>
-        <BouncyCheckbox
-          size={25}
-          fillColor="#007AFF"
-          unfillColor="#FFFFFF"
-          iconStyle={{ borderColor: "#007AFF" }}
-          innerIconStyle={{ borderWidth: 2 }}
-        />
-      </View>
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, index) => '' + index}
+        renderItem={renderResultRow}
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={{ fontSize: 24 }}>{title}</Text>
+      )}
+      >
+      </SectionList>
 
       <StatusBar style="auto" />
     </SafeAreaView>
@@ -87,7 +139,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flexDirection: 'row',
     marginLeft: 5,
-    /* marginBottom: 20 */
+    marginBottom: 20
   },
   inputContainer: {
     flex: 2,
@@ -110,11 +162,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  resultsContainer: {
+  resultsRowContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
+    paddingTop: 10,
+    paddingBottom: 10
   },
   thumbnail: {
     width: 70,
