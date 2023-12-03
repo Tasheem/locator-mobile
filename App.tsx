@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button, Image, SafeAreaView, SectionList, SectionListRenderItem, StyleSheet, Text, TextInput, View } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { SerpAPIResult } from './app/models/serpapi';
 
 type Section = {
   title: string
@@ -10,11 +11,15 @@ type Section = {
 }
 
 type SectionData = {
-  imageSrc: string
+  imageSrc: {
+    uri: string
+  }
   name: string
   address: string
   type: string
 }
+
+const apiKey = '9de1f7091548075288f90f1f6b0d3bea6c57810b47ce67cbf885bbc39a473ff9';
 
 const styles = StyleSheet.create({
   container: {
@@ -61,7 +66,9 @@ export default function App() {
     {label: 'Atlanta', value: 'Atlanta, Georgia', parent: 'Georgia'}
   ]);
 
-  const sections: Section[] = [
+  const [sections, setSections] = useState<Section[]>([]);
+
+  /* const sections: Section[] = [
     {
       title: 'Coffee',
       data: [
@@ -85,12 +92,45 @@ export default function App() {
         }
       ]
     }
-  ]
+  ] */
 
   useEffect(() => {
     console.log(`Diet: ${diet}`)
     console.log(`Location: ${location}`);
   }, [diet, location]);
+
+  const fetchPlaces = () => {
+    const url = `https://serpapi.com/search.json?api_key=${apiKey}&q=${diet}&location=${location?.replace(' ', '+')}&hl=en&gl=us&google_domain=google.com`;
+
+    fetch(url)
+    .then((response) => response.json())
+    .then((data: SerpAPIResult) => {
+      const sections = [] as Section[];
+      const sectionData = [] as SectionData[];
+
+      console.log(data);
+      data.local_results.places.forEach((place) => {
+        sectionData.push({
+          imageSrc: {
+            uri: place.thumbnail
+          },
+          name: place.title,
+          address: place.address,
+          type: place.type
+        });
+      });
+
+      sections.push({
+        title: diet,
+        data: sectionData
+      });
+
+      setSections(sections);
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -122,7 +162,7 @@ export default function App() {
         </View>
 
         <View style={styles.formBtnContainer}>
-          <Button title='Search' />
+          <Button title='Search' onPress={fetchPlaces} />
         </View>
       </View>
 
@@ -180,7 +220,7 @@ const renderResultRow: SectionListRenderItem<SectionData, Section> = (sectionDat
 
   return (
     <View style={resultsStyle.resultsRowContainer}>
-      <Image style={resultsStyle.thumbnail} source={require('./assets/favicon.png')} />
+      <Image style={resultsStyle.thumbnail} source={sectionData.item.imageSrc} />
       <View style={resultsStyle.informationContainer}>
         <View style={resultsStyle.detailsRow}>
           <Text style={resultsStyle.label}>Name:</Text>
