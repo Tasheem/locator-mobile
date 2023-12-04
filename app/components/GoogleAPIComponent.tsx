@@ -135,12 +135,6 @@ const styles = StyleSheet.create({
 		height: 40,
 		paddingLeft: 5,
 	},
-	dropdown: {
-		flex: 1,
-		borderColor: "#bfbfbf",
-		borderRadius: 8,
-		paddingLeft: 1,
-	},
 	formBtnContainer: {
 		flex: 1,
 		flexDirection: "row",
@@ -170,10 +164,10 @@ const resultsStyle = StyleSheet.create({
 		height: 70,
 	},
 	informationContainer: {
-		height: 70,
 		justifyContent: "space-between",
 		flex: 5,
 		paddingLeft: 20,
+		rowGap: 5
 	},
 	detailsRow: {
 		flexDirection: "row",
