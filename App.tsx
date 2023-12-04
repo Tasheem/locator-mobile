@@ -80,10 +80,10 @@ export default function App() {
   const [open, setOpen] = useState(false);
   const [cities, setCities] = useState([
     {label: 'Alabama', value: 'Alabama', disabled: true, labelStyle: { opacity: 0.5 }},
-    {label: 'Birmingham', value: 'Birmingham, Alabama', parent: 'Alabama'},
+    {label: 'Birmingham', value: 'Birmingham, Alabama, United States', parent: 'Alabama'},
 
     {label: 'Georgia', value: 'Georgia', disabled: true, labelStyle: { opacity: 0.5 }},
-    {label: 'Atlanta', value: 'Atlanta, Georgia', parent: 'Georgia'}
+    {label: 'Atlanta', value: 'Atlanta, Georgia, United States', parent: 'Georgia'}
   ]);
 
   const [sections, setSections] = useState<Section[]>([]);
@@ -166,15 +166,16 @@ export default function App() {
           onChangeText={setDiet}
           value={diet} />
 
-          <DropDownPicker
-            open={open}
-            value={location}
-            items={cities}
-            setOpen={setOpen}
-            setValue={setLocation}
-            setItems={setCities}
-            style={styles.dropdown}
-          />
+          <View style={styles.dropdown}>
+            <DropDownPicker
+              open={open}
+              value={location}
+              items={cities}
+              setOpen={setOpen}
+              setValue={setLocation}
+              setItems={setCities}
+            />
+          </View>
         </View>
 
         <View style={styles.formBtnContainer}>
