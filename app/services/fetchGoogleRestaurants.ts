@@ -1,27 +1,4 @@
-type AuthorAttribution = {
-	displayName: string;
-	photoUri: string;
-	uri: string;
-}
-
-type Photo = {
-	height: number;
-	width: number;
-	photoReference: string;
-	htmlAttributions: string[];
-	authorAttributions: AuthorAttribution[];
-};
-
-export type Restaurant = {
-	types: string[];
-	formattedAddress: string;
-	websiteUri: string;
-	displayName: {
-		languageCode: string;
-		text: string;
-	};
-	photos?: Photo[];
-};
+import { Restaurant } from "../models/google-places-api";
 
 //fetches restaurants based on searchTerm. i.e: 'Vegan', 'Vegetarian', etc.
 export function fetchRestaurants(searchTerm: string, apiKey: string) {
