@@ -72,18 +72,18 @@ export default function GoogleAPIComponent() {
 	);
 }
 
-const renderImage = (photoUri: string) => {
-	if(!photoUri) {
+const renderImage = (uri: string) => {
+	if(!uri) {
 		return (
 			<Image source={{
-				uri: ''
+				uri: uri
 			}} />
 		);
 	}
 
 	return (
 		<Image style={resultsStyle.thumbnail} source={{
-			uri: 'https:' + photoUri
+			uri: uri
 		}} />
 	);
 }
@@ -95,10 +95,7 @@ const renderResultsList = (businesses: Business[]) => {
 			keyExtractor={(item) => item.id}
 			renderItem={({ item }) => (
 				<View style={resultsStyle.resultsRowContainer}>
-					<Image
-						style={resultsStyle.thumbnail}
-						source={{ uri: item.image_url }}
-					/>
+					{ renderImage(item.image_url) }
 					<View style={resultsStyle.informationContainer}>
 						<View style={resultsStyle.detailsRow}>
 							<Text style={resultsStyle.label}>Name:</Text>
