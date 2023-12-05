@@ -29,13 +29,13 @@ export default function YelpAPIComponent() {
 	const handlePress = () => {
 		if (diet) {
 			fetchYelpRestaurants(diet, "Bzz6M3phkh0W4XFEb1LtdBZmxC9TraSABAVGI-eLgf1O1VrWDNj8jLGiNO_kSY6nFPcaiUU8YaMDOhIJ3Jr3K7fLuYg6n37tPQagkuIZsYqNaakZCuL4GLdNPBNtZXYx")
-				.then((results) => {
-					setBusinesses(results);
-				})
-				.catch((error) => {
-					console.error("Error fetching restaurants:", error);
-					// Handle error appropriately
-				});
+			.then((results) => {
+				setBusinesses(results);
+			})
+			.catch((error) => {
+				console.error("Error fetching restaurants:", error);
+				// Handle error appropriately
+			});
 		} else {
 			// Handle the case where 'diet' is not set
 			console.log("what the fuck?");
@@ -62,7 +62,7 @@ export default function YelpAPIComponent() {
 					/>
 				</View>
 			</View>
-			{ businesses.length > 0 ? renderResultsList(businesses) : <Text>Nada</Text> }
+			{ businesses.length > 0 ? renderResultsList(businesses) : <Text></Text> }
 
 			<StatusBar style="auto" />
 		</SafeAreaView>
