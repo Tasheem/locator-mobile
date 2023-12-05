@@ -10,8 +10,8 @@ type Coordinates = {
 
 type Location = {
 	address1: string;
-	address2: string | null;
-	address3: string | null;
+	address2?: string;
+	address3?: string;
 	city: string;
 	country: string;
 	display_address: string[];
@@ -51,17 +51,17 @@ export function fetchYelpRestaurants(searchTerm: string, apiKey: string) {
 		method: "GET",
 		headers: headers,
 	})
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			return response.json();
-		})
-		.then((data): Business[] => {
-			return data?.businesses;
-		})
-		.catch((error) => {
-			console.error("Error:", error);
-			throw error;
-		});
+	.then((response) => {
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		return response.json();
+	})
+	.then((data): Business[] => {
+		return data?.businesses;
+	})
+	.catch((error) => {
+		console.error("Error:", error);
+		throw error;
+	});
 }
