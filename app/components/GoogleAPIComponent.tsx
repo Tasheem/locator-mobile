@@ -13,11 +13,12 @@ import {
 	StatusBar as sb,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { fetchRestaurants, Restaurant } from "../utils/fetchRestaurants";
+import { fetchRestaurants, Restaurant } from "../utils/fetchGoogleRestaurants";
+import { fetchYelpRestaurants, Business } from "../utils/fetchYelpRestaurants";
 
 export default function GoogleAPIComponent() {
 	const [diet, setDiet] = useState("");
-	const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+	const [restaurants, setRestaurants] = useState<Business[]>([]);
 
 	useEffect(() => {
 		console.log(`Diet: ${diet}`);
@@ -27,7 +28,7 @@ export default function GoogleAPIComponent() {
 
 	const handlePress = () => {
 		if (diet) {
-			fetchRestaurants(diet, "AIzaSyDBXZ-Ndvz1vBlQ69PERxePyWvN6LOk3Ho")
+			fetchYelpRestaurants(diet, "GetYourKeyBro")
 				.then((results) => {
 					setRestaurants(results);
 				})
@@ -68,23 +69,23 @@ export default function GoogleAPIComponent() {
 			{restaurants.length > 0 ? (
 				<FlatList
 					data={restaurants}
-					keyExtractor={(item) => item.displayName.text}
+					keyExtractor={(item) => item.id}
 					renderItem={({ item }) => (
 						<View style={resultsStyle.resultsRowContainer}>
-							{/* <Image
-                            style={resultsStyle.thumbnail}
-                            source={}
-                        /> */}
+							<Image
+								style={resultsStyle.thumbnail}
+								source={{ uri: item.image_url }}
+							/>
 							<View style={resultsStyle.informationContainer}>
 								<View style={resultsStyle.detailsRow}>
 									<Text style={resultsStyle.label}>Name:</Text>
-									<Text>{item.displayName.text}</Text>
+									<Text>{item.name}</Text>
 								</View>
 
-								<View style={resultsStyle.detailsRow}>
+								{/* <View style={resultsStyle.detailsRow}>
 									<Text style={resultsStyle.label}>Address:</Text>
-									<Text>{item.formattedAddress}</Text>
-								</View>
+									<Text>{item.location}</Text>
+								</View> */}
 
 								{/* <View style={resultsStyle.detailsRow}>
 									<Text style={resultsStyle.label}>Type:</Text>
