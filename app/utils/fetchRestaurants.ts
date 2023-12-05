@@ -1,8 +1,15 @@
+type AuthorAttribution = {
+	displayName: string;
+	photoUri: string;
+	uri: string;
+}
+
 type Photo = {
 	height: number;
 	width: number;
 	photoReference: string;
 	htmlAttributions: string[];
+	authorAttributions: AuthorAttribution[];
 };
 
 export type Restaurant = {
