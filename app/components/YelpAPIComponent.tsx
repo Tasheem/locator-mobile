@@ -13,7 +13,8 @@ import {
 	StatusBar as sb,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { fetchYelpRestaurants, Business } from "../utils/fetchYelpRestaurants";
+import { fetchYelpRestaurants } from "../utils/fetchYelpRestaurants";
+import { Business } from "../models/yelp-api";
 
 export default function YelpAPIComponent() {
 	const [diet, setDiet] = useState("");
