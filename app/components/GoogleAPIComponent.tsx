@@ -13,11 +13,12 @@ import {
 	StatusBar as sb,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { fetchRestaurants, Restaurant } from "../utils/fetchRestaurants";
+import { fetchRestaurants, Restaurant } from "../utils/fetchGoogleRestaurants";
+import { fetchYelpRestaurants, Business } from "../utils/fetchYelpRestaurants";
 
 export default function GoogleAPIComponent() {
 	const [diet, setDiet] = useState("");
-	const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+	const [restaurants, setRestaurants] = useState<Business[]>([]);
 
 	useEffect(() => {
 		console.log(`Diet: ${diet}`);
@@ -27,7 +28,7 @@ export default function GoogleAPIComponent() {
 
 	const handlePress = () => {
 		if (diet) {
-			fetchRestaurants(diet, "AIzaSyDBXZ-Ndvz1vBlQ69PERxePyWvN6LOk3Ho")
+			fetchYelpRestaurants(diet, "GetYourKeyBro")
 				.then((results) => {
 					setRestaurants(results);
 				})
@@ -65,7 +66,50 @@ export default function GoogleAPIComponent() {
 					/>
 				</View>
 			</View>
+<<<<<<< HEAD
 			{ restaurants.length > 0 ? renderResultsList(restaurants) : <Text>Nada</Text> }
+=======
+			{restaurants.length > 0 ? (
+				<FlatList
+					data={restaurants}
+					keyExtractor={(item) => item.id}
+					renderItem={({ item }) => (
+						<View style={resultsStyle.resultsRowContainer}>
+							<Image
+								style={resultsStyle.thumbnail}
+								source={{ uri: item.image_url }}
+							/>
+							<View style={resultsStyle.informationContainer}>
+								<View style={resultsStyle.detailsRow}>
+									<Text style={resultsStyle.label}>Name:</Text>
+									<Text>{item.name}</Text>
+								</View>
+
+								{/* <View style={resultsStyle.detailsRow}>
+									<Text style={resultsStyle.label}>Address:</Text>
+									<Text>{item.location}</Text>
+								</View> */}
+
+								{/* <View style={resultsStyle.detailsRow}>
+									<Text style={resultsStyle.label}>Type:</Text>
+									<Text>{sectionData.item.type}</Text>
+								</View> */}
+							</View>
+							<BouncyCheckbox
+								size={25}
+								fillColor="#007AFF"
+								unfillColor="#FFFFFF"
+								iconStyle={{ borderColor: "#007AFF" }}
+								innerIconStyle={{ borderWidth: 2 }}
+								style={resultsStyle.checkbox}
+							/>
+						</View>
+					)}
+				/>
+			) : (
+				<Text>Nada</Text>
+			)}
+>>>>>>> main
 			<StatusBar style="auto" />
 		</SafeAreaView>
 	);
