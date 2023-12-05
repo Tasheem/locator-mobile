@@ -65,49 +65,64 @@ export default function GoogleAPIComponent() {
 					/>
 				</View>
 			</View>
-			{restaurants.length > 0 ? (
-				<FlatList
-					data={restaurants}
-					keyExtractor={(item) => item.displayName.text}
-					renderItem={({ item }) => (
-						<View style={resultsStyle.resultsRowContainer}>
-							{/* <Image
-                            style={resultsStyle.thumbnail}
-                            source={}
-                        /> */}
-							<View style={resultsStyle.informationContainer}>
-								<View style={resultsStyle.detailsRow}>
-									<Text style={resultsStyle.label}>Name:</Text>
-									<Text>{item.displayName.text}</Text>
-								</View>
-
-								<View style={resultsStyle.detailsRow}>
-									<Text style={resultsStyle.label}>Address:</Text>
-									<Text>{item.formattedAddress}</Text>
-								</View>
-
-								{/* <View style={resultsStyle.detailsRow}>
-									<Text style={resultsStyle.label}>Type:</Text>
-									<Text>{sectionData.item.type}</Text>
-								</View> */}
-							</View>
-							<BouncyCheckbox
-								size={25}
-								fillColor="#007AFF"
-								unfillColor="#FFFFFF"
-								iconStyle={{ borderColor: "#007AFF" }}
-								innerIconStyle={{ borderWidth: 2 }}
-								style={resultsStyle.checkbox}
-							/>
-						</View>
-					)}
-				/>
-			) : (
-				<Text>Nada</Text>
-			)}
+			{ restaurants.length > 0 ? renderResultsList(restaurants) : <Text>Nada</Text> }
 			<StatusBar style="auto" />
 		</SafeAreaView>
 	);
+}
+
+const renderImage = (photoUri: string) => {
+	if(!photoUri) {
+		return (
+			<Image source={{
+				uri: ''
+			}} />
+		);
+	}
+
+	return (
+		<Image style={resultsStyle.thumbnail} source={{
+			uri: 'https:' + photoUri
+		}} />
+	);
+}
+
+const renderResultsList = (restaurants: Restaurant[]) => {
+	return (
+		<FlatList
+			data={restaurants}
+			keyExtractor={(item) => item.displayName.text}
+			renderItem={({ item }) => (
+				<View style={resultsStyle.resultsRowContainer}>
+					{ renderImage(item.photos ? item.photos[0].authorAttributions[0].photoUri : '') }
+					<View style={resultsStyle.informationContainer}>
+						<View style={resultsStyle.detailsRow}>
+							<Text style={resultsStyle.label}>Name:</Text>
+							<Text>{item.displayName.text}</Text>
+						</View>
+
+						<View style={resultsStyle.detailsRow}>
+							<Text style={resultsStyle.label}>Address:</Text>
+							<Text>{item.formattedAddress}</Text>
+						</View>
+
+						{/* <View style={resultsStyle.detailsRow}>
+							<Text style={resultsStyle.label}>Type:</Text>
+							<Text>{sectionData.item.type}</Text>
+						</View> */}
+					</View>
+					<BouncyCheckbox
+						size={25}
+						fillColor="#007AFF"
+						unfillColor="#FFFFFF"
+						iconStyle={{ borderColor: "#007AFF" }}
+						innerIconStyle={{ borderWidth: 2 }}
+						style={resultsStyle.checkbox}
+					/>
+				</View>
+			)}
+		/>
+	)
 }
 
 const styles = StyleSheet.create({
