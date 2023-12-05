@@ -15,7 +15,7 @@ import {
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { fetchYelpRestaurants, Business } from "../utils/fetchYelpRestaurants";
 
-export default function GoogleAPIComponent() {
+export default function YelpAPIComponent() {
 	const [diet, setDiet] = useState("");
 	const [businesses, setBusinesses] = useState<Business[]>([]);
 
@@ -27,7 +27,7 @@ export default function GoogleAPIComponent() {
 
 	const handlePress = () => {
 		if (diet) {
-			fetchYelpRestaurants(diet, "GetYourKeyBro")
+			fetchYelpRestaurants(diet, "Bzz6M3phkh0W4XFEb1LtdBZmxC9TraSABAVGI-eLgf1O1VrWDNj8jLGiNO_kSY6nFPcaiUU8YaMDOhIJ3Jr3K7fLuYg6n37tPQagkuIZsYqNaakZCuL4GLdNPBNtZXYx")
 				.then((results) => {
 					setBusinesses(results);
 				})
@@ -133,7 +133,7 @@ const formatPhoneNumber = (pn: string) => {
 
 	const phoneNumber = pn.slice(2);
 	const split = [phoneNumber.slice(0, 3), phoneNumber.slice(3, 6), phoneNumber.slice(6, 10)];
-	const formattedNumber = `${split[0]}-${split[1]}-${split[2]}`;
+	const formattedNumber = `(${split[0]})-${split[1]}-${split[2]}`;
 
 	return formattedNumber;
 }

@@ -6,7 +6,7 @@ import {
 	StatusBar as sb,
 } from "react-native";
 // import SerpAPIComponent from "./app/components/SerpApiComponent";
-import GoogleAPIComponent from "./app/components/GoogleAPIComponent";
+import YelpAPIComponent from "./app/components/YelpAPIComponent";
 
 const styles = StyleSheet.create({
 	androidSafeArea: {
@@ -19,7 +19,7 @@ export default function App() {
 	return (
 		<SafeAreaView style={styles.androidSafeArea}>
 			{/* <SerpAPIComponent /> */}
-			<GoogleAPIComponent />
+			<YelpAPIComponent />
 			<StatusBar style="auto" />
 		</SafeAreaView>
 	);
