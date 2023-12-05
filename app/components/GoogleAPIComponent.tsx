@@ -13,24 +13,23 @@ import {
 	StatusBar as sb,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { fetchRestaurants, Restaurant } from "../utils/fetchGoogleRestaurants";
 import { fetchYelpRestaurants, Business } from "../utils/fetchYelpRestaurants";
 
 export default function GoogleAPIComponent() {
 	const [diet, setDiet] = useState("");
-	const [restaurants, setRestaurants] = useState<Business[]>([]);
+	const [businesses, setBusinesses] = useState<Business[]>([]);
 
 	useEffect(() => {
 		console.log(`Diet: ${diet}`);
-		console.log(`Number of restaurants: ${restaurants.length}`);
-		console.log(restaurants);
-	}, [restaurants]);
+		console.log(`Number of businesses: ${businesses.length}`);
+		console.log(businesses);
+	}, [businesses]);
 
 	const handlePress = () => {
 		if (diet) {
 			fetchYelpRestaurants(diet, "GetYourKeyBro")
 				.then((results) => {
-					setRestaurants(results);
+					setBusinesses(results);
 				})
 				.catch((error) => {
 					console.error("Error fetching restaurants:", error);
@@ -66,50 +65,8 @@ export default function GoogleAPIComponent() {
 					/>
 				</View>
 			</View>
-<<<<<<< HEAD
-			{ restaurants.length > 0 ? renderResultsList(restaurants) : <Text>Nada</Text> }
-=======
-			{restaurants.length > 0 ? (
-				<FlatList
-					data={restaurants}
-					keyExtractor={(item) => item.id}
-					renderItem={({ item }) => (
-						<View style={resultsStyle.resultsRowContainer}>
-							<Image
-								style={resultsStyle.thumbnail}
-								source={{ uri: item.image_url }}
-							/>
-							<View style={resultsStyle.informationContainer}>
-								<View style={resultsStyle.detailsRow}>
-									<Text style={resultsStyle.label}>Name:</Text>
-									<Text>{item.name}</Text>
-								</View>
+			{ businesses.length > 0 ? renderResultsList(businesses) : <Text>Nada</Text> }
 
-								{/* <View style={resultsStyle.detailsRow}>
-									<Text style={resultsStyle.label}>Address:</Text>
-									<Text>{item.location}</Text>
-								</View> */}
-
-								{/* <View style={resultsStyle.detailsRow}>
-									<Text style={resultsStyle.label}>Type:</Text>
-									<Text>{sectionData.item.type}</Text>
-								</View> */}
-							</View>
-							<BouncyCheckbox
-								size={25}
-								fillColor="#007AFF"
-								unfillColor="#FFFFFF"
-								iconStyle={{ borderColor: "#007AFF" }}
-								innerIconStyle={{ borderWidth: 2 }}
-								style={resultsStyle.checkbox}
-							/>
-						</View>
-					)}
-				/>
-			) : (
-				<Text>Nada</Text>
-			)}
->>>>>>> main
 			<StatusBar style="auto" />
 		</SafeAreaView>
 	);
@@ -131,24 +88,27 @@ const renderImage = (photoUri: string) => {
 	);
 }
 
-const renderResultsList = (restaurants: Restaurant[]) => {
+const renderResultsList = (businesses: Business[]) => {
 	return (
 		<FlatList
-			data={restaurants}
-			keyExtractor={(item) => item.displayName.text}
+			data={businesses}
+			keyExtractor={(item) => item.id}
 			renderItem={({ item }) => (
 				<View style={resultsStyle.resultsRowContainer}>
-					{ renderImage(item.photos ? item.photos[0].authorAttributions[0].photoUri : '') }
+					<Image
+						style={resultsStyle.thumbnail}
+						source={{ uri: item.image_url }}
+					/>
 					<View style={resultsStyle.informationContainer}>
 						<View style={resultsStyle.detailsRow}>
 							<Text style={resultsStyle.label}>Name:</Text>
-							<Text>{item.displayName.text}</Text>
+							<Text>{item.name}</Text>
 						</View>
 
-						<View style={resultsStyle.detailsRow}>
+						{/* <View style={resultsStyle.detailsRow}>
 							<Text style={resultsStyle.label}>Address:</Text>
-							<Text>{item.formattedAddress}</Text>
-						</View>
+							<Text>{item.location}</Text>
+						</View> */}
 
 						{/* <View style={resultsStyle.detailsRow}>
 							<Text style={resultsStyle.label}>Type:</Text>
