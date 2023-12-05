@@ -44,19 +44,12 @@ export default function YelpAPIComponent() {
 	return (
 		<SafeAreaView style={styles.androidSafeArea}>
 			<View style={styles.formContainer}>
-				<View style={styles.inputContainer}>
-					<TextInput
-						style={[
-							styles.inputField,
-							{
-								flexBasis: "100%",
-							},
-						]}
-						placeholder="Diet"
-						onChangeText={setDiet}
-						value={diet}
-					/>
-				</View>
+				<TextInput
+					style={styles.inputField}
+					placeholder="Diet"
+					onChangeText={setDiet}
+					value={diet}
+				/>
 
 				<View style={styles.formBtnContainer}>
 					<Button
@@ -149,14 +142,8 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		zIndex: 2,
 	},
-	inputContainer: {
-		flex: 2,
-		flexDirection: "row",
-		flexWrap: "wrap",
-		rowGap: 5,
-	},
 	inputField: {
-		flex: 1,
+		flex: 2,
 		borderColor: "#bfbfbf",
 		borderWidth: 1,
 		borderRadius: 8,
@@ -167,8 +154,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "row",
 		justifyContent: "center",
-		alignItems: "center",
-		height: "200%",
+		alignItems: "center"
 	},
 });
 
