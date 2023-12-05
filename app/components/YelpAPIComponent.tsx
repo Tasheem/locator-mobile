@@ -143,8 +143,8 @@ const styles = StyleSheet.create({
 	headerContainer: {
 		flexDirection: "row",
 		justifyContent: "center",
-		paddingTop: 10,
-		paddingBottom: 10
+		paddingTop: 20,
+		paddingBottom: 20
 	},
 	heading: {
 		fontSize: 20,
