@@ -11,7 +11,8 @@ import {
 	Platform,
 	View,
 	StatusBar as sb,
-	ActivityIndicator
+	ActivityIndicator,
+	TouchableHighlight
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { fetchYelpRestaurants } from "../services/fetchYelpRestaurants";
@@ -65,17 +66,7 @@ export default function YelpAPIComponent() {
 					value={diet}
 				/>
 
-				<View style={styles.formBtnContainer}>
-					<Button
-						title="Search"
-						onPress={handlePress}
-						color={brandColor}
-					/>
-					<Image style={{
-						width: 20,
-						height: 20
-					}} source={require("../../assets/locater_center_solid.png")} />
-				</View>
+				{ renderSearchButton(handlePress) }
 			</View>
 			<ActivityIndicator 
 				animating={isLoading}
@@ -89,6 +80,39 @@ export default function YelpAPIComponent() {
 			<StatusBar style="auto" />
 		</SafeAreaView>
 	);
+}
+
+const renderSearchButton = (handlePress: () => void) => {
+	if(Platform.OS === "android") {
+		return (
+			<TouchableHighlight onPress={handlePress} underlayColor={brandColor} style={styles.formBtnContainer}>
+				<View style={styles.androidBtn}>
+					<Text style={{
+						fontSize: 17,
+						color: brandColor
+					}}>Search</Text>
+					<Image style={{
+						width: 20,
+						height: 20
+					}} source={require("../../assets/locater_center_solid.png")} />
+				</View>
+			</TouchableHighlight>
+		)
+	}
+
+	return (
+		<View style={styles.formBtnContainer}>
+			<Button
+				title="Search"
+				onPress={handlePress}
+				color={brandColor}
+			/>
+			<Image style={{
+				width: 20,
+				height: 20
+			}} source={require("../../assets/locater_center_solid.png")} />
+		</View>
+	)
 }
 
 const renderImage = (uri: string) => {
@@ -185,7 +209,14 @@ const styles = StyleSheet.create({
 		borderColor: brandColor,
 		marginLeft: 10,
 		marginRight: 10,
-		borderRadius: 10
+		borderRadius: 10,
+		columnGap: 5
+	},
+	androidBtn: {
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: 5
 	}
 });
 
