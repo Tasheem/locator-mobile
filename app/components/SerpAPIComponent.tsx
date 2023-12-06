@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DropDownPicker from "react-native-dropdown-picker";
-import { SerpAPIResult } from "../models/serpapi";
+import { SerpAPIResult } from "../models/serp-api";
 
 type Section = {
 	title: string;
