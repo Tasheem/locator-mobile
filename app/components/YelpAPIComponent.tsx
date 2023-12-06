@@ -53,7 +53,7 @@ export default function YelpAPIComponent() {
 	return (
 		<SafeAreaView style={styles.androidSafeArea}>
 			<View style={styles.headerContainer}>
-				<TextInput style={styles.heading} value="Find Your Meal" />
+				<Text style={styles.heading}>Find Your Meal</Text>
 			</View>
 			<View style={styles.formContainer}>
 				<TextInput
@@ -144,15 +144,16 @@ const styles = StyleSheet.create({
 	},
 	headerContainer: {
 		flexDirection: "row",
-		justifyContent: "center",
-		paddingTop: Platform.OS === "android" ? 0 : 20,
-		paddingBottom: 20
+		marginTop: Platform.OS === "android" ? 0 : 20,
+		marginBottom: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		borderColor: "#007AFF",
+		borderBottomWidth: 2
 	},
 	heading: {
 		fontSize: 20,
-		fontWeight: "bold",
-		borderColor: "#007AFF",
-		borderBottomWidth: 2
+		fontWeight: "bold"
 	},
 	formContainer: {
 		flexDirection: "row",
