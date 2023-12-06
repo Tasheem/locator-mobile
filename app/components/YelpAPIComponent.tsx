@@ -11,12 +11,15 @@ import {
 	Platform,
 	View,
 	StatusBar as sb,
-	ActivityIndicator
+	ActivityIndicator,
+	TouchableHighlight
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { fetchYelpRestaurants } from "../services/fetchYelpRestaurants";
 import { Business } from "../models/yelp-api";
 import { formatPhoneNumber } from "../utils/formatUtil";
+
+const brandColor = "#c96b6b";
 
 export default function YelpAPIComponent() {
 	const [diet, setDiet] = useState("");
@@ -53,7 +56,7 @@ export default function YelpAPIComponent() {
 	return (
 		<SafeAreaView style={styles.androidSafeArea}>
 			<View style={styles.headerContainer}>
-				<TextInput style={styles.heading} value="Find Your Meal" />
+				<Text style={styles.heading}>Find Your Meal</Text>
 			</View>
 			<View style={styles.formContainer}>
 				<TextInput
@@ -63,16 +66,11 @@ export default function YelpAPIComponent() {
 					value={diet}
 				/>
 
-				<View style={styles.formBtnContainer}>
-					<Button
-						title="Search"
-						onPress={handlePress}
-					/>
-				</View>
+				{ renderSearchButton(handlePress) }
 			</View>
 			<ActivityIndicator 
 				animating={isLoading}
-				color="#007AFF"
+				color={brandColor}
 				style={{
 					height: isLoading ? "auto" : 0
 				}} 
@@ -82,6 +80,39 @@ export default function YelpAPIComponent() {
 			<StatusBar style="auto" />
 		</SafeAreaView>
 	);
+}
+
+const renderSearchButton = (handlePress: () => void) => {
+	if(Platform.OS === "android") {
+		return (
+			<TouchableHighlight onPress={handlePress} underlayColor={brandColor} style={styles.formBtnContainer}>
+				<View style={styles.androidBtn}>
+					<Text style={{
+						fontSize: 17,
+						color: brandColor
+					}}>Search</Text>
+					<Image style={{
+						width: 20,
+						height: 20
+					}} source={require("../../assets/locater_center_solid.png")} />
+				</View>
+			</TouchableHighlight>
+		)
+	}
+
+	return (
+		<View style={styles.formBtnContainer}>
+			<Button
+				title="Search"
+				onPress={handlePress}
+				color={brandColor}
+			/>
+			<Image style={{
+				width: 20,
+				height: 20
+			}} source={require("../../assets/locater_center_solid.png")} />
+		</View>
+	)
 }
 
 const renderImage = (uri: string) => {
@@ -126,9 +157,9 @@ const renderResultsList = (businesses: Business[]) => {
 					</View>
 					<BouncyCheckbox
 						size={25}
-						fillColor="#007AFF"
+						fillColor={brandColor}
 						unfillColor="#FFFFFF"
-						iconStyle={{ borderColor: "#007AFF" }}
+						iconStyle={{ borderColor: brandColor }}
 						innerIconStyle={{ borderWidth: 2 }}
 						style={resultsStyle.checkbox}
 					/>
@@ -140,19 +171,20 @@ const renderResultsList = (businesses: Business[]) => {
 
 const styles = StyleSheet.create({
 	androidSafeArea: {
-		flex: 1
+		marginTop: Platform.OS === "android" ? sb.currentHeight : 0
 	},
 	headerContainer: {
 		flexDirection: "row",
-		justifyContent: "center",
-		paddingTop: Platform.OS === "android" ? 0 : 20,
-		paddingBottom: 20
+		marginTop: 20,
+		marginBottom: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		borderColor: brandColor,
+		borderBottomWidth: 2
 	},
 	heading: {
 		fontSize: 20,
-		fontWeight: "bold",
-		borderColor: "#007AFF",
-		borderBottomWidth: 2
+		fontWeight: "bold"
 	},
 	formContainer: {
 		flexDirection: "row",
@@ -162,7 +194,7 @@ const styles = StyleSheet.create({
 	},
 	inputField: {
 		flex: 2,
-		borderColor: "#bfbfbf",
+		borderColor: brandColor,
 		borderWidth: 1,
 		borderRadius: 8,
 		height: 40,
@@ -172,7 +204,19 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "row",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: brandColor,
+		marginLeft: 10,
+		marginRight: 10,
+		borderRadius: 10,
+		columnGap: 5
+	},
+	androidBtn: {
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: 5
 	}
 });
 
@@ -184,11 +228,11 @@ const resultsStyle = StyleSheet.create({
 		justifyContent: "space-between",
 		padding: 10,
 		zIndex: 1,
-		borderColor: "#bfbfbf",
+		borderColor: brandColor,
 		borderWidth: 2,
 		margin: 10,
 		borderRadius: 20,
-		shadowColor: "#bfbfbf",
+		shadowColor: brandColor,
 		shadowOpacity: 0.8,
 	},
 	thumbnail: {

@@ -1,12 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import {
 	SafeAreaView,
+	View,
 	StyleSheet,
 	Platform,
 	StatusBar as sb,
 } from "react-native";
 // import SerpAPIComponent from "./app/components/SerpApiComponent";
 import YelpAPIComponent from "./app/components/YelpAPIComponent";
+import LoginComponent from "./app/components/LoginComponent";
 
 const styles = StyleSheet.create({
 	androidSafeArea: {
@@ -17,10 +19,11 @@ const styles = StyleSheet.create({
 
 export default function App() {
 	return (
-		<SafeAreaView style={styles.androidSafeArea}>
+		<View>
 			{/* <SerpAPIComponent /> */}
-			<YelpAPIComponent />
+			{/* <YelpAPIComponent /> */}
+			<LoginComponent />
 			<StatusBar style="auto" />
-		</SafeAreaView>
+		</View>
 	);
 }
