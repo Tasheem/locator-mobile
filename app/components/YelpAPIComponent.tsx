@@ -11,6 +11,7 @@ import {
 	Platform,
 	View,
 	StatusBar as sb,
+	ActivityIndicator
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { fetchYelpRestaurants } from "../services/fetchYelpRestaurants";
@@ -20,6 +21,7 @@ import { formatPhoneNumber } from "../utils/formatUtil";
 export default function YelpAPIComponent() {
 	const [diet, setDiet] = useState("");
 	const [businesses, setBusinesses] = useState<Business[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		console.log(`Diet: ${diet}`);
@@ -29,6 +31,8 @@ export default function YelpAPIComponent() {
 
 	const handlePress = () => {
 		if (diet) {
+			setIsLoading(true);
+			
 			fetchYelpRestaurants(diet, "Bzz6M3phkh0W4XFEb1LtdBZmxC9TraSABAVGI-eLgf1O1VrWDNj8jLGiNO_kSY6nFPcaiUU8YaMDOhIJ3Jr3K7fLuYg6n37tPQagkuIZsYqNaakZCuL4GLdNPBNtZXYx")
 			.then((results) => {
 				setBusinesses(results);
@@ -36,6 +40,9 @@ export default function YelpAPIComponent() {
 			.catch((error) => {
 				console.error("Error fetching restaurants:", error);
 				// Handle error appropriately
+			})
+			.finally(() => {
+				setIsLoading(false);
 			});
 		} else {
 			// Handle the case where 'diet' is not set
@@ -63,6 +70,13 @@ export default function YelpAPIComponent() {
 					/>
 				</View>
 			</View>
+			<ActivityIndicator 
+				animating={isLoading}
+				color="#007AFF"
+				style={{
+					height: isLoading ? "auto" : 0
+				}} 
+			/>
 			{ businesses.length > 0 ? renderResultsList(businesses) : <Text></Text> }
 
 			<StatusBar style="auto" />
