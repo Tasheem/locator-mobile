@@ -25,7 +25,7 @@ const renderButton = () => {
     }
 
     return (
-        <TouchableHighlight underlayColor={brandColor} style={styles.btnContainer}>
+        <TouchableHighlight onPress={() => {}} underlayColor="#965050" style={styles.btnContainer}>
             <View style={styles.androidBtn}>
                 <Text style={{
                     fontSize: 20,
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     },
     inputField: {
 		borderColor: brandColor,
-		borderWidth: 2,
+		borderWidth: 1,
 		borderRadius: 8,
 		height: 40,
         width: Dimensions.get("window").width - 80,
