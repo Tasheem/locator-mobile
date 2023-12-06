@@ -18,6 +18,8 @@ import { fetchYelpRestaurants } from "../services/fetchYelpRestaurants";
 import { Business } from "../models/yelp-api";
 import { formatPhoneNumber } from "../utils/formatUtil";
 
+const brandColor = "#c96b6b";
+
 export default function YelpAPIComponent() {
 	const [diet, setDiet] = useState("");
 	const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -67,12 +69,17 @@ export default function YelpAPIComponent() {
 					<Button
 						title="Search"
 						onPress={handlePress}
+						color={brandColor}
 					/>
+					<Image style={{
+						width: 20,
+						height: 20
+					}} source={require("../../assets/locater_center_solid.png")} />
 				</View>
 			</View>
 			<ActivityIndicator 
 				animating={isLoading}
-				color="#007AFF"
+				color={brandColor}
 				style={{
 					height: isLoading ? "auto" : 0
 				}} 
@@ -126,9 +133,9 @@ const renderResultsList = (businesses: Business[]) => {
 					</View>
 					<BouncyCheckbox
 						size={25}
-						fillColor="#007AFF"
+						fillColor={brandColor}
 						unfillColor="#FFFFFF"
-						iconStyle={{ borderColor: "#007AFF" }}
+						iconStyle={{ borderColor: brandColor }}
 						innerIconStyle={{ borderWidth: 2 }}
 						style={resultsStyle.checkbox}
 					/>
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 		marginLeft: "auto",
 		marginRight: "auto",
-		borderColor: "#007AFF",
+		borderColor: brandColor,
 		borderBottomWidth: 2
 	},
 	heading: {
@@ -163,7 +170,7 @@ const styles = StyleSheet.create({
 	},
 	inputField: {
 		flex: 2,
-		borderColor: "#bfbfbf",
+		borderColor: brandColor,
 		borderWidth: 1,
 		borderRadius: 8,
 		height: 40,
@@ -173,7 +180,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: "row",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: brandColor,
+		marginLeft: 10,
+		marginRight: 10,
+		borderRadius: 10
 	}
 });
 
@@ -185,11 +197,11 @@ const resultsStyle = StyleSheet.create({
 		justifyContent: "space-between",
 		padding: 10,
 		zIndex: 1,
-		borderColor: "#bfbfbf",
+		borderColor: brandColor,
 		borderWidth: 2,
 		margin: 10,
 		borderRadius: 20,
-		shadowColor: "#bfbfbf",
+		shadowColor: brandColor,
 		shadowOpacity: 0.8,
 	},
 	thumbnail: {
