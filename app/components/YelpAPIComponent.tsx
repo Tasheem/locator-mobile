@@ -140,11 +140,11 @@ const renderResultsList = (businesses: Business[]) => {
 
 const styles = StyleSheet.create({
 	androidSafeArea: {
-		flex: 1
+		marginTop: Platform.OS === "android" ? sb.currentHeight : 0
 	},
 	headerContainer: {
 		flexDirection: "row",
-		marginTop: Platform.OS === "android" ? 0 : 20,
+		marginTop: 20,
 		marginBottom: 20,
 		marginLeft: "auto",
 		marginRight: "auto",
