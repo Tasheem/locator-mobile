@@ -1,4 +1,4 @@
-import { Button, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, View, Dimensions, Platform, Image } from "react-native";
+import { Button, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, View, Dimensions, Platform, Image, TouchableHighlight } from "react-native";
 
 export default function LoginComponent() {
     return (
@@ -18,14 +18,21 @@ export default function LoginComponent() {
 const renderButton = () => {
     if(Platform.OS === "ios") {
         return (
-            <View style={styles.iosBtnContainer}>
+            <View style={styles.btnContainer}>
                 <Button title="Log In" color="white" />
             </View>
         )
     }
 
     return (
-        <Button title="Log In" />
+        <TouchableHighlight underlayColor={brandColor} style={styles.btnContainer}>
+            <View style={styles.androidBtn}>
+                <Text style={{
+                    fontSize: 20,
+                    color: "white"
+                }}>Log In</Text>
+            </View>
+        </TouchableHighlight>
     )
 }
 
@@ -53,10 +60,17 @@ const styles = StyleSheet.create({
     },
     passwordInput: {
     },
-    iosBtnContainer: {
+    btnContainer: {
         backgroundColor: brandColor,
         borderRadius: 5,
         paddingLeft: 10,
-        paddingRight: 10,
-    }
+        paddingRight: 10
+    },
+    androidBtn: {
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: 5,
+        padding: 5
+	}
 })

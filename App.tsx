@@ -21,8 +21,8 @@ export default function App() {
 	return (
 		<View>
 			{/* <SerpAPIComponent /> */}
-			<YelpAPIComponent />
-			{/* <LoginComponent /> */}
+			{/* <YelpAPIComponent /> */}
+			<LoginComponent />
 			<StatusBar style="auto" />
 		</View>
 	);
