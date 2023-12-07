@@ -83,36 +83,14 @@ export default function YelpAPIComponent() {
 }
 
 const renderSearchButton = (handlePress: () => void) => {
-	if(Platform.OS === "android") {
-		return (
-			<TouchableHighlight onPress={handlePress} underlayColor={brandColor} style={styles.formBtnContainer}>
-				<View style={styles.androidBtn}>
-					<Text style={{
-						fontSize: 17,
-						color: brandColor
-					}}>Search</Text>
-					<Image style={{
-						width: 20,
-						height: 20
-					}} source={require("../../assets/locater_center_solid.png")} />
-				</View>
-			</TouchableHighlight>
-		)
-	}
-
 	return (
-		<View style={styles.formBtnContainer}>
-			<Button
-				title="Search"
-				onPress={handlePress}
-				color={brandColor}
-			/>
-			<Image style={{
-				width: 20,
-				height: 20
-			}} source={require("../../assets/locater_center_solid.png")} />
-		</View>
-	)
+		<TouchableHighlight onPress={handlePress} underlayColor={brandColor} style={styles.formBtnContainer}>
+			<View style={styles.btn}>
+				<Text style={styles.btnText}>Search</Text>
+				<Image style={styles.btnImage} source={require("../../assets/locater_center_solid.png")} />
+			</View>
+		</TouchableHighlight>
+	);
 }
 
 const renderImage = (uri: string) => {
@@ -209,14 +187,21 @@ const styles = StyleSheet.create({
 		borderColor: brandColor,
 		marginLeft: 10,
 		marginRight: 10,
-		borderRadius: 10,
-		columnGap: 5
+		borderRadius: 10
 	},
-	androidBtn: {
+	btn: {
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		gap: 5
+		gap: 8
+	},
+	btnText: {
+		fontSize: 17,
+		color: brandColor
+	},
+	btnImage: {
+		width: 20,
+		height: 20
 	}
 });
 
