@@ -8,7 +8,7 @@ export default function LoginComponent() {
                 height: 100
             }} source={require("../../assets/locater_center_solid.png")} />
             <TextInput placeholder="Username" style={[styles.inputField, styles.usernameInput]} />
-            <TextInput placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
+            <TextInput secureTextEntry={true} placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
 
             { renderButton() }
         </View>
