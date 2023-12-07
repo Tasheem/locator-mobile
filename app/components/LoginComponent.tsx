@@ -8,7 +8,7 @@ export default function LoginComponent() {
                 height: 100
             }} source={require("../../assets/locater_center_solid.png")} />
             <TextInput placeholder="Username" style={[styles.inputField, styles.usernameInput]} />
-            <TextInput placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
+            <TextInput secureTextEntry={true} placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
 
             { renderButton() }
         </View>
@@ -16,22 +16,12 @@ export default function LoginComponent() {
 }
 
 const renderButton = () => {
-    if(Platform.OS === "ios") {
-        return (
-            <View style={styles.btnContainer}>
-                <Button title="Log In" color="white" />
-            </View>
-        )
-    }
-
     return (
         <TouchableHighlight onPress={() => {}} underlayColor="#965050" style={styles.btnContainer}>
-            <View style={styles.androidBtn}>
-                <Text style={{
-                    fontSize: 20,
-                    color: "white"
-                }}>Log In</Text>
-            </View>
+            <Text style={{
+                fontSize: 20,
+                color: "white"
+            }}>Log In</Text>
         </TouchableHighlight>
     )
 }
@@ -62,15 +52,20 @@ const styles = StyleSheet.create({
     },
     btnContainer: {
         backgroundColor: brandColor,
-        borderRadius: 5,
-        paddingLeft: 10,
-        paddingRight: 10
+        borderRadius: 8,
+        paddingLeft: 25,
+        paddingRight: 25,
+        paddingTop: 7,
+        paddingBottom: 7,
+        flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center"
     },
-    androidBtn: {
+    btn: {
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
 		gap: 5,
         padding: 5
 	}
-})
+});
