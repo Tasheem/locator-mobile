@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
 	inputField: {
 		flex: 2,
 		borderColor: brandColor,
-		borderWidth: 1,
+		borderWidth: 2,
 		borderRadius: 8,
 		height: 40,
 		paddingLeft: 5
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		borderWidth: 1,
+		borderWidth: 2,
 		borderColor: brandColor,
 		marginLeft: 10,
 		marginRight: 10,
@@ -217,8 +217,8 @@ const resultsStyle = StyleSheet.create({
 		borderWidth: 2,
 		margin: 10,
 		borderRadius: 20,
-		shadowColor: brandColor,
-		shadowOpacity: 0.8,
+		shadowColor: brandColor, // only works on iOS unless bg-color is set
+		shadowOpacity: 0.5, // only works on iOS unless bg-color is set
 	},
 	thumbnail: {
 		width: 70,
