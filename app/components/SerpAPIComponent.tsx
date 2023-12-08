@@ -14,7 +14,6 @@ import {
 	StatusBar as sb,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import DropDownPicker from "react-native-dropdown-picker";
 import { SerpAPIResult } from "../models/serp-api";
 
 type Section = {
@@ -191,17 +190,6 @@ export default function SerpAPIComponent() {
 						onChangeText={setDiet}
 						value={diet}
 					/>
-
-					<View style={styles.dropdown}>
-						<DropDownPicker
-							open={open}
-							value={location}
-							items={cities}
-							setOpen={setOpen}
-							setValue={setLocation}
-							setItems={setCities}
-						/>
-					</View>
 				</View>
 
 				<View style={styles.formBtnContainer}>
