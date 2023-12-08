@@ -1,4 +1,5 @@
-import { Button, SafeAreaView, StatusBar, StyleSheet, Text, TextInput, View, Dimensions, Platform, Image, TouchableHighlight } from "react-native";
+import { router } from "expo-router";
+import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
 
 export default function LoginComponent() {
     return (
@@ -6,7 +7,7 @@ export default function LoginComponent() {
             <Image style={{
                 width: 100,
                 height: 100
-            }} source={require("../../assets/locater_center_solid.png")} />
+            }} source={require("../assets/locater_center_solid.png")} />
             <TextInput placeholder="Username" style={[styles.inputField, styles.usernameInput]} />
             <TextInput secureTextEntry={true} placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
 
@@ -17,7 +18,9 @@ export default function LoginComponent() {
 
 const renderButton = () => {
     return (
-        <TouchableHighlight onPress={() => {}} underlayColor="#965050" style={styles.btnContainer}>
+        <TouchableHighlight onPress={() => {
+            router.push("/yelp");
+        }} underlayColor="#965050" style={styles.btnContainer}>
             <Text style={{
                 fontSize: 20,
                 color: "white"

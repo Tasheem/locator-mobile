@@ -87,7 +87,7 @@ const renderSearchButton = (handlePress: () => void) => {
 		<TouchableHighlight onPress={handlePress} underlayColor={brandColor} style={styles.formBtnContainer}>
 			<View style={styles.btn}>
 				<Text style={styles.btnText}>Search</Text>
-				<Image style={styles.btnImage} source={require("../../assets/locater_center_solid.png")} />
+				<Image style={styles.btnImage} source={require("../assets/locater_center_solid.png")} />
 			</View>
 		</TouchableHighlight>
 	);
@@ -149,7 +149,7 @@ const renderResultsList = (businesses: Business[]) => {
 
 const styles = StyleSheet.create({
 	androidSafeArea: {
-		marginTop: Platform.OS === "android" ? sb.currentHeight : 0
+		marginTop: Platform.OS === "android" ? -20 : 0
 	},
 	headerContainer: {
 		flexDirection: "row",
