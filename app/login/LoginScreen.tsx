@@ -1,6 +1,7 @@
 import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
 import { LoginNavigationProps, RootStackParamList } from "../../App";
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
+import LokatorButton from "../components/LokatorButton"
 
 export default function LoginComponent(navigationProp: LoginNavigationProps) {
     return (
@@ -12,21 +13,15 @@ export default function LoginComponent(navigationProp: LoginNavigationProps) {
             <TextInput placeholder="Username" style={[styles.inputField, styles.usernameInput]} />
             <TextInput secureTextEntry={true} placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
 
-            { renderButton(navigationProp.navigation) }
+            <LokatorButton 
+                handler={() => {
+                    navigationProp.navigation.navigate("Search");
+                }} 
+                type="Primary"
+                fontSize={20} 
+                padding="wide"
+            />
         </View>
-    )
-}
-
-const renderButton = (navigation: NativeStackNavigationProp<RootStackParamList, "Login", undefined>) => {
-    return (
-        <TouchableHighlight onPress={() => {
-            navigation.navigate("Search");
-        }} underlayColor="#965050" style={styles.btnContainer}>
-            <Text style={{
-                fontSize: 20,
-                color: "white"
-            }}>Log In</Text>
-        </TouchableHighlight>
     )
 }
 
@@ -53,23 +48,5 @@ const styles = StyleSheet.create({
     usernameInput: {
     },
     passwordInput: {
-    },
-    btnContainer: {
-        backgroundColor: brandColor,
-        borderRadius: 8,
-        paddingLeft: 25,
-        paddingRight: 25,
-        paddingTop: 7,
-        paddingBottom: 7,
-        flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center"
-    },
-    btn: {
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: 5,
-        padding: 5
-	}
+    }
 });

@@ -9,14 +9,13 @@ import {
 	TextInput,
 	Platform,
 	View,
-	StatusBar as sb,
 	ActivityIndicator,
-	TouchableHighlight
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { fetchYelpRestaurants } from "../services/fetchYelpRestaurants";
 import { Business } from "../models/yelp-api";
 import { formatPhoneNumber } from "../utils/formatUtil";
+import LokatorButton from "../components/LokatorButton";
 
 const brandColor = "#c96b6b";
 
@@ -53,7 +52,7 @@ export default function YelpAPIComponent() {
 	};
 
 	return (
-		<SafeAreaView style={styles.androidSafeArea}>
+		<SafeAreaView>
 			<View style={styles.headerContainer}>
 				<Text style={styles.heading}>Find Your Meal</Text>
 			</View>
@@ -64,8 +63,13 @@ export default function YelpAPIComponent() {
 					onChangeText={setDiet}
 					value={diet}
 				/>
-
-				{ renderSearchButton(handlePress) }
+				
+				<LokatorButton 
+					handler={handlePress} 
+					type="Secondary"
+					fontSize={17}
+					useLogo={true}
+				/>
 			</View>
 			<ActivityIndicator 
 				animating={isLoading}
@@ -78,17 +82,6 @@ export default function YelpAPIComponent() {
 
 			<StatusBar style="auto" />
 		</SafeAreaView>
-	);
-}
-
-const renderSearchButton = (handlePress: () => void) => {
-	return (
-		<TouchableHighlight onPress={handlePress} underlayColor={brandColor} style={styles.formBtnContainer}>
-			<View style={styles.btn}>
-				<Text style={styles.btnText}>Search</Text>
-				<Image style={styles.btnImage} source={require("../assets/locater_center_solid.png")} />
-			</View>
-		</TouchableHighlight>
 	);
 }
 
@@ -147,9 +140,6 @@ const renderResultsList = (businesses: Business[]) => {
 }
 
 const styles = StyleSheet.create({
-	androidSafeArea: {
-		marginTop: Platform.OS === "android" ? -20 : 0
-	},
 	headerContainer: {
 		flexDirection: "row",
 		marginTop: 20,
@@ -166,6 +156,7 @@ const styles = StyleSheet.create({
 	formContainer: {
 		flexDirection: "row",
 		marginLeft: 5,
+		marginRight: 5,
 		marginBottom: 20,
 		zIndex: 2
 	},
@@ -175,32 +166,8 @@ const styles = StyleSheet.create({
 		borderWidth: 2,
 		borderRadius: 8,
 		height: 40,
-		paddingLeft: 5
-	},
-	formBtnContainer: {
-		flex: 1,
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		borderWidth: 2,
-		borderColor: brandColor,
-		marginLeft: 10,
-		marginRight: 10,
-		borderRadius: 10
-	},
-	btn: {
-		flexDirection: "row",
-		justifyContent: "center",
-		alignItems: "center",
-		gap: 8
-	},
-	btnText: {
-		fontSize: 17,
-		color: brandColor
-	},
-	btnImage: {
-		width: 20,
-		height: 20
+		paddingLeft: 5,
+		marginRight: 10
 	}
 });
 
