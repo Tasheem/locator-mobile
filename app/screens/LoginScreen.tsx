@@ -3,7 +3,7 @@ import { LoginNavigationProps, RootStackParamList } from "../../App";
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import LokatorButton from "../components/LokatorButton"
 
-export default function LoginComponent(navigationProp: LoginNavigationProps) {
+export default function LoginScreen(navigationProp: LoginNavigationProps) {
     return (
         <View style={styles.formContainer}>
             <Image style={{

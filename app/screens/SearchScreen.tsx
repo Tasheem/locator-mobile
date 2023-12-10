@@ -19,7 +19,7 @@ import LokatorButton from "../components/LokatorButton";
 
 const brandColor = "#c96b6b";
 
-export default function YelpAPIComponent() {
+export default function SearchScreen() {
 	const [diet, setDiet] = useState("");
 	const [businesses, setBusinesses] = useState<Business[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
