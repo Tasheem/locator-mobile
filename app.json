@@ -4,12 +4,12 @@
     "slug": "Lokator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "app/assets/locater_center_solid.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "app/assets/locater_center_solid.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#292524"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -19,12 +19,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "app/assets/locater_center_solid.png",
+        "backgroundColor": "#292524"
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "app/assets/locater_center_solid.png"
     }
   }
 }
