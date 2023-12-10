@@ -1,15 +1,12 @@
-import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
-import { LoginNavigationProps, RootStackParamList } from "../../App";
-import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
-import LokatorButton from "../components/LokatorButton"
+import { StyleSheet, Text, TextInput, View, Dimensions } from "react-native";
+import { LoginNavigationProps } from "../../App";
+import LokatorButton from "../components/LokatorButton";
+import Logo from "../components/Logo";
 
 export default function LoginScreen(navigationProp: LoginNavigationProps) {
     return (
         <View style={styles.formContainer}>
-            <Image style={{
-                width: 100,
-                height: 100
-            }} source={require("../assets/locater_center_solid.png")} />
+            <Logo height={100} width={100} />
             <TextInput placeholder="Username" style={[styles.inputField, styles.usernameInput]} />
             <TextInput secureTextEntry={true} placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
 

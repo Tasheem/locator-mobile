@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
 import { BRAND_RED } from "../constants/colors";
+import Logo from "./Logo";
 
 type LokatorButtonProps = {
     handler: () => void;
@@ -45,8 +46,11 @@ export default function LokatorButton(props: LokatorButtonProps) {
 			<View style={styles.contentContainer}>
 				<Text style={styles.btnText}>Search</Text>
                 {
-                    props.useLogo ? <Image style={styles.btnImage} source={require("../assets/locater_center_solid.png")} />
-                    : null
+                    props.useLogo ? 
+                    <Logo 
+                        height={props.fontSize ? props.fontSize + 3 : 19} 
+                        width={props.fontSize ? props.fontSize + 3 : 19} 
+                    /> : null
                 }
 			</View>
 		</TouchableHighlight>
