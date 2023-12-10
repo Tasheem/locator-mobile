@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import LoginComponent from "./app/login";
+import LoginComponent from "./app/login/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import YelpAPIComponent from "./app/yelp";
+import YelpAPIComponent from "./app/yelp/SearchScreen";
 
 export type RootStackParamList = {
 	Login: undefined;
