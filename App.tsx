@@ -4,11 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
 import YelpAPIComponent from "./app/yelp/SearchScreen";
 
-export type RootStackParamList = {
-	Login: undefined;
-	Search: undefined;
-};
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
@@ -22,3 +17,11 @@ export default function App() {
 		</NavigationContainer>
 	);
 }
+
+type RootStackParamList = {
+	Login: undefined;
+	Search: undefined;
+};
+type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
+
+export { RootStackParamList, LoginNavigationProps }

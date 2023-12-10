@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
-import { RootStackParamList } from "../../App";
+import { LoginNavigationProps, RootStackParamList } from "../../App";
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function LoginComponent(navigationProp: NativeStackScreenProps<RootStackParamList, "Login">) {
+export default function LoginComponent(navigationProp: LoginNavigationProps) {
     return (
         <View style={styles.formContainer}>
             <Image style={{
