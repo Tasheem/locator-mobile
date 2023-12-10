@@ -1,7 +1,8 @@
-import { router } from "expo-router";
 import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
+import { RootStackParamList } from "../../App";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 
-export default function LoginComponent() {
+export default function LoginComponent(navigationProp: NativeStackScreenProps<RootStackParamList, "Login">) {
     return (
         <View style={styles.formContainer}>
             <Image style={{
@@ -11,15 +12,15 @@ export default function LoginComponent() {
             <TextInput placeholder="Username" style={[styles.inputField, styles.usernameInput]} />
             <TextInput secureTextEntry={true} placeholder="Password" style={[styles.inputField, styles.passwordInput]} />
 
-            { renderButton() }
+            { renderButton(navigationProp.navigation) }
         </View>
     )
 }
 
-const renderButton = () => {
+const renderButton = (navigation: NativeStackNavigationProp<RootStackParamList, "Login", undefined>) => {
     return (
         <TouchableHighlight onPress={() => {
-            router.push("/yelp");
+            navigation.navigate("Search");
         }} underlayColor="#965050" style={styles.btnContainer}>
             <Text style={{
                 fontSize: 20,
