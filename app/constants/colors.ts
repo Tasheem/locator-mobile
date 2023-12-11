@@ -1,0 +1,1 @@
+export const BRAND_RED = "#c96b6b";
