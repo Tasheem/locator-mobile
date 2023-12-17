@@ -7,7 +7,8 @@ type LokatorButtonProps = {
     type: "Primary" | "Secondary"
     useLogo?: boolean;
     fontSize?: number;
-    padding?: "wide" | "normal"
+    padding?: "wide" | "normal";
+    textValue: string;
 }
 
 export default function LokatorButton(props: LokatorButtonProps) {
@@ -44,7 +45,7 @@ export default function LokatorButton(props: LokatorButtonProps) {
     return (
 		<TouchableHighlight onPress={props.handler} underlayColor={ props.type === "Primary" ? "#965050" : BRAND_RED } style={styles.btn}>
 			<View style={styles.contentContainer}>
-				<Text style={styles.btnText}>Search</Text>
+				<Text style={styles.btnText}>{props.textValue}</Text>
                 {
                     props.useLogo ? 
                     <Logo 
@@ -54,5 +55,5 @@ export default function LokatorButton(props: LokatorButtonProps) {
                 }
 			</View>
 		</TouchableHighlight>
-    )
+    );
 }

@@ -17,6 +17,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
                 type="Primary"
                 fontSize={20} 
                 padding="wide"
+                textValue="Login"
             />
         </View>
     )

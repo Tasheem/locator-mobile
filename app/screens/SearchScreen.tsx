@@ -69,6 +69,7 @@ export default function SearchScreen() {
 					type="Secondary"
 					fontSize={17}
 					useLogo={true}
+					textValue="Search"
 				/>
 			</View>
 			<ActivityIndicator 
