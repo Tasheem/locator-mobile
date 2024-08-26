@@ -1,9 +1,9 @@
 import { SafeAreaView, View, StyleSheet, Text, Image } from "react-native";
-import { HomeNavigationProps } from "../../App";
+import { RoomsNavigationProps } from "../../App";
 import Logo from "../components/Logo";
-import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
+import { CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 
-export default function RoomsScreen(navgationProps: HomeNavigationProps) {
+export default function RoomsScreen(navgationProps: RoomsNavigationProps) {
     return (
         <SafeAreaView>
             <View style={ styles.viewContainer }>

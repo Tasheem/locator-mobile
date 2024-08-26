@@ -28,6 +28,6 @@ type RootStackParamList = {
 	Rooms: undefined;
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
-type HomeNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;
+type RoomsNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;
 
-export { RootStackParamList, LoginNavigationProps, HomeNavigationProps }
+export { RootStackParamList, LoginNavigationProps, RoomsNavigationProps }
