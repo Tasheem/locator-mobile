@@ -3,9 +3,9 @@ import { RoomsNavigationProps } from "../../App";
 import Logo from "../components/Logo";
 import { CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 
-export default function RoomsScreen(navgationProps: RoomsNavigationProps) {
+export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{flex: 1}}>
             <View style={ styles.viewContainer }>
                 <View style={ styles.roomContainer }>
                     <Logo height={50} width={50} />

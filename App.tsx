@@ -4,6 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
 import YelpAPIComponent from "./app/screens/SearchScreen";
 import RoomsScreen from "./app/screens/RoomsScreen";
+import Logo from "./app/components/Logo";
+import { Button, TouchableHighlight } from "react-native";
+import LokatorButton from "./app/components/LokatorButton";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -15,7 +18,15 @@ export default function App() {
 				<Stack.Screen name="Search" component={YelpAPIComponent} />
 			</Stack.Navigator> */}
 			<Stack.Navigator initialRouteName="Rooms">
-				<Stack.Screen name="Rooms" component={ RoomsScreen } />
+				<Stack.Screen name="Rooms" component={ RoomsScreen }
+				options={{
+					/* headerTitle: () => <Logo height={30} width={30} />, */
+					headerLeft: () => {
+						return (
+							<LokatorButton type="Secondary" textValue="New Room" handler={() => {}} />
+						);
+					}
+				}} />
 			</Stack.Navigator>
 			<StatusBar style="auto" />
 		</NavigationContainer>
