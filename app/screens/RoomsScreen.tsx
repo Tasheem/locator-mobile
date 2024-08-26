@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet, Text, Image } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TouchableHighlight } from "react-native";
 import { RoomsNavigationProps } from "../../App";
 import Logo from "../components/Logo";
 import { CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
@@ -6,7 +6,14 @@ import { CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
     return (
         <SafeAreaView style={{flex: 1}}>
-            <View style={ styles.viewContainer }>
+            <TouchableHighlight 
+            onPress={() => {
+                navigationProps.navigation.navigate('RoomDetails', {
+                    roomId: 0
+                });
+            }} 
+            style={ styles.viewContainer } 
+            underlayColor={"red"}>
                 <View style={ styles.roomContainer }>
                     <Logo height={50} width={50} />
                     <View style={ styles.descriptionContainer }>
@@ -14,7 +21,7 @@ export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
                         <Text style={ styles.description }>Participants: 20</Text>
                     </View>
                 </View>
-            </View>
+            </TouchableHighlight>
         </SafeAreaView>
     );
 }

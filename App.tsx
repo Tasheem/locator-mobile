@@ -7,6 +7,7 @@ import RoomsScreen from "./app/screens/RoomsScreen";
 import Logo from "./app/components/Logo";
 import { Button, TouchableHighlight } from "react-native";
 import LokatorButton from "./app/components/LokatorButton";
+import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -27,6 +28,11 @@ export default function App() {
 						);
 					}
 				}} />
+
+				<Stack.Screen name="RoomDetails" component={ RoomDetailsScreen }
+				options={{
+					title: 'Room'
+				}} />
 			</Stack.Navigator>
 			<StatusBar style="auto" />
 		</NavigationContainer>
@@ -37,6 +43,9 @@ type RootStackParamList = {
 	Login: undefined;
 	Search: undefined;
 	Rooms: undefined;
+	RoomDetails: {
+		roomId: number
+	}
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
 type RoomsNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;
