@@ -9,7 +9,7 @@ export default function ChatScreen() {
             data={messages}
             style={style.container}
             renderItem={({ item }) => (
-                <View style={item === 2 ? style.messageContainer : [style.messageContainer, style.messageContainer.blue]}>
+                <View style={item === 1 ? [style.messageContainer, style.messageContainer.blue] : style.messageContainer}>
                     <View style={item === 1 ? [style.imageContainer, style.imageContainer.blueMessage] : style.imageContainer}>
                         <Image source={require("../assets/no-profile-pic.png")}
                         style={{
