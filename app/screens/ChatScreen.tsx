@@ -3,7 +3,7 @@ import renderImage from "../utils/renderImage";
 import { CARD_BLUE_PRIMARY_COLOR, CARD_BLUE_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 
 export default function ChatScreen() {
-    const messages: {}[] = [1, 2];
+    const messages = [1, 2];
     return (
         <FlatList
             data={messages}
