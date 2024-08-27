@@ -8,6 +8,7 @@ import Logo from "./app/components/Logo";
 import { Button, TouchableHighlight } from "react-native";
 import LokatorButton from "./app/components/LokatorButton";
 import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
+import { BRAND_RED } from "./app/constants/colors";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -18,7 +19,12 @@ export default function App() {
 				<Stack.Screen name="Login" component={LoginComponent} />
 				<Stack.Screen name="Search" component={YelpAPIComponent} />
 			</Stack.Navigator> */}
-			<Stack.Navigator initialRouteName="Rooms">
+			<Stack.Navigator initialRouteName="Rooms"
+			screenOptions={{
+				headerTitleStyle: {
+					color: BRAND_RED
+				}
+			}}>
 				<Stack.Screen name="Rooms" component={ RoomsScreen }
 				options={{
 					/* headerTitle: () => <Logo height={30} width={30} />, */
