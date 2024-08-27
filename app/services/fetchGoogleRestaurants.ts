@@ -1,4 +1,4 @@
-import { Place, TextSearchResponse } from "../models/google-places-api";
+import { Place, SearchResponse } from "../models/google-places-api";
 
 export const apiKey = "";
 
@@ -26,7 +26,7 @@ export async function fetchPlaces() {
 		}
 	});
 
-	let data: TextSearchResponse | null = null;
+	let data: SearchResponse | null = null;
 	try {
 		const response = await fetch(url, {
 			method: "POST",
@@ -34,7 +34,7 @@ export async function fetchPlaces() {
 			body: body
 		});
 	
-		data = await response.json() as TextSearchResponse;
+		data = await response.json() as SearchResponse;
 		return data.places;
 	} catch(err) {
 		console.log(err);
