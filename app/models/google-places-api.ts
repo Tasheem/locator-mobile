@@ -18,18 +18,15 @@ type Place = {
 	types: string[];
 	nationalPhoneNumber: string;
 	formattedAddress: string;
-	displayName: {
-		languageCode: string;
-		text: string;
-	};
+	displayName: LocalizedText;
 	primaryTypeDisplayName: LocalizedText;
 	currentOpeningHours: OpeningHours;
 	primaryType: string;
 	photos?: Photo[];
 };
 
-type TextSearchResponse = {
+type SearchResponse = {
 	places: Place[];
 }
 
-export { Place, Photo, TextSearchResponse };
+export { Place, Photo, SearchResponse };
