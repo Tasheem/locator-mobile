@@ -22,11 +22,17 @@ export default function ChatScreen() {
                     </View>
                     <View style={style.textContainer}>
                         <View style={item === 1 ? [style.messageDetailsContainer, style.messageDetailsContainer.blueMessage] : style.messageDetailsContainer}>
-                            <Text style={item === 1 ? style.text.blueMessage : style.text}>{item === 1 ? "Tasheem Hargrove" : "John Doe"}</Text>
-                            <Text style={item === 1 ? style.text.blueMessage : style.text}>{item === 1 ? "Yesterday 11:14pm" : "Today 8:23am"}</Text>
+                            <Text style={item === 1 ? [style.text, style.text.blueMessage] : style.text}>
+                                {item === 1 ? "Tasheem Hargrove" : "John Doe"}
+                            </Text>
+                            <Text style={item === 1 ? [style.text, style.text.blueMessage] : style.text}>
+                                {item === 1 ? "Yesterday 11:14pm" : "Today 8:23am"}
+                            </Text>
                         </View>
                         <View style={style.messageContentsContainer}>
-                            <Text style={item === 1 ? style.text.blueMessage : style.text}>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum a perspiciatis consequuntur veritatis est vero fugit officia, doloremque numquam ex, nesciunt cum incidunt inventore corrupti molestias repellat dolore tempora rem?</Text>
+                            <Text style={item === 1 ? [style.text, style.text.blueMessage] : style.text}>
+                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum a perspiciatis consequuntur veritatis est vero fugit officia, doloremque numquam ex, nesciunt cum incidunt inventore corrupti molestias repellat dolore tempora rem?
+                            </Text>
                         </View>
                     </View>
                 </View>
@@ -67,6 +73,7 @@ const style = StyleSheet.create({
     },
     text: {
         color: "black",
+        lineHeight: 18,
         blueMessage: {
             color: "white"
         }
