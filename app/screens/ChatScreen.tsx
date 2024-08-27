@@ -9,8 +9,8 @@ export default function ChatScreen() {
             data={messages}
             style={style.container}
             renderItem={({ item }) => (
-                <View style={item === 1 ? [style.messageContainer, style.messageContainer.blue] : style.messageContainer}>
-                    <View style={item === 1 ? [style.imageContainer, style.imageContainer.blueMessage] : style.imageContainer}>
+                <View style={item === 1 ? [style.messageContainer, style.blueMessageContainer] : style.messageContainer}>
+                    <View style={item === 1 ? [style.imageContainer, style.blueImageContainer] : style.imageContainer}>
                         <Image source={require("../assets/no-profile-pic.png")}
                         style={{
                             width: 50,
@@ -21,16 +21,16 @@ export default function ChatScreen() {
                         }} />
                     </View>
                     <View style={style.textContainer}>
-                        <View style={item === 1 ? [style.messageDetailsContainer, style.messageDetailsContainer.blueMessage] : style.messageDetailsContainer}>
-                            <Text style={item === 1 ? [style.text, style.text.blueMessage] : style.text}>
+                        <View style={item === 1 ? [style.messageDetailsContainer, style.blueDetailsContainer] : style.messageDetailsContainer}>
+                            <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
                                 {item === 1 ? "Tasheem Hargrove" : "John Doe"}
                             </Text>
-                            <Text style={item === 1 ? [style.text, style.text.blueMessage] : style.text}>
+                            <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
                                 {item === 1 ? "Yesterday 11:14pm" : "Today 8:23am"}
                             </Text>
                         </View>
                         <View style={style.messageContentsContainer}>
-                            <Text style={item === 1 ? [style.text, style.text.blueMessage] : style.text}>
+                            <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
                                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum a perspiciatis consequuntur veritatis est vero fugit officia, doloremque numquam ex, nesciunt cum incidunt inventore corrupti molestias repellat dolore tempora rem?
                             </Text>
                         </View>
@@ -53,10 +53,10 @@ const style = StyleSheet.create({
         borderRadius: 18,
         backgroundColor: CARD_PRIMARY_COLOR,
         marginBottom: 10,
-        blue: {
-            borderColor: CARD_BLUE_SECONDARY_COLOR,
-            backgroundColor: CARD_BLUE_PRIMARY_COLOR
-        }
+    },
+    blueMessageContainer: {
+        borderColor: CARD_BLUE_SECONDARY_COLOR,
+        backgroundColor: CARD_BLUE_PRIMARY_COLOR
     },
     imageContainer: {
         borderRightColor: CARD_SECONDARY_COLOR,
@@ -64,19 +64,19 @@ const style = StyleSheet.create({
         justifyContent: "center",
         paddingLeft: 5,
         paddingRight: 5,
-        blueMessage: {
-            borderRightColor: CARD_BLUE_SECONDARY_COLOR
-        }
+    },
+    blueImageContainer: {
+        borderRightColor: CARD_BLUE_SECONDARY_COLOR
     },
     textContainer: {
         flex: 1
     },
     text: {
         color: "black",
-        lineHeight: 18,
-        blueMessage: {
-            color: "white"
-        }
+        lineHeight: 18
+    },
+    whiteText: {
+        color: "white"
     },
     messageDetailsContainer: {
         flexDirection: "row",
@@ -84,10 +84,10 @@ const style = StyleSheet.create({
         borderBottomColor: CARD_SECONDARY_COLOR,
         borderBottomWidth: 2,
         paddingLeft: 5,
-        paddingRight: 5,
-        blueMessage: {
-            borderBottomColor: CARD_BLUE_SECONDARY_COLOR
-        }
+        paddingRight: 5
+    },
+    blueDetailsContainer: {
+        borderBottomColor: CARD_BLUE_SECONDARY_COLOR
     },
     messageContentsContainer: {
         paddingLeft: 5,
