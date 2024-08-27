@@ -1,26 +1,35 @@
-type AuthorAttribution = {
-	displayName: string;
-	photoUri: string;
-	uri: string;
-}
-
 type Photo = {
-	height: number;
-	width: number;
-	photoReference: string;
-	htmlAttributions: string[];
-	authorAttributions: AuthorAttribution[];
+	name: string;
+	heightPx: number;
+	widthPx: number;
 };
 
-type Restaurant = {
+type LocalizedText = {
+	text: string;
+	languageCode: string
+}
+
+type OpeningHours = {
+	openNow: boolean
+}
+
+type Place = {
+	id: string;
 	types: string[];
+	nationalPhoneNumber: string;
 	formattedAddress: string;
-	websiteUri: string;
 	displayName: {
 		languageCode: string;
 		text: string;
 	};
+	primaryTypeDisplayName: LocalizedText;
+	currentOpeningHours: OpeningHours;
+	primaryType: string;
 	photos?: Photo[];
 };
 
-export { Restaurant, Photo, AuthorAttribution };
+type TextSearchResponse = {
+	places: Place[];
+}
+
+export { Place, Photo, TextSearchResponse };

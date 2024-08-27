@@ -1,46 +1,42 @@
-import { Restaurant } from "../models/google-places-api";
+import { Place, TextSearchResponse } from "../models/google-places-api";
 
-//fetches restaurants based on searchTerm. i.e: 'Vegan', 'Vegetarian', etc.
-export function fetchRestaurants(searchTerm: string, apiKey: string) {
-	const url = "https://places.googleapis.com/v1/places:searchText";
+export const apiKey = "";
 
+export async function fetchPlaces() {
+	const url = "https://places.googleapis.com/v1/places:searchNearby";
 	const headers = {
 		"Content-Type": "application/json",
 		"X-Goog-Api-Key": apiKey,
 		"X-Goog-FieldMask":
-			"places.id,places.displayName,places.formattedAddress,places.types,places.websiteUri,places.photos",
+			"places.id,places.types,places.nationalPhoneNumber,places.displayName,places.primaryType,places.primaryTypeDisplayName,places.formattedAddress,places.photos.name,places.photos.widthPx,places.photos.heightPx,places.currentOpeningHours.openNow",
 	};
 
 	const body = JSON.stringify({
-		textQuery: searchTerm,
-		languageCode: "en",
-		locationBias: {
+		openNow: true,
+		includedTypes: ["restaurant"],
+		maxResultCount: 10,
+		locationRestriction: {
 			circle: {
 				center: {
-					latitude: 33.5186,
-					longitude: -86.8104,
+					latitude: 33.50009020,
+					longitude: -86.8069160,
 				},
-				radius: 500.0,
+				radius: 20000.0,
 			},
-		},
+		}
 	});
 
-	return fetch(url, {
-		method: "POST",
-		headers: headers,
-		body: body,
-	})
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-			return response.json();
-		})
-		.then((data): Restaurant[] => {
-			return data?.places;
-		})
-		.catch((error) => {
-			console.error("Error:", error);
-			throw error;
+	let data: TextSearchResponse | null = null;
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: headers,
+			body: body
 		});
+	
+		data = await response.json() as TextSearchResponse;
+		return data.places;
+	} catch(err) {
+		console.log(err);
+	}
 }

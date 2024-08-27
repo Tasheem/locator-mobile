@@ -1,6 +1,7 @@
 import { StyleSheet, Image } from "react-native";
 
 export default function renderImage(uri: string, width: number, height: number) {
+	console.log('URI:', uri);
 	if(!uri) {
 		return (
 			<Image source={{
