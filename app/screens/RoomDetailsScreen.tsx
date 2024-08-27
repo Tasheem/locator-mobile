@@ -12,6 +12,9 @@ export default function RoomDetailsScreen() {
         screenOptions={{
             tabBarIndicatorStyle: {
                 backgroundColor: BRAND_RED
+            },
+            tabBarLabelStyle: {
+                color: BRAND_RED
             }
         }}>
             {/* <Tab.Screen name="Participants" component={ ParticipantsScreen } /> */}
