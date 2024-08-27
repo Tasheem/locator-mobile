@@ -44,6 +44,9 @@ export default function RecommendationScreen() {
 const renderResultsList = (places: Place[]) => {
     const imageHeight = 70;
     const imageWidth = 70;
+
+    const maxHeightPx = 200;
+    const maxWidthPx = 200;
 	return (
 		<FlatList
 			data={places}
@@ -51,7 +54,7 @@ const renderResultsList = (places: Place[]) => {
 			renderItem={({ item }) => (
 				<View style={resultsStyle.resultsRowContainer}>
 					{ item.photos && item.photos.length > 0 ? 
-                    renderImage(`https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${apiKey}&maxHeightPx=${imageHeight}&maxWidthPx=${imageWidth}`, imageWidth, imageHeight) 
+                    renderImage(`https://places.googleapis.com/v1/${item.photos[0].name}/media?key=${apiKey}&maxHeightPx=${maxHeightPx}&maxWidthPx=${maxWidthPx}`, imageWidth, imageHeight) 
                     : <View></View>}
 					<View style={resultsStyle.informationContainer}>
 						<View style={resultsStyle.detailsRow}>
