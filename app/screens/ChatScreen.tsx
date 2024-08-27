@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
 import renderImage from "../utils/renderImage";
-import { CARD_BLUE_PRIMARY_COLOR, CARD_BLUE_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
+import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 
 export default function ChatScreen() {
     const messages = [1, 2];
@@ -9,8 +9,8 @@ export default function ChatScreen() {
             data={messages}
             style={style.container}
             renderItem={({ item }) => (
-                <View style={item === 1 ? [style.messageContainer, style.blueMessageContainer] : style.messageContainer}>
-                    <View style={item === 1 ? [style.imageContainer, style.blueImageContainer] : style.imageContainer}>
+                <View style={item === 1 ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}>
+                    <View style={item === 1 ? [style.imageContainer, style.redImageContainer] : style.imageContainer}>
                         <Image source={require("../assets/no-profile-pic.png")}
                         style={{
                             width: 50,
@@ -21,7 +21,7 @@ export default function ChatScreen() {
                         }} />
                     </View>
                     <View style={style.textContainer}>
-                        <View style={item === 1 ? [style.messageDetailsContainer, style.blueDetailsContainer] : style.messageDetailsContainer}>
+                        <View style={item === 1 ? [style.messageDetailsContainer, style.redDetailsContainer] : style.messageDetailsContainer}>
                             <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
                                 {item === 1 ? "Tasheem Hargrove" : "John Doe"}
                             </Text>
@@ -54,9 +54,9 @@ const style = StyleSheet.create({
         backgroundColor: CARD_PRIMARY_COLOR,
         marginBottom: 10,
     },
-    blueMessageContainer: {
-        borderColor: CARD_BLUE_SECONDARY_COLOR,
-        backgroundColor: CARD_BLUE_PRIMARY_COLOR
+    redMessageContainer: {
+        borderColor: CARD_RED_SECONDARY_COLOR,
+        backgroundColor: CARD_RED_PRIMARY_COLOR
     },
     imageContainer: {
         borderRightColor: CARD_SECONDARY_COLOR,
@@ -65,8 +65,8 @@ const style = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5,
     },
-    blueImageContainer: {
-        borderRightColor: CARD_BLUE_SECONDARY_COLOR
+    redImageContainer: {
+        borderRightColor: CARD_RED_SECONDARY_COLOR
     },
     textContainer: {
         flex: 1
@@ -86,8 +86,8 @@ const style = StyleSheet.create({
         paddingLeft: 5,
         paddingRight: 5
     },
-    blueDetailsContainer: {
-        borderBottomColor: CARD_BLUE_SECONDARY_COLOR
+    redDetailsContainer: {
+        borderBottomColor: CARD_RED_SECONDARY_COLOR
     },
     messageContentsContainer: {
         paddingLeft: 5,
