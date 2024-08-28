@@ -3,7 +3,7 @@ import renderImage from "../utils/renderImage";
 import { useEffect, useState } from "react";
 import { Place } from "../models/google-places-api";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { apiKey, fetchPlaces } from "../services/fetchGoogleRestaurants";
+import { apiKey, fetchPlaces } from "../services/places-service";
 
 const brandColor = "#c96b6b";
 
