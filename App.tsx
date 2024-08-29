@@ -10,8 +10,10 @@ import LokatorButton from "./app/components/LokatorButton";
 import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
 import { BRAND_RED } from "./app/constants/colors";
 import { useState } from "react";
+import { AuthService } from "./app/services/auth-service";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const authService = new AuthService();
 
 export default function App() {
 	const [userToken, setUserToken] = useState<string | null>(null);
@@ -34,6 +36,14 @@ export default function App() {
 							headerLeft: () => {
 								return (
 									<LokatorButton type="Secondary" textValue="New Room" handler={() => {}} />
+								);
+							},
+							headerRight: () => {
+								return (
+									<LokatorButton type="Secondary" textValue="Log Out" handler={async () => {
+										await authService.logout();
+										setUserToken(null);
+									}} />
 								);
 							}
 						}} />

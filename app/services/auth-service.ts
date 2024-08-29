@@ -5,7 +5,7 @@ export class AuthService {
         this.serverPrefix = "http://localhost:8080";
     }
 
-    public async login(username: string, password: string, setUseToken: React.Dispatch<React.SetStateAction<string | null>>) {
+    public async login(username: string, password: string, setUserToken: React.Dispatch<React.SetStateAction<string | null>>) {
         const options: RequestInit = {
             method: "POST",
             headers:{
@@ -26,7 +26,16 @@ export class AuthService {
         if(response.status === 200) {
             const jSessionID = response.headers.get("set-cookie");
             console.log("JSessionID:", jSessionID);
-            setUseToken(jSessionID);
+            setUserToken(jSessionID);
         }
+    }
+
+    public async logout() {
+        const options: RequestInit = {
+            method: "GET"
+        }
+
+        const response = await fetch(this.serverPrefix + "/logout")
+        console.log("STATUS:", response.status);
     }
 }
