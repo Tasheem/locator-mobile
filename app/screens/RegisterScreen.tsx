@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList } from "react-native";
+import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal } from "react-native";
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
 import { PlaceType } from "../models/lokator-place-type";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -14,6 +14,7 @@ export default function RegisterScreen() {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
     fetchPlaceTypes()
     .then(types => {
@@ -71,10 +72,36 @@ export default function RegisterScreen() {
                     </View>
                 </View>
 
-                <View style={style.preferencesContainer}>
-                    <Text style={style.title}>Choose Preferences</Text>
-                    { renderPlaceTypes(placeTypes) }
+                <View style={style.btnContainer}>
+                    <LokatorButton type="Secondary" textValue="Preferences"
+                    handler={() => {
+                        setModalVisible(true);
+                    }} />
+
+                    <LokatorButton type="Primary" textValue="Submit"
+                        handler={() => {
+
+                        }} 
+                    />
                 </View>
+
+                <Modal
+                animationType="slide"
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}>
+                    <SafeAreaView>
+                        <LokatorButton type="Secondary" textValue="Close"
+                        handler={() => {
+                            setModalVisible(false);
+                        }} />
+                        <View style={style.preferencesContainer}>
+                            <Text style={style.title}>Choose Preferences</Text>
+                            { renderPlaceTypes(placeTypes) }
+                        </View>
+                    </SafeAreaView>
+                </Modal>
             </View>
         </SafeAreaView>
     );
@@ -110,6 +137,8 @@ const renderPlaceTypes = (placeTypes: PlaceType[]) => {
 
 const style = StyleSheet.create({
     rootContainer: {
+        height: "90%",
+        justifyContent: "center",
         alignItems: "center"
     },
     formContainer: {
@@ -120,12 +149,12 @@ const style = StyleSheet.create({
     leftContainer: {
         flex: 1,
         alignItems: "center",
-        gap: 20
+        gap: 35
     },
     rightContainer: {
         flex: 1,
         alignItems: "center",
-        gap: 20
+        gap: 35
     },
     textBox: {
         width: 160,
@@ -141,11 +170,17 @@ const style = StyleSheet.create({
         marginTop: 15,
         marginBottom: 15
     },
+    btnContainer: {
+        marginTop: 40,
+        flexDirection: "row",
+        width: "75%",
+        justifyContent: "space-between"
+    },
     preferencesContainer: {
         alignItems: "center"
     },
     flatListContainer: {
-        paddingBottom: "170%" // React Native FlatList has issue with bottom part of list cutting off.
+        paddingBottom: "40%" // React Native FlatList has issue with bottom part of list cutting off.
         /* flexDirection: "row",
         flexWrap: "wrap" */
     },

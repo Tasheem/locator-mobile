@@ -60,18 +60,7 @@ export default function App() {
 						initialParams={{
 							"setUserToken": setUserToken
 						}} />
-						<Stack.Screen name="Register" component={RegisterScreen}
-						options={{
-							headerRight: () => {
-								return (
-									<LokatorButton type="Primary" textValue="Submit"
-										handler={() => {
-
-										}} 
-									/>
-								);
-							}
-						}} />
+						<Stack.Screen name="Register" component={RegisterScreen} />
 					</Stack.Navigator>
 				)
 			}
