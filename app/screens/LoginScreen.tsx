@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, Dimensions, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, TextInput, View, Dimensions, ActivityIndicator, Button } from "react-native";
 import { LoginNavigationProps } from "../../App";
 import LokatorButton from "../components/LokatorButton";
 import Logo from "../components/Logo";
@@ -52,6 +52,12 @@ export default function LoginScreen(navigationProp: LoginNavigationProps, loginP
                 fontSize={20} 
                 padding="wide"
                 textValue="Login"
+            />
+
+            <Button title="Register" 
+                onPress={() => {
+                    navigationProp.navigation.navigate("Register");
+                }}
             />
         </View>
     );

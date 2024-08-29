@@ -11,6 +11,7 @@ import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
 import { BRAND_RED } from "./app/constants/colors";
 import { useState } from "react";
 import { AuthService } from "./app/services/auth-service";
+import RegisterScreen from "./app/screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const authService = new AuthService();
@@ -55,10 +56,22 @@ export default function App() {
 					</Stack.Navigator>
 				) : (
 					<Stack.Navigator initialRouteName="Login">
-						<Stack.Screen name="Login" component={LoginComponent} initialParams={{
+						<Stack.Screen name="Login" component={LoginComponent} 
+						initialParams={{
 							"setUserToken": setUserToken
 						}} />
-						<Stack.Screen name="Search" component={YelpAPIComponent} />
+						<Stack.Screen name="Register" component={RegisterScreen}
+						options={{
+							headerRight: () => {
+								return (
+									<LokatorButton type="Primary" textValue="Submit"
+										handler={() => {
+
+										}} 
+									/>
+								);
+							}
+						}} />
 					</Stack.Navigator>
 				)
 			}
@@ -76,7 +89,8 @@ type RootStackParamList = {
 	Rooms: undefined;
 	RoomDetails: {
 		roomId: number
-	}
+	},
+	Register: undefined
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
 type RoomsNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;

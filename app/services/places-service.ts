@@ -1,4 +1,5 @@
 import { Place, SearchResponse } from "../models/google-places-api";
+import { PlaceType } from "../models/lokator-place-type";
 
 export const apiKey = "";
 
@@ -39,4 +40,17 @@ export async function fetchPlaces() {
 	} catch(err) {
 		console.log(err);
 	}
+}
+
+const host = "http://localhost:8080"
+export async function fetchPlaceTypes() {
+	const uri = host + "/places/type";
+	const response = await fetch(uri);
+
+	if(!response.ok) {
+		console.log(response);
+		throw Error("Status not 200");
+	}
+
+	return response.json() as Promise<PlaceType[]>;
 }
