@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal } from "react-native";
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
 import { PlaceType } from "../models/lokator-place-type";
@@ -16,10 +16,13 @@ export default function RegisterScreen() {
     const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
 
-    fetchPlaceTypes()
-    .then(types => {
-        setPlaceTypes(types);
-    });
+    useEffect(() => {
+        fetchPlaceTypes()
+        .then(types => {
+            setPlaceTypes(types);
+        });
+    }, []);
+
 
     return (
         <SafeAreaView>
@@ -173,7 +176,7 @@ const style = StyleSheet.create({
     btnContainer: {
         marginTop: 40,
         flexDirection: "row",
-        width: "75%",
+        width: "80%",
         justifyContent: "space-between"
     },
     preferencesContainer: {
