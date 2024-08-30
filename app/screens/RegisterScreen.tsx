@@ -42,7 +42,30 @@ export default function RegisterScreen({ navigation }: PageProps) {
         });
     }, []);
 
+    const isFormValid: () => boolean = () => {
+        if(password.length < 3) {
+            Alert.alert("Invalid", "Your password must be at least 3 characters long.");
+            return false;
+        }
+    
+        if(password !== confirmPassword) {
+            Alert.alert("Invalid", "Password and Confirm Password do not match.");
+            return false;
+        }
+
+        if(preferenceIds.size === 0) {
+            Alert.alert("Invalid", "At least 1 preference is needed.");
+            return false;
+        }
+
+        return true;
+    }
+
     const submitData = async () => {
+        if(!isFormValid()) {
+            return;
+        }
+
         const payload: User = {
             username: username,
             password: password,
