@@ -6,6 +6,9 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import LokatorButton from "../components/LokatorButton";
 import { fetchPlaceTypes } from "../services/places-service";
 
+// This set contains the ids of the preferences the user has selected.
+const preferenceIds = new Set<number>();
+
 export default function RegisterScreen() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -131,11 +134,21 @@ const renderPlaceTypes = (placeTypes: PlaceType[]) => {
 						unfillColor="#FFFFFF"
 						iconStyle={{ borderColor: BRAND_RED }}
 						innerIconStyle={{ borderWidth: 2 }}
+                        isChecked={ preferenceIds.has(item.id) }
+                        onPress={(isChecked) => {
+                            if(isChecked) {
+                                preferenceIds.add(item.id);
+                            } else {
+                                preferenceIds.delete(item.id);
+                            }
+
+                            console.log(preferenceIds);
+                        }}
 					/>
                 </View>
             )}
         />
-    )
+    );
 }
 
 const style = StyleSheet.create({
