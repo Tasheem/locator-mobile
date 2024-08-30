@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal } from "react-native";
+import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal, Alert } from "react-native";
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
 import { PlaceType } from "../models/lokator-place-type";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import LokatorButton from "../components/LokatorButton";
 import { fetchPlaceTypes } from "../services/places-service";
+import { User } from "../models/user";
+import { AuthService } from "../services/auth-service";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../App";
 
 // This set contains the ids of the preferences the user has selected.
 const preferenceIds = new Set<number>();
+const authService = new AuthService();
 
-export default function RegisterScreen() {
+type PageProps = {
+    navigation: NativeStackNavigationProp<RootStackParamList, "Register">
+}
+
+export default function RegisterScreen({ navigation }: PageProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,18 +27,55 @@ export default function RegisterScreen() {
     const [email, setEmail] = useState("");
     const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [displayingSuccess, setDisplayingSuccess] = useState(false);
 
     useEffect(() => {
+        // Making sure that the selected preferences go away when navigating back to the home screen
+        // then coming back to the register screen.
+        if(preferenceIds.size > 0) {
+            preferenceIds.clear();
+        }
+
         fetchPlaceTypes()
         .then(types => {
             setPlaceTypes(types);
         });
     }, []);
 
+    const submitData = async () => {
+        const payload: User = {
+            username: username,
+            password: password,
+            firstname: firstName,
+            lastname: lastName,
+            email: email,
+            preferences: Array.from(preferenceIds).map((preferenceId) => {
+                return {
+                    id: preferenceId
+                } as PlaceType
+            })
+        }
+
+        try {
+            await authService.register(payload);
+            
+            setDisplayingSuccess(true);
+            setTimeout(() => {
+                setDisplayingSuccess(false);
+                navigation.goBack();
+            }, 3500);
+        } catch(error: any) {
+            Alert.alert("Error", "An error occurred when creating your account. Please try again later.");
+        }
+    }
 
     return (
         <SafeAreaView>
             <View style={style.rootContainer}>
+                {
+                    displayingSuccess ? <Text style={style.successMessage}>Profile Successfully Created...</Text>
+                    : null
+                }
                 <Text style={style.title}>Create Profile</Text>
 
                 <View style={style.formContainer}>
@@ -84,15 +130,17 @@ export default function RegisterScreen() {
                         setModalVisible(true);
                     }} />
 
-                    <LokatorButton type="Primary" textValue="Submit"
-                        handler={() => {
-
-                        }} 
-                    />
+                    {
+                        displayingSuccess ? null : (
+                            <LokatorButton type="Primary" textValue="Submit"
+                                handler={submitData} 
+                            />
+                        )
+                    }
                 </View>
 
                 <Modal
-                animationType="slide"
+                animationType="fade"
                 visible={modalVisible}
                 onRequestClose={() => {
                     setModalVisible(false);
@@ -141,8 +189,6 @@ const renderPlaceTypes = (placeTypes: PlaceType[]) => {
                             } else {
                                 preferenceIds.delete(item.id);
                             }
-
-                            console.log(preferenceIds);
                         }}
 					/>
                 </View>
@@ -152,6 +198,10 @@ const renderPlaceTypes = (placeTypes: PlaceType[]) => {
 }
 
 const style = StyleSheet.create({
+    successMessage: {
+        color: "green",
+        fontSize: 20
+    },
     rootContainer: {
         height: "90%",
         justifyContent: "center",

@@ -1,3 +1,5 @@
+import { User } from "../models/user";
+
 export class AuthService {
     private serverPrefix: string;
 
@@ -37,5 +39,24 @@ export class AuthService {
 
         const response = await fetch(this.serverPrefix + "/logout")
         console.log("STATUS:", response.status);
+    }
+
+    public async register(payload: User) {
+        const headers = new Headers();
+        headers.set("Content-Type", "application/json");
+
+        const options: RequestInit = {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(payload)
+        }
+
+        const response = await fetch(this.serverPrefix + "/user/register", options);
+        if(response.status !== 200 && response.status !== 201) {
+            // Error registering a user.
+            throw Error(response.status + "");
+        }
+        
+        return response;
     }
 }
