@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight, DimensionValue } from "react-native";
 import { BRAND_RED } from "../constants/colors";
 import Logo from "./Logo";
 import { useState } from "react";
@@ -10,6 +10,8 @@ type LokatorButtonProps = {
     fontSize?: number;
     padding?: "wide" | "normal";
     textValue: string;
+    width?: DimensionValue
+    height?: DimensionValue
 }
 
 export default function LokatorButton(props: LokatorButtonProps) {
@@ -35,7 +37,9 @@ export default function LokatorButton(props: LokatorButtonProps) {
             paddingTop: "1.5%",
             paddingBottom: "1.5%",
             paddingRight: props.padding ? (props.padding === "normal" ? "4%" : "6%") : "4%",
-            borderRadius: 8
+            borderRadius: 8,
+            width: props.width ? props.width : "auto",
+            height: props.height ? props.height : "auto"
         },
         contentContainer: {
             flexDirection: "row",

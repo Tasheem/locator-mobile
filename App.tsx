@@ -14,7 +14,6 @@ import { Room } from "./app/models/room";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-
 export default function App() {
 	const [user, setUser] = useState<User | null>(null);
 	
@@ -42,11 +41,6 @@ export default function App() {
 						<Stack.Screen name="Rooms" component={ RoomsScreen }
 						options={{
 							/* headerTitle: () => <Logo height={30} width={30} />, */
-							headerLeft: () => {
-								return (
-									<LokatorButton type="Secondary" textValue="New Room" handler={() => {}} />
-								);
-							},
 							headerRight: () => {
 								return (
 									<LokatorButton type="Secondary" textValue="Log Out" handler={() => {

@@ -61,7 +61,7 @@ const login = async (username: string, password: string) => {
     
     const options: RequestInit = {
         method: "POST",
-        headers:{
+        headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
