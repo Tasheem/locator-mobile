@@ -41,7 +41,7 @@ export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
                         <Logo height={50} width={50} />
                         <View style={ styles.descriptionContainer }>
                             <Text style={ styles.description }>{ itemInfo.item.name }</Text>
-                            <Text style={ styles.description }>{ itemInfo.item.members.length }</Text>
+                            <Text style={ styles.description }>Participants: { itemInfo.item.members.length }</Text>
                         </View>
                     </View>
                 </TouchableHighlight>

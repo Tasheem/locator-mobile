@@ -57,9 +57,9 @@ export default function App() {
 						}} />
 	
 						<Stack.Screen name="RoomDetails" component={ RoomDetailsScreen }
-						options={{
-							title: 'Room'
-						}} />
+						options={(options) => ({
+							title: options.route.params.room.name
+						})} />
 					</Stack.Navigator>
 				) : (
 					<Stack.Navigator initialRouteName="Login">
@@ -75,13 +75,14 @@ export default function App() {
 }
 
 type RootStackParamList = {
-	Login: undefined;
-	Search: undefined;
-	Rooms: undefined;
+	Login: undefined
+	Search: undefined
+	Rooms: undefined
 	RoomDetails: {
 		room: Room
-	},
+	}
 	Register: undefined
+	Chat: undefined
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
 type RoomsNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;
