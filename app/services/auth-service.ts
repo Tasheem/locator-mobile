@@ -1,10 +1,10 @@
-import { Subject } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
 
 const serverPrefix = "http://localhost:8080/auth";
 
-const userSubject = new Subject<User | null>();
-const tokenSubject = new Subject<string | null>();
+const userSubject = new BehaviorSubject<User | null>(null);
+const tokenSubject = new BehaviorSubject<string | null>(null);
 
 const emitUser = (user: User | null) => {
     userSubject.next(user);

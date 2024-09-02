@@ -1,27 +1,52 @@
-import { SafeAreaView, View, StyleSheet, Text, TouchableHighlight } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TouchableHighlight, FlatList } from "react-native";
 import { RoomsNavigationProps } from "../../App";
 import Logo from "../components/Logo";
 import { CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
+import { useEffect, useState } from "react";
+import { User } from "../models/user";
+import { userObservable } from "../services/auth-service";
+import { Room } from "../models/room";
 
 export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
+    // const [user, setUser] = useState<User | null>(null);
+    const [rooms, setRooms] = useState<Room[]>([]);
+
+    
+    useEffect(() => {
+        const userSubscription = userObservable().subscribe((nextValue) => {
+            // setUser(nextValue);
+            setRooms(nextValue?.rooms ? nextValue.rooms : []);
+        });
+
+        return () => {
+            userSubscription.unsubscribe();
+        };
+    }, []);
+
     return (
         <SafeAreaView style={{flex: 1}}>
-            <TouchableHighlight 
-            onPress={() => {
-                navigationProps.navigation.navigate('RoomDetails', {
-                    roomId: 0
-                });
-            }} 
-            style={ styles.viewContainer } 
-            underlayColor={"red"}>
-                <View style={ styles.roomContainer }>
-                    <Logo height={50} width={50} />
-                    <View style={ styles.descriptionContainer }>
-                        <Text style={ styles.description }>Our Room</Text>
-                        <Text style={ styles.description }>Participants: 20</Text>
+            <FlatList
+            data={rooms}
+            keyExtractor={(item) => item.id + ""}
+            renderItem={(itemInfo) => (
+                <TouchableHighlight 
+                    onPress={() => {
+                        navigationProps.navigation.navigate("RoomDetails", {
+                            room: itemInfo.item
+                        });
+                    }} 
+                    style={ styles.viewContainer } 
+                    underlayColor={"red"}>
+                    <View style={ styles.roomContainer }>
+                        <Logo height={50} width={50} />
+                        <View style={ styles.descriptionContainer }>
+                            <Text style={ styles.description }>{ itemInfo.item.name }</Text>
+                            <Text style={ styles.description }>{ itemInfo.item.members.length }</Text>
+                        </View>
                     </View>
-                </View>
-            </TouchableHighlight>
+                </TouchableHighlight>
+            )}
+            />
         </SafeAreaView>
     );
 }

@@ -10,22 +10,23 @@ import { userObservable, logout } from "./app/services/auth-service";
 import RegisterScreen from "./app/screens/RegisterScreen";
 import { User } from "./app/models/user";
 import { useEffect, useState } from "react";
+import { Room } from "./app/models/room";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 
 export default function App() {
-	const [user, setUser] = useState<User | null>();
+	const [user, setUser] = useState<User | null>(null);
 	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
-			console.log("User emitted:", nextValue);
+			// console.log("User emitted:", nextValue);
 			setUser(nextValue);
 		});
 
 		return () => {
 			userSubscription.unsubscribe();
-		}
+		};
 	}, []);
 
 	return (
@@ -78,7 +79,7 @@ type RootStackParamList = {
 	Search: undefined;
 	Rooms: undefined;
 	RoomDetails: {
-		roomId: number
+		room: Room
 	},
 	Register: undefined
 };
