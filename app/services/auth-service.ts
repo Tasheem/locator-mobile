@@ -1,16 +1,47 @@
 import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const serverPrefix = "http://localhost:8080/auth";
-
 const userSubject = new BehaviorSubject<User | null>(null);
 const tokenSubject = new BehaviorSubject<string | null>(null);
 
+AsyncStorage.getItem("user")
+.then((item) => {
+    if(!item) {
+        return;
+    }
+
+    const user = JSON.parse(item) as User;
+    userSubject.next(user);
+});
+
+AsyncStorage.getItem("bearerToken")
+.then((token) => {
+    if(!token) {
+        return;
+    }
+
+    tokenSubject.next(token);
+});
+
 const emitUser = (user: User | null) => {
+    if(user) {
+        AsyncStorage.setItem("user", JSON.stringify(user));
+    } else {
+        AsyncStorage.removeItem("user");
+    }
+
     userSubject.next(user);
 }
 
 const emitToken = (token: string | null) => {
+    if(token) {
+        AsyncStorage.setItem("bearerToken", token);
+    } else {
+        AsyncStorage.removeItem("bearerToken");
+    }
+
     tokenSubject.next(token);
 }
 
