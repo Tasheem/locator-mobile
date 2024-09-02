@@ -4,32 +4,41 @@ export class AuthService {
     private serverPrefix: string;
 
     constructor() {
-        this.serverPrefix = "http://localhost:8080";
+        this.serverPrefix = "http://localhost:8080/auth";
     }
 
-    public async login(username: string, password: string, setUserToken: React.Dispatch<React.SetStateAction<string | null>>) {
+    public async login(username: string, password: string) {
+        const payload = {
+            "username": username,
+            "password": password,
+        };
+        
         const options: RequestInit = {
             method: "POST",
             headers:{
-                "Content-Type": "application/x-www-form-urlencoded"
-            },    
-            body: new URLSearchParams({
-                "username": username,
-                "password": password,
-                "grant_type": "password"
-            }).toString()
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
         };
 
-        console.log(options.body);
+        console.log(payload);
 
         const response = await fetch(this.serverPrefix + "/login", options);
         console.log("STATUS:", response.status);
         console.log("Headers:", response.headers);
         if(response.status === 200) {
-            const jSessionID = response.headers.get("set-cookie");
-            console.log("JSessionID:", jSessionID);
-            setUserToken(jSessionID);
+            const token = response.headers.get("authorization");
+            console.log("JSessionID:", token);
+
+            const user = await response.json() as User;
+
+            return {
+                authToken: token,
+                user: user
+            }
         }
+
+        throw new Error();
     }
 
     public async logout() {

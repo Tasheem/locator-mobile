@@ -4,22 +4,32 @@ import LokatorButton from "../components/LokatorButton";
 import Logo from "../components/Logo";
 import { useState } from "react";
 import { AuthService } from "../services/auth-service";
+import { User } from "../models/user";
 
-type LoginProps = {
-    setUserToken: React.Dispatch<React.SetStateAction<string | null>>
-}
-
-export default function LoginScreen(navigationProp: LoginNavigationProps, loginProps: LoginProps) {
+export default function LoginScreen(navigationProp: LoginNavigationProps) {
     // TODO: Need to figure out how React does dependency injection.
     const authService = new AuthService();
+    const setUser = navigationProp.route.params.setUser;
+    const setAuthToken = navigationProp.route.params.setAuthToken;
 
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
 
     return (
         <View style={styles.formContainer}>
             <Logo height={100} width={100} />
+            
+            {
+                error && !isLoggingIn ? (
+                    <View>
+                        <Text style={{
+                            color: "red"
+                        }}>Incorrect username/password.</Text>
+                    </View>
+                ) : null
+            }
             <ActivityIndicator 
 				animating={isLoggingIn}
 				color={brandColor}
@@ -45,8 +55,20 @@ export default function LoginScreen(navigationProp: LoginNavigationProps, loginP
                     setIsLoggingIn(true);
                     console.log("username:", username);
                     console.log("password:", password);
-                    await authService.login(username, password, navigationProp.route.params.setUserToken);
-                    setIsLoggingIn(false);
+
+                    try {
+                        const result = await authService.login(username, password);
+                        if(result) {
+                            //console.log("------------------------- Printing login() Result -------------------------", result);
+                            setUser(result.user);
+                            setAuthToken(result.authToken);
+                        }
+                    } catch (error: any) {
+                        setError(true);
+                        console.log(error);
+                    } finally {
+                        setIsLoggingIn(false);
+                    }
                 }} 
                 type="Primary"
                 fontSize={20} 
