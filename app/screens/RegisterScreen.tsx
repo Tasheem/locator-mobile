@@ -6,13 +6,12 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import LokatorButton from "../components/LokatorButton";
 import { fetchPlaceTypes } from "../services/places-service";
 import { User } from "../models/user";
-import { AuthService } from "../services/auth-service";
+import { register } from "../services/auth-service";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 
 // This set contains the ids of the preferences the user has selected.
 const preferenceIds = new Set<number>();
-const authService = new AuthService();
 
 type PageProps = {
     navigation: NativeStackNavigationProp<RootStackParamList, "Register">
@@ -80,7 +79,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
         }
 
         try {
-            await authService.register(payload);
+            await register(payload);
             
             setDisplayingSuccess(true);
             setTimeout(() => {

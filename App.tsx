@@ -1,32 +1,37 @@
 import { StatusBar } from "expo-status-bar";
 import LoginComponent from "./app/screens/LoginScreen";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import YelpAPIComponent from "./app/screens/SearchScreen";
 import RoomsScreen from "./app/screens/RoomsScreen";
-import Logo from "./app/components/Logo";
-import { Button, TouchableHighlight } from "react-native";
 import LokatorButton from "./app/components/LokatorButton";
 import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
 import { BRAND_RED } from "./app/constants/colors";
-import { useState } from "react";
-import { AuthService } from "./app/services/auth-service";
+import { userObservable, logout } from "./app/services/auth-service";
 import RegisterScreen from "./app/screens/RegisterScreen";
 import { User } from "./app/models/user";
+import { useEffect, useState } from "react";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const authService = new AuthService();
+
 
 export default function App() {
-	const [authToken, setAuthToken] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [isSignout, setIsSignout] = useState<boolean>(false);
-	const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<User | null>();
+	
+	useEffect(() => {
+		const userSubscription = userObservable().subscribe((nextValue) => {
+			console.log("User emitted:", nextValue);
+			setUser(nextValue);
+		});
+
+		return () => {
+			userSubscription.unsubscribe();
+		}
+	}, []);
 
 	return (
 		<NavigationContainer>
 			{
-				authToken ? (
+				user ? (
 					<Stack.Navigator initialRouteName="Rooms"
 					screenOptions={{
 						headerTitleStyle: {
@@ -43,8 +48,8 @@ export default function App() {
 							},
 							headerRight: () => {
 								return (
-									<LokatorButton type="Secondary" textValue="Log Out" handler={async () => {
-										setAuthToken(null);
+									<LokatorButton type="Secondary" textValue="Log Out" handler={() => {
+										logout();
 									}} />
 								);
 							}
@@ -57,10 +62,7 @@ export default function App() {
 					</Stack.Navigator>
 				) : (
 					<Stack.Navigator initialRouteName="Login">
-						<Stack.Screen name="Login" component={LoginComponent} initialParams={{
-							setAuthToken: setAuthToken,
-							setUser: setUser
-						}} />
+						<Stack.Screen name="Login" component={LoginComponent} />
 						<Stack.Screen name="Register" component={RegisterScreen} />
 					</Stack.Navigator>
 				)
@@ -72,10 +74,7 @@ export default function App() {
 }
 
 type RootStackParamList = {
-	Login: {
-		setAuthToken: React.Dispatch<React.SetStateAction<string | null>>
-		setUser: React.Dispatch<React.SetStateAction<User | null>>
-	};
+	Login: undefined;
 	Search: undefined;
 	Rooms: undefined;
 	RoomDetails: {

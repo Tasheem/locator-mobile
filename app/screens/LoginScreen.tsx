@@ -3,15 +3,9 @@ import { LoginNavigationProps } from "../../App";
 import LokatorButton from "../components/LokatorButton";
 import Logo from "../components/Logo";
 import { useState } from "react";
-import { AuthService } from "../services/auth-service";
-import { User } from "../models/user";
+import { login } from "../services/auth-service";
 
 export default function LoginScreen(navigationProp: LoginNavigationProps) {
-    // TODO: Need to figure out how React does dependency injection.
-    const authService = new AuthService();
-    const setUser = navigationProp.route.params.setUser;
-    const setAuthToken = navigationProp.route.params.setAuthToken;
-
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -57,12 +51,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
                     console.log("password:", password);
 
                     try {
-                        const result = await authService.login(username, password);
-                        if(result) {
-                            //console.log("------------------------- Printing login() Result -------------------------", result);
-                            setUser(result.user);
-                            setAuthToken(result.authToken);
-                        }
+                        await login(username, password);
                     } catch (error: any) {
                         setError(true);
                         console.log(error);
