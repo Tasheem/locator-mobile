@@ -52,7 +52,8 @@ export default function App() {
 	
 						<Stack.Screen name="RoomDetails" component={ RoomDetailsScreen }
 						options={(options) => ({
-							title: options.route.params.room.name
+							title: options.route.params.room.name,
+							headerTintColor: BRAND_RED
 						})} />
 					</Stack.Navigator>
 				) : (

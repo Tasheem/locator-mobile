@@ -4,6 +4,7 @@ import LokatorButton from "../components/LokatorButton";
 import Logo from "../components/Logo";
 import { useState } from "react";
 import { login } from "../services/auth-service";
+import { BRAND_RED } from "../constants/colors";
 
 export default function LoginScreen(navigationProp: LoginNavigationProps) {
     const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -65,7 +66,8 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
                 textValue="Login"
             />
 
-            <Button title="Register" 
+            <Button title="Register"
+                color={BRAND_RED}
                 onPress={() => {
                     navigationProp.navigation.navigate("Register");
                 }}
