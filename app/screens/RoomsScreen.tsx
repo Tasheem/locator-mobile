@@ -7,7 +7,7 @@ import { User } from "../models/user";
 import { userObservable } from "../services/auth-service";
 import { Room } from "../models/room";
 import LokatorButton from "../components/LokatorButton";
-import { createRoom } from "../services/room-service";
+import { createRoom, getRoomsForUser } from "../services/room-service";
 import { requestUser } from "../services/user-service";
 
 export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
@@ -19,14 +19,16 @@ export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
     const [isError, setIsError] = useState(false);
     
     useEffect(() => {
-        const userSubscription = userObservable().subscribe((nextValue) => {
-            // setUser(nextValue);
-            setRooms(nextValue?.rooms ? nextValue.rooms : []);
+        getRoomsForUser()
+        .then(response => {
+            return response.json() as Promise<Room[]>;
+        })
+        .then(rooms => {
+            setRooms(rooms);
+        })
+        .catch(err => {
+            setRooms([]);
         });
-
-        return () => {
-            userSubscription.unsubscribe();
-        };
     }, []);
 
     return (

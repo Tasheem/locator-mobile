@@ -32,6 +32,17 @@ const createRoom = async (roomName: string) => {
     return fetch(serverPrefix, options);
 }
 
+const getRoomsForUser = async () => {
+    const token = await AsyncStorage.getItem("bearerToken");
+    const options = {
+        headers: {
+            "Authorization": token ? token : ""
+        }
+    }
+
+    return fetch(serverPrefix, options);
+}
+
 const getChatMessages = async (roomId: number) => {
     const token = await AsyncStorage.getItem("bearerToken");
 
@@ -63,4 +74,4 @@ const disconnectChat = () => {
     stompClient.deactivate();
 }
 
-export { createRoom, establishChatConnection, disconnectChat, chatObservable, getChatMessages }
+export { createRoom, establishChatConnection, disconnectChat, chatObservable, getChatMessages, getRoomsForUser }
