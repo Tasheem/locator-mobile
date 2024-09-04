@@ -44,7 +44,8 @@ export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
                     <TouchableHighlight 
                         onPress={() => {
                             navigationProps.navigation.navigate("RoomDetails", {
-                                room: itemInfo.item
+                                room: itemInfo.item,
+                                user: navigationProps.route.params.user
                             });
                         }} 
                         style={ styles.viewContainer } 

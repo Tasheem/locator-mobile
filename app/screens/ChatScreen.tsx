@@ -1,24 +1,48 @@
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
-import renderImage from "../utils/renderImage";
 import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
+import { useContext, useEffect, useState } from "react";
+import { Chat } from "../models/room";
+import { chatObservable, disconnectChat, establishChatConnection, getChatMessages } from "../services/room-service";
 import { RootStackParamList } from "../../App";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useContext } from "react";
-import { RoomContext } from "./RoomDetailsScreen";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RouteProp } from "@react-navigation/native";
+import { RoomDetailsParamList } from "./RoomDetailsScreen";
+import moment from "moment";
 
-export default function ChatScreen() {
-    const room = useContext(RoomContext);
+type Props = {
+    navigation: NativeStackNavigationProp<RoomDetailsParamList, "Chat", undefined>
+    route: RouteProp<RoomDetailsParamList, "Chat">
+}
 
-    const messages = [1, 2];
-    console.log("Room:", room);
+export default function ChatScreen({ route }: Props) {
+    const room = route.params.room;
+    const user = route.params.user;
+    const [messages, setMessages] = useState<Chat[]>([]);
+    
+    useEffect(() => {
+        getChatMessages(room.id)
+        .then(response => response.json())
+        .then((chats: Chat[]) => {
+            setMessages(chats);
+        });
+
+        establishChatConnection(room.id);
+        chatObservable().subscribe((newMessage) => {
+            setMessages([...messages, newMessage]);
+        });
+
+        return () => {
+            disconnectChat();
+        }
+    }, []);
 
     return (
         <FlatList
             data={messages}
             style={style.container}
             renderItem={({ item }) => (
-                <View style={item === 1 ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}>
-                    <View style={item === 1 ? [style.imageContainer, style.redImageContainer] : style.imageContainer}>
+                <View style={item.source.id === user?.id ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}>
+                    <View style={item.source.id === user?.id ? [style.imageContainer, style.redImageContainer] : style.imageContainer}>
                         <Image source={require("../assets/no-profile-pic.png")}
                         style={{
                             width: 50,
@@ -29,17 +53,24 @@ export default function ChatScreen() {
                         }} />
                     </View>
                     <View style={style.textContainer}>
-                        <View style={item === 1 ? [style.messageDetailsContainer, style.redDetailsContainer] : style.messageDetailsContainer}>
-                            <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
-                                {item === 1 ? "Tasheem Hargrove" : "John Doe"}
-                            </Text>
-                            <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
-                                {item === 1 ? "Yesterday 11:14pm" : "Today 8:23am"}
-                            </Text>
+                        <View style={item.source.id === user?.id ? [style.messageDetailsContainer, style.redDetailsContainer] : style.messageDetailsContainer}>
+                            <View style={style.nameContainer}>
+                                <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
+                                    { item.source.username }
+                                </Text>
+                            </View>
+                            <View style={style.dateContainer}>
+                                <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
+                                    { moment(item.createDate).format("MMM Do YYYY").toString() }
+                                </Text>
+                                <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
+                                    { moment(item.createDate).format("h:mm:ss a").toString() }
+                                </Text>
+                            </View>
                         </View>
                         <View style={style.messageContentsContainer}>
-                            <Text style={item === 1 ? [style.text, style.whiteText] : style.text}>
-                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Rerum a perspiciatis consequuntur veritatis est vero fugit officia, doloremque numquam ex, nesciunt cum incidunt inventore corrupti molestias repellat dolore tempora rem?
+                            <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
+                                { item.message }
                             </Text>
                         </View>
                     </View>
@@ -77,7 +108,8 @@ const style = StyleSheet.create({
         borderRightColor: CARD_RED_SECONDARY_COLOR
     },
     textContainer: {
-        flex: 1
+        flex: 1,
+        flexGrow: 1
     },
     text: {
         color: "black",
@@ -92,7 +124,16 @@ const style = StyleSheet.create({
         borderBottomColor: CARD_SECONDARY_COLOR,
         borderBottomWidth: 2,
         paddingLeft: 5,
-        paddingRight: 5
+        paddingRight: 5,
+        flexWrap: "wrap",
+        flex: 1
+    },
+    nameContainer: {
+        flex: 1
+    },
+    dateContainer: {
+        flex: 1,
+        alignItems: "flex-end"
     },
     redDetailsContainer: {
         borderBottomColor: CARD_RED_SECONDARY_COLOR
@@ -102,5 +143,3 @@ const style = StyleSheet.create({
         paddingRight: 5
     }
 });
-
-type Props = NativeStackScreenProps<RootStackParamList, "RoomDetails">;

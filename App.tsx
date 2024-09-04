@@ -38,7 +38,9 @@ export default function App() {
 							color: BRAND_RED
 						}
 					}}>
-						<Stack.Screen name="Rooms" component={ RoomsScreen }
+						<Stack.Screen name="Rooms" component={ RoomsScreen } initialParams={{
+							user: user
+						}}
 						options={{
 							/* headerTitle: () => <Logo height={30} width={30} />, */
 							headerRight: () => {
@@ -72,12 +74,14 @@ export default function App() {
 type RootStackParamList = {
 	Login: undefined
 	Search: undefined
-	Rooms: undefined
+	Rooms: {
+		user: User
+	}
 	RoomDetails: {
-		room: Room
+		room: Room,
+		user: User
 	}
 	Register: undefined
-	Chat: undefined
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
 type RoomsNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;
