@@ -3,8 +3,6 @@ import { RoomsNavigationProps } from "../../App";
 import Logo from "../components/Logo";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import { useEffect, useState } from "react";
-import { User } from "../models/user";
-import { userObservable } from "../services/auth-service";
 import { Room } from "../models/room";
 import LokatorButton from "../components/LokatorButton";
 import { createRoom, getRoomsForUser } from "../services/room-service";

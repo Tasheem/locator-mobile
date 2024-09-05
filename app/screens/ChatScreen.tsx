@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, FlatList, ScrollView, TextInput, ActivityIndicator } from "react-native";
 import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from "../constants/colors";
 import { useContext, useEffect, useState } from "react";
 import { Chat } from "../models/room";
@@ -23,8 +23,10 @@ export default function ChatScreen({ route }: Props) {
     const user = route.params.user;
     const [messages, setMessages] = useState<Chat[]>([]);
     const [userMessage, setUserMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     
     useEffect(() => {
+        setIsLoading(true);
         getChatMessages(room.id)
         .then(response => response.json())
         .then((chats: Chat[]) => {
@@ -34,6 +36,9 @@ export default function ChatScreen({ route }: Props) {
             for(let chat of chats) {
                 messagesRef.messages.push(chat);
             }
+        })
+        .finally(() => {
+            setIsLoading(false);
         });
 
         establishChatConnection(room.id);
@@ -91,6 +96,10 @@ export default function ChatScreen({ route }: Props) {
 
     return (
         <View style={style.rootContainer}>
+            <ActivityIndicator 
+                animating={isLoading}
+                color={BRAND_RED}
+            />
             <ScrollView>
                 { renderedElements }
             </ScrollView>
