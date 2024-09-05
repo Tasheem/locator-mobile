@@ -1,11 +1,11 @@
 type Photo = {
-	name: string;
-	heightPx: number;
-	widthPx: number;
+	name: string
+	heightPx: number
+	widthPx: number
 };
 
 type LocalizedText = {
-	text: string;
+	text: string
 	languageCode: string
 }
 
@@ -14,15 +14,15 @@ type OpeningHours = {
 }
 
 type Place = {
-	id: string;
-	types: string[];
-	nationalPhoneNumber: string;
-	formattedAddress: string;
-	displayName: LocalizedText;
-	primaryTypeDisplayName: LocalizedText;
-	currentOpeningHours: OpeningHours;
-	primaryType: string;
-	photos?: Photo[];
+	id: string
+	nationalPhoneNumber: string
+	formattedAddress: string
+	displayName: LocalizedText
+	primaryTypeDisplayName: LocalizedText
+	currentOpeningHours: OpeningHours
+	primaryType: string
+	photos?: Photo[]
+	matchPercentage: number
 };
 
 type SearchResponse = {
