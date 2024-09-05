@@ -54,6 +54,22 @@ const getChatMessages = async (roomId: number) => {
     return fetch(`${serverPrefix}/id/${roomId}/chat`, options);
 }
 
+const sendChatMessage = async (message: string, roomId: number) => {
+    const token = await AsyncStorage.getItem("bearerToken");
+
+    const options = {
+        method: "POST",
+        headers: {
+            "Authorization": token ? token : "",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "message": message
+        })
+    } as RequestInit;
+    return fetch(`${serverPrefix}/id/${roomId}/chat`, options);
+}
+
 const establishChatConnection = (roomId: number) => {
     AsyncStorage.getItem("bearerToken")
     .then(token => {
@@ -85,4 +101,4 @@ const disconnectChat = () => {
     stompClient.client?.deactivate();
 }
 
-export { createRoom, establishChatConnection, disconnectChat, chatObservable, getChatMessages, getRoomsForUser }
+export { createRoom, establishChatConnection, disconnectChat, chatObservable, getChatMessages, getRoomsForUser, sendChatMessage }
