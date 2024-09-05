@@ -11,9 +11,9 @@ const chatObservable = () => {
     return chatSubject.asObservable();
 }
 
-const stompClient = new Client({
-    brokerURL: socketUrl
-});
+const stompClient: {
+    client?: Client
+} = {}
 
 const createRoom = async (roomName: string) => {
     const token = await AsyncStorage.getItem("bearerToken");
@@ -50,28 +50,39 @@ const getChatMessages = async (roomId: number) => {
         headers: {
             "Authorization": token ? token : ""
         }
-    }
-
+    };
     return fetch(`${serverPrefix}/id/${roomId}/chat`, options);
 }
 
 const establishChatConnection = (roomId: number) => {
-    stompClient.activate();
-
-    stompClient.onConnect = (frame) => {
-        console.log("Connected:", frame);
-    
-        stompClient.subscribe("/topic/room/" + roomId, (message) => {
-            const chatMessage = JSON.parse(message.body) as Chat;
-            console.log(chatMessage);
-
-            chatSubject.next(chatMessage);
+    AsyncStorage.getItem("bearerToken")
+    .then(token => {
+        stompClient.client = new Client({
+            brokerURL: socketUrl,
+            connectHeaders: {
+                "Authorization": token ? token : ""
+            },
+            forceBinaryWSFrames: true,
+            appendMissingNULLonIncoming: true,
+            logRawCommunication: true
         });
-    };
+
+        stompClient.client.onConnect = (frame) => {
+            stompClient.client?.subscribe("/topic/room/" + roomId, (message) => {
+                const chatMessage = JSON.parse(message.body) as Chat;
+                console.log(chatMessage);
+                
+                chatSubject.next(chatMessage);
+            });
+        };
+        
+        stompClient.client.activate();
+    });
 }
 
 const disconnectChat = () => {
-    stompClient.deactivate();
+    // console.log("Deactivating Chat...");
+    stompClient.client?.deactivate();
 }
 
 export { createRoom, establishChatConnection, disconnectChat, chatObservable, getChatMessages, getRoomsForUser }

@@ -11,6 +11,9 @@ import RegisterScreen from "./app/screens/RegisterScreen";
 import { User } from "./app/models/user";
 import { useEffect, useState } from "react";
 import { Room } from "./app/models/room";
+import * as encoding from "text-encoding" // Needed for stompjs library
+
+global.TextEncoder = encoding.TextEncoder
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

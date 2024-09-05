@@ -14,6 +14,10 @@ type Props = {
     route: RouteProp<RoomDetailsParamList, "Chat">
 }
 
+const messagesRef = {
+    messages: [] as Chat[]
+};
+
 export default function ChatScreen({ route }: Props) {
     const room = route.params.room;
     const user = route.params.user;
@@ -24,14 +28,23 @@ export default function ChatScreen({ route }: Props) {
         .then(response => response.json())
         .then((chats: Chat[]) => {
             setMessages(chats);
+
+            messagesRef.messages = [];
+            for(let chat of chats) {
+                messagesRef.messages.push(chat);
+            }
         });
 
         establishChatConnection(room.id);
-        chatObservable().subscribe((newMessage) => {
-            setMessages([...messages, newMessage]);
+        const chatSubscription = chatObservable().subscribe((newMessage) => {
+            const newArray = [...messagesRef.messages, newMessage];
+            setMessages(newArray);
+
+            messagesRef.messages = newArray;
         });
 
         return () => {
+            chatSubscription.unsubscribe();
             disconnectChat();
         }
     }, []);
