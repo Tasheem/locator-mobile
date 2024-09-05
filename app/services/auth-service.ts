@@ -1,59 +1,7 @@
-import { BehaviorSubject } from "rxjs";
 import { User } from "../models/user";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { emitToken, emitUser, sendRequest } from "../utils/requestUtil";
 
 const serverPrefix = "http://localhost:8080/auth";
-const userSubject = new BehaviorSubject<User | null>(null);
-const tokenSubject = new BehaviorSubject<string | null>(null);
-
-AsyncStorage.getItem("user")
-.then((item) => {
-    if(!item) {
-        return;
-    }
-
-    const user = JSON.parse(item) as User;
-    userSubject.next(user);
-});
-
-AsyncStorage.getItem("bearerToken")
-.then((token) => {
-    if(!token) {
-        return;
-    }
-
-    tokenSubject.next(token);
-});
-
-const emitUser = (user: User | null) => {
-    if(user) {
-        AsyncStorage.setItem("user", JSON.stringify(user));
-    } else {
-        AsyncStorage.removeItem("user");
-    }
-
-    userSubject.next(user);
-}
-
-const emitToken = (token: string | null) => {
-    console.log("Emit Token:", token);
-    if(token) {
-        AsyncStorage.setItem("bearerToken", token);
-    } else {
-        AsyncStorage.removeItem("bearerToken");
-    }
-
-    tokenSubject.next(token);
-}
-
-const userObservable = () => {
-    return userSubject.asObservable();
-}
-
-const tokenObservable = () => {
-    return tokenSubject.asObservable();
-}
-
 const login = async (username: string, password: string) => {
     const payload = {
         "username": username,
@@ -70,7 +18,7 @@ const login = async (username: string, password: string) => {
 
     console.log(payload);
 
-    const response = await fetch(serverPrefix + "/login", options);
+    const response = await sendRequest(serverPrefix + "/login", options);
     /* console.log("STATUS:", response.status);
     console.log("Headers:", response.headers); */
     if(response.status === 200) {
@@ -104,7 +52,7 @@ const register = async (payload: User) => {
         body: JSON.stringify(payload)
     }
 
-    const response = await fetch(serverPrefix + "/user/register", options);
+    const response = await sendRequest(serverPrefix + "/user/register", options);
     if(response.status !== 200 && response.status !== 201) {
         // Error registering a user.
         throw Error(response.status + "");
@@ -113,4 +61,4 @@ const register = async (payload: User) => {
     return response;
 }
 
-export { userObservable, tokenObservable, emitUser, emitToken, login, logout, register };
+export { login, logout, register };

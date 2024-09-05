@@ -1,5 +1,6 @@
-import { Place, SearchResponse } from "../models/google-places-api";
+import { SearchResponse } from "../models/google-places-api";
 import { PlaceType } from "../models/lokator-place-type";
+import { sendRequest } from "../utils/requestUtil";
 
 export const apiKey = "";
 
@@ -29,7 +30,7 @@ export async function fetchPlaces() {
 
 	let data: SearchResponse | null = null;
 	try {
-		const response = await fetch(url, {
+		const response = await sendRequest(url, {
 			method: "POST",
 			headers: headers,
 			body: body
@@ -45,7 +46,7 @@ export async function fetchPlaces() {
 const host = "http://localhost:8080"
 export async function fetchPlaceTypes() {
 	const uri = host + "/places/type";
-	const response = await fetch(uri);
+	const response = await sendRequest(uri);
 
 	if(!response.ok) {
 		console.log(response);

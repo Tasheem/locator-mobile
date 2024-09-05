@@ -6,12 +6,13 @@ import RoomsScreen from "./app/screens/RoomsScreen";
 import LokatorButton from "./app/components/LokatorButton";
 import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
 import { BRAND_RED } from "./app/constants/colors";
-import { userObservable, logout } from "./app/services/auth-service";
+import { logout } from "./app/services/auth-service";
 import RegisterScreen from "./app/screens/RegisterScreen";
 import { User } from "./app/models/user";
 import { useEffect, useState } from "react";
 import { Room } from "./app/models/room";
 import * as encoding from "text-encoding" // Needed for stompjs library
+import { userObservable } from "./app/utils/requestUtil";
 
 global.TextEncoder = encoding.TextEncoder
 

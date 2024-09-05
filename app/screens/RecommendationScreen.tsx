@@ -11,7 +11,7 @@ export default function RecommendationScreen() {
     const [places, setPlaces] = useState<Place[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
+    /* useEffect(() => {
         setIsLoading(true);
         fetchPlaces()
         .then(results => {
@@ -20,7 +20,7 @@ export default function RecommendationScreen() {
         .finally(() => {
             setIsLoading(false);
         });
-    }, []);
+    }, []); */
     
     /* useEffect(() => {
         console.log(`Number of places: ${places.length}`);

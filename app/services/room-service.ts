@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Client } from "@stomp/stompjs";
 import { Chat } from "../models/room";
 import { Subject } from "rxjs";
+import { sendRequest } from "../utils/requestUtil";
 
 const serverPrefix = "http://localhost:8080/room";
 const socketUrl = 'ws://localhost:8080/chat';
@@ -29,45 +30,29 @@ const createRoom = async (roomName: string) => {
         }
     };
 
-    return fetch(serverPrefix, options);
+    return sendRequest(serverPrefix, options);
 }
 
 const getRoomsForUser = async () => {
-    const token = await AsyncStorage.getItem("bearerToken");
-    const options = {
-        headers: {
-            "Authorization": token ? token : ""
-        }
-    }
-
-    return fetch(serverPrefix, options);
+    return sendRequest(serverPrefix);
 }
 
 const getChatMessages = async (roomId: number) => {
-    const token = await AsyncStorage.getItem("bearerToken");
-
-    const options = {
-        headers: {
-            "Authorization": token ? token : ""
-        }
-    };
-    return fetch(`${serverPrefix}/id/${roomId}/chat`, options);
+    return sendRequest(`${serverPrefix}/id/${roomId}/chat`);
 }
 
 const sendChatMessage = async (message: string, roomId: number) => {
-    const token = await AsyncStorage.getItem("bearerToken");
-
     const options = {
         method: "POST",
         headers: {
-            "Authorization": token ? token : "",
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
             "message": message
         })
     } as RequestInit;
-    return fetch(`${serverPrefix}/id/${roomId}/chat`, options);
+    
+    return sendRequest(`${serverPrefix}/id/${roomId}/chat`, options);
 }
 
 const establishChatConnection = (roomId: number) => {
