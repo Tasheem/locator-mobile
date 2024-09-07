@@ -17,15 +17,12 @@ const stompClient: {
 } = {}
 
 const createRoom = async (roomName: string) => {
-    const token = await AsyncStorage.getItem("bearerToken");
-
     const options = {
         method: "POST",
         body: JSON.stringify({
             "name": roomName
         }),
         headers: {
-            "Authorization": token ? token : "",
             "Content-Type": "application/json"
         }
     };
