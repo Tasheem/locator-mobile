@@ -1,39 +1,52 @@
 import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet } from "react-native";
 import renderImage from "../utils/renderImage";
 import { useEffect, useState } from "react";
-import { Place } from "../models/google-places-api";
+import { Place } from "../models/places";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { apiKey, fetchPlaces } from "../services/places-service";
 import { BRAND_RED } from "../constants/colors";
+import { fetchRecommendedPlaces } from "../services/recommendation-service";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RoomDetailsParamList } from "./RoomDetailsScreen";
+import { RouteProp } from "@react-navigation/native";
 
-export default function RecommendationScreen() {
+const apiKey = process.env.EXPO_PUBLIC_API_KEY;
+
+type Props = {
+    navigation: NativeStackNavigationProp<RoomDetailsParamList, "Recommendation", undefined>
+    route: RouteProp<RoomDetailsParamList, "Recommendation">
+}
+
+export default function RecommendationScreen({ route }: Props) {
+    const room = route.params.room;
+
     const [places, setPlaces] = useState<Place[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
-	useEffect(() => {
+	/* useEffect(() => {
 		setIsLoading(true);
 		setPlaces([]);
 		setTimeout(() => {
 			setPlaces(loadDummyData())
 			setIsLoading(false);
 		}, 500);
-	}, []);
+	}, []); */
 
-    /* useEffect(() => {
+    useEffect(() => {
         setIsLoading(true);
-        fetchPlaces()
-        .then(results => {
-            setPlaces(results ? results : []);
+        fetchRecommendedPlaces(room.id)
+        .then(res => res.json())
+        .then((places: Place[]) => {
+            setPlaces(places ? places : []);
         })
         .finally(() => {
             setIsLoading(false);
         });
-    }, []); */
+    }, []);
     
-    /* useEffect(() => {
+    useEffect(() => {
         console.log(`Number of places: ${places.length}`);
-        console.log(places);
-    }, [places]); */
+        // console.log(places);
+    }, [places]);
 
     return (
         <SafeAreaView>

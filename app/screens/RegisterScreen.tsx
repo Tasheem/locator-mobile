@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal, Alert } from "react-native";
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
-import { PlaceType } from "../models/lokator-place-type";
+import { PlaceType } from "../models/places";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import LokatorButton from "../components/LokatorButton";
 import { fetchPlaceTypes } from "../services/places-service";

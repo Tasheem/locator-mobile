@@ -1,8 +1,8 @@
-import { PlaceType } from "./lokator-place-type"
+import { PlaceType } from "./places"
 import { Room } from "./room"
 
 export type User = {
-    id: number
+    id?: number
     username: string
     password: string
     firstname: string

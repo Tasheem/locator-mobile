@@ -12,7 +12,9 @@ export type RoomDetailsParamList = {
         room: Room,
         user: User
     }
-    Recommendation: undefined
+    Recommendation: {
+        room: Room
+    }
 }
 const Tab = createMaterialTopTabNavigator<RoomDetailsParamList>();
 
@@ -35,7 +37,9 @@ export default function RoomDetailsScreen({ route }: Props) {
                 room: room,
                 user: user
             }} />
-            <Tab.Screen name="Recommendation" component={ RecommendationScreen } />
+            <Tab.Screen name="Recommendation" component={ RecommendationScreen } initialParams={{
+                room: room
+            }} />
         </Tab.Navigator>
     );
 }

@@ -1,3 +1,9 @@
+type PlaceType = {
+    id: number;
+    type: string;
+    displayName: string;
+}
+
 type Photo = {
 	name: string
 	heightPx: number
@@ -25,8 +31,4 @@ type Place = {
 	matchPercentage: number
 };
 
-type SearchResponse = {
-	places: Place[];
-}
-
-export { Place, Photo, SearchResponse };
+export { PlaceType, Place, Photo };
