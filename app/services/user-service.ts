@@ -14,4 +14,18 @@ const requestUser = async () => {
     return response;
 }
 
-export { requestUser }
+const searchUsers = async (searchTerm: string) => {
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "searchTerm": searchTerm
+        })
+    } as RequestInit
+
+    return sendRequest(serverPrefix + "/search", options);
+}
+
+export { requestUser, searchUsers }

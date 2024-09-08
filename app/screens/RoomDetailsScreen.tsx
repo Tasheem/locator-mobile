@@ -6,13 +6,17 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 import { Room } from "../models/room";
 import { User } from "../models/user";
+import ParticipantsScreen from "./ParticipantsScreen";
 
 export type RoomDetailsParamList = {
+    Participants: {
+        room: Room
+    },
     Chat: {
         room: Room,
         user: User
     }
-    Recommendation: {
+    Recommended: {
         room: Room
     }
 }
@@ -32,12 +36,14 @@ export default function RoomDetailsScreen({ route }: Props) {
                 color: BRAND_RED
             }
         }} >
-            {/* <Tab.Screen name="Participants" component={ ParticipantsScreen } /> */}
+            <Tab.Screen name="Participants" component={ ParticipantsScreen } initialParams={{
+                room: room
+            }} />
             <Tab.Screen name="Chat" component={ ChatScreen } initialParams={{
                 room: room,
                 user: user
             }} />
-            <Tab.Screen name="Recommendation" component={ RecommendationScreen } initialParams={{
+            <Tab.Screen name="Recommended" component={ RecommendationScreen } initialParams={{
                 room: room
             }} />
         </Tab.Navigator>

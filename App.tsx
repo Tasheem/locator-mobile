@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { Room } from "./app/models/room";
 import * as encoding from "text-encoding" // Needed for stompjs library
 import { userObservable } from "./app/utils/requestUtil";
+import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -33,45 +34,47 @@ export default function App() {
 	}, []);
 
 	return (
-		<NavigationContainer>
-			{
-				user ? (
-					<Stack.Navigator initialRouteName="Rooms"
-					screenOptions={{
-						headerTitleStyle: {
-							color: BRAND_RED
-						}
-					}}>
-						<Stack.Screen name="Rooms" component={ RoomsScreen } initialParams={{
-							user: user
-						}}
-						options={{
-							/* headerTitle: () => <Logo height={30} width={30} />, */
-							headerRight: () => {
-								return (
-									<LokatorButton type="Secondary" textValue="Log Out" handler={() => {
-										logout();
-									}} />
-								);
+		<AutocompleteDropdownContextProvider>
+			<NavigationContainer>
+				{
+					user ? (
+						<Stack.Navigator initialRouteName="Rooms"
+						screenOptions={{
+							headerTitleStyle: {
+								color: BRAND_RED
 							}
-						}} />
-	
-						<Stack.Screen name="RoomDetails" component={ RoomDetailsScreen }
-						options={(options) => ({
-							title: options.route.params.room.name,
-							headerTintColor: BRAND_RED
-						})} />
-					</Stack.Navigator>
-				) : (
-					<Stack.Navigator initialRouteName="Login">
-						<Stack.Screen name="Login" component={LoginComponent} />
-						<Stack.Screen name="Register" component={RegisterScreen} />
-					</Stack.Navigator>
-				)
-			}
-			
-			<StatusBar style="auto" />
-		</NavigationContainer>
+						}}>
+							<Stack.Screen name="Rooms" component={ RoomsScreen } initialParams={{
+								user: user
+							}}
+							options={{
+								/* headerTitle: () => <Logo height={30} width={30} />, */
+								headerRight: () => {
+									return (
+										<LokatorButton type="Secondary" textValue="Log Out" handler={() => {
+											logout();
+										}} />
+									);
+								}
+							}} />
+		
+							<Stack.Screen name="RoomDetails" component={ RoomDetailsScreen }
+							options={(options) => ({
+								title: options.route.params.room.name,
+								headerTintColor: BRAND_RED
+							})} />
+						</Stack.Navigator>
+					) : (
+						<Stack.Navigator initialRouteName="Login">
+							<Stack.Screen name="Login" component={LoginComponent} />
+							<Stack.Screen name="Register" component={RegisterScreen} />
+						</Stack.Navigator>
+					)
+				}
+				
+				<StatusBar style="auto" />
+			</NavigationContainer>
+		</AutocompleteDropdownContextProvider>
 	);
 }
 

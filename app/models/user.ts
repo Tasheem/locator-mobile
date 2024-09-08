@@ -11,3 +11,13 @@ export type User = {
     preferences: PlaceType[]
     rooms?: Room[]
 }
+
+export type UserSearchResult = {
+    id: number
+    username: string
+    firstname: string
+    lastname: string
+    usernameHighlight: string
+    firstnameHighlight: string
+    lastnameHighlight: string
+}

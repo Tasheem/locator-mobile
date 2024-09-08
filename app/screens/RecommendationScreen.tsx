@@ -12,8 +12,8 @@ import { RouteProp } from "@react-navigation/native";
 const apiKey = process.env.EXPO_PUBLIC_API_KEY;
 
 type Props = {
-    navigation: NativeStackNavigationProp<RoomDetailsParamList, "Recommendation", undefined>
-    route: RouteProp<RoomDetailsParamList, "Recommendation">
+    navigation: NativeStackNavigationProp<RoomDetailsParamList, "Recommended", undefined>
+    route: RouteProp<RoomDetailsParamList, "Recommended">
 }
 
 export default function RecommendationScreen({ route }: Props) {
