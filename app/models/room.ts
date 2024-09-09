@@ -15,4 +15,12 @@ type Chat = {
     room: Room
 }
 
-export { Room, Chat }
+type JoinRoom = {
+    id: number
+    targetRoom: Room
+    sourceUser: User
+    targetUser: User
+    createDate: string
+}
+
+export { Room, Chat, JoinRoom }

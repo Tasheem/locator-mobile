@@ -8,6 +8,7 @@ import { BRAND_RED } from "../constants/colors";
 import LokatorButton from "../components/LokatorButton";
 import { logout } from "../services/auth-service";
 import RoomDetailsScreen from "./RoomDetailsScreen";
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 type Props = {
     route: RouteProp<RootStackParamList, "Home">
@@ -20,7 +21,26 @@ export default function HomeScreen({ route }: Props) {
     const user = route.params.user;
 
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+        screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+  
+              if (route.name === 'RoomsStack') {
+                iconName = focused
+                  ? 'home'
+                  : 'home-outline';
+              } else {
+                iconName = focused ? 'notifications' : 'notifications-outline';
+              }
+  
+              // You can return any component that you like here!
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            tabBarActiveTintColor: 'tomato',
+            tabBarInactiveTintColor: 'gray',
+        })}
+        >
             <Tab.Screen name="RoomsStack" component={RoomsStack} initialParams={{
                 user: user
             }}
@@ -30,6 +50,8 @@ export default function HomeScreen({ route }: Props) {
             }} />
             <Tab.Screen name="Notifications" component={NotificationScreen} initialParams={{
                 user: user
+            }} options={{
+                headerTintColor: BRAND_RED
             }} />
         </Tab.Navigator>
     );
