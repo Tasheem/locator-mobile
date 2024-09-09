@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StyleSheet, View, Image, Text, FlatList, TextInput, Dimensions } from "react-native";
+import { StyleSheet, View, Image, Text, FlatList, TextInput, Dimensions, Alert } from "react-native";
 import { RoomDetailsParamList } from "./RoomDetailsScreen";
 import { RouteProp } from "@react-navigation/native";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { AutocompleteDropdown, AutocompleteDropdownItem, IAutocompleteDropdownRef } from "react-native-autocomplete-dropdown";
 import { searchUsers } from "../services/user-service";
 import { UserSearchResult } from "../models/user";
-import { disconnectParticipantsSocket, establishParticipantsConnection, participantsObservable } from "../services/room-service";
+import { disconnectParticipantsSocket, establishParticipantsConnection, participantsObservable, sendJoinRoomRequest } from "../services/room-service";
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, "Participants", undefined>
@@ -73,6 +73,35 @@ export default function ParticipantsScreen({ route }: Props) {
                         const userId = item?.id;
                         console.log("logging item");
                         console.log(item);
+
+                        if(item == null) {
+                            return;
+                        }
+
+                        const username = item?.title?.split(" ")[0];
+                        Alert.alert("Request", `Are you sure you want to send a request to ${username ? username : "this user"} to join this room?`,[
+                            {
+                                text: "No",
+                                onPress: () => console.log("Cancel Pressed"),
+                                style: "cancel",
+                            },
+                            {
+                                text: "Yes", 
+                                onPress: () => {
+                                    sendJoinRoomRequest(room.id, Number(userId))
+                                    .then((response) => {
+                                        if(response.status === 201) {
+                                            Alert.alert("Success", "The request has been sent successfully.");
+                                        } else {
+                                            Alert.alert("Error", "An error occurred while sending the request.");
+                                        }
+                                    })
+                                    .catch(() => {
+                                        Alert.alert("Error", "An error occurred while sending the request.");
+                                    });
+                                }
+                            }
+                        ])
                     }}
                     onClear={() => {
                         setSuggestions([]);

@@ -49,6 +49,21 @@ const getJoinRoomRequests = async () => {
     return sendRequest(`${serverPrefix}/join`);
 }
 
+const sendJoinRoomRequest = async (roomId: number, targetUserId: number) => {
+    const options = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "targetRoomId": roomId,
+            "targetUserId": targetUserId
+        })
+    } as RequestInit;
+
+    return sendRequest(`${serverPrefix}/join`, options);
+}
+
 const sendJoinRoomResponse = async (joinRequestId: number, accepted: boolean) => {
     const options = {
         method: "PATCH"
@@ -137,7 +152,8 @@ export {
     establishChatConnection, 
     disconnectChat, 
     chatObservable, 
-    getChatMessages, 
+    getChatMessages,
+    sendJoinRoomRequest,
     getJoinRoomRequests, 
     getRoomsForUser, 
     sendChatMessage,
