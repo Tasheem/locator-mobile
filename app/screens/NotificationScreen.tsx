@@ -2,10 +2,11 @@ import { NavigationProp, RouteProp } from "@react-navigation/native"
 import { StyleSheet, View, Text, FlatList, Image } from "react-native";
 import { RootStackParamList } from "../../App";
 import { useEffect, useState } from "react";
-import { getJoinRoomRequests } from "../services/room-service";
+import { getJoinRoomRequests, sendJoinRoomResponse } from "../services/room-service";
 import { JoinRoom } from "../models/room";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import LokatorButton from "../components/LokatorButton";
+import { Alert } from "react-native";
 
 type Props = {
     route: RouteProp<RootStackParamList, "Notifications">,
@@ -58,8 +59,40 @@ export default function NotificationScreen({ route, navigation }: Props) {
                             </View>
                         </View>
                         <View style={style.btnContainer}>
-                            <LokatorButton type="Secondary" textValue="Decline" handler={() => {}} />
-                            <LokatorButton type="Primary" textValue="Accept" handler={() => {}} />
+                            <LokatorButton type="Secondary" textValue="Decline" handler={() => {
+                                const errorTitle = "Error";
+                                const errorMessage = "Sorry. The action could not be completed.";
+
+                                sendJoinRoomResponse(item.id, false)
+                                .then((response) => {
+                                    if(response.status === 204 || response.status === 200) {
+                                        const updatedList = requests.filter((request) => request.id !== item.id);
+                                        setRequests(updatedList);
+                                    } else {
+                                        Alert.alert(errorTitle, errorMessage);
+                                    }
+                                })
+                                .catch(() => {
+                                    Alert.alert(errorTitle, errorMessage);
+                                });
+                            }} />
+                            <LokatorButton type="Primary" textValue="Accept" handler={() => {
+                                const errorTitle = "Error";
+                                const errorMessage = "Sorry. The action could not be completed.";
+
+                                sendJoinRoomResponse(item.id, true)
+                                .then((response) => {
+                                    if(response.status === 204 || response.status === 200) {
+                                        const updatedList = requests.filter((request) => request.id !== item.id);
+                                        setRequests(updatedList);
+                                    } else {
+                                        Alert.alert(errorTitle, errorMessage);
+                                    }
+                                })
+                                .catch(() => {
+                                    Alert.alert(errorTitle, errorMessage);
+                                });
+                            }} />
                         </View>
                     </View>
                 );

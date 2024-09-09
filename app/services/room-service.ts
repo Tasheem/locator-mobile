@@ -42,6 +42,14 @@ const getJoinRoomRequests = async () => {
     return sendRequest(`${serverPrefix}/join`);
 }
 
+const sendJoinRoomResponse = async (joinRequestId: number, accepted: boolean) => {
+    const options = {
+        method: "PATCH"
+    } as RequestInit;
+
+    return sendRequest(`${serverPrefix}/join/id/${joinRequestId}/accepted/${accepted}`, options);
+}
+
 const sendChatMessage = async (message: string, roomId: number) => {
     const options = {
         method: "POST",
@@ -87,4 +95,14 @@ const disconnectChat = () => {
     stompClient.client?.deactivate();
 }
 
-export { createRoom, establishChatConnection, disconnectChat, chatObservable, getChatMessages, getJoinRoomRequests, getRoomsForUser, sendChatMessage }
+export { 
+    createRoom, 
+    establishChatConnection, 
+    disconnectChat, 
+    chatObservable, 
+    getChatMessages, 
+    getJoinRoomRequests, 
+    getRoomsForUser, 
+    sendChatMessage,
+    sendJoinRoomResponse
+}
