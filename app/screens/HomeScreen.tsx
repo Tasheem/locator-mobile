@@ -37,7 +37,7 @@ export default function HomeScreen({ route }: Props) {
               // You can return any component that you like here!
               return <Ionicons name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: 'tomato',
+            tabBarActiveTintColor: BRAND_RED,
             tabBarInactiveTintColor: 'gray',
         })}
         >
