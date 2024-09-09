@@ -3,6 +3,7 @@ import { Client } from "@stomp/stompjs";
 import { Chat } from "../models/room";
 import { Subject } from "rxjs";
 import { sendRequest } from "../utils/requestUtil";
+import { User } from "../models/user";
 
 const serverPrefix = "http://localhost:8080/room";
 const socketUrl = 'ws://localhost:8080/chat';
@@ -12,8 +13,14 @@ const chatObservable = () => {
     return chatSubject.asObservable();
 }
 
+const participantsSubject = new Subject<User>();
+const participantsObservable = () => {
+    return participantsSubject.asObservable();
+}
+
 const stompClient: {
-    client?: Client
+    chatClient?: Client,
+    participantsClient?: Client
 } = {}
 
 const createRoom = async (roomName: string) => {
@@ -67,7 +74,7 @@ const sendChatMessage = async (message: string, roomId: number) => {
 const establishChatConnection = (roomId: number) => {
     AsyncStorage.getItem("bearerToken")
     .then(token => {
-        stompClient.client = new Client({
+        stompClient.chatClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
                 "Authorization": token ? token : ""
@@ -77,8 +84,8 @@ const establishChatConnection = (roomId: number) => {
             logRawCommunication: true
         });
 
-        stompClient.client.onConnect = (frame) => {
-            stompClient.client?.subscribe("/topic/room/" + roomId, (message) => {
+        stompClient.chatClient.onConnect = (frame) => {
+            stompClient.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
                 const chatMessage = JSON.parse(message.body) as Chat;
                 console.log(chatMessage);
                 
@@ -86,13 +93,43 @@ const establishChatConnection = (roomId: number) => {
             });
         };
         
-        stompClient.client.activate();
+        stompClient.chatClient.activate();
     });
 }
 
 const disconnectChat = () => {
     // console.log("Deactivating Chat...");
-    stompClient.client?.deactivate();
+    stompClient.chatClient?.deactivate();
+}
+
+const establishParticipantsConnection = (roomId: number) => {
+    AsyncStorage.getItem("bearerToken")
+    .then(token => {
+        stompClient.participantsClient = new Client({
+            brokerURL: socketUrl,
+            connectHeaders: {
+                "Authorization": token ? token : ""
+            },
+            forceBinaryWSFrames: true,
+            appendMissingNULLonIncoming: true,
+            logRawCommunication: true
+        });
+
+        stompClient.participantsClient.onConnect = (frame) => {
+            stompClient.participantsClient?.subscribe(`/topic/room/${roomId}/members`, (message) => {
+                const newMember = JSON.parse(message.body) as User;
+                console.log(newMember);
+                
+                participantsSubject.next(newMember);
+            });
+        };
+        
+        stompClient.participantsClient.activate();
+    });
+}
+
+const disconnectParticipantsSocket = () => {
+    stompClient.participantsClient?.deactivate();
 }
 
 export { 
@@ -104,5 +141,8 @@ export {
     getJoinRoomRequests, 
     getRoomsForUser, 
     sendChatMessage,
-    sendJoinRoomResponse
+    sendJoinRoomResponse,
+    establishParticipantsConnection,
+    participantsObservable,
+    disconnectParticipantsSocket
 }

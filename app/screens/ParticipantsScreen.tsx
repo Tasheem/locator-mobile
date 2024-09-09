@@ -4,10 +4,11 @@ import { RoomDetailsParamList } from "./RoomDetailsScreen";
 import { RouteProp } from "@react-navigation/native";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import LokatorButton from "../components/LokatorButton";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AutocompleteDropdown, AutocompleteDropdownItem, IAutocompleteDropdownRef } from "react-native-autocomplete-dropdown";
 import { searchUsers } from "../services/user-service";
 import { UserSearchResult } from "../models/user";
+import { disconnectParticipantsSocket, establishParticipantsConnection, participantsObservable } from "../services/room-service";
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, "Participants", undefined>
@@ -21,6 +22,20 @@ export default function ParticipantsScreen({ route }: Props) {
     const room = route.params.room;
     const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [members, setMembers] = useState(room.members);
+
+    useEffect(() => {
+        establishParticipantsConnection(room.id);
+        const subscription = participantsObservable().subscribe(newMember => {
+            const updatedList = [...members, newMember];
+            setMembers(updatedList);
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            disconnectParticipantsSocket();
+        }
+    }, []);
 
     return (
         <View style={style.rootContainer}>
@@ -97,7 +112,7 @@ export default function ParticipantsScreen({ route }: Props) {
             </View>
 
             <FlatList
-            data={room.members}
+            data={members}
             numColumns={2}
             keyExtractor={item => item.id + ""}
             contentContainerStyle={{
