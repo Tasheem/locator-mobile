@@ -2,11 +2,16 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import ChatScreen from "./ChatScreen";
 import RecommendationScreen from "./RecommendationScreen";
 import { BRAND_RED } from "../constants/colors";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
 import { Room } from "../models/room";
 import { User } from "../models/user";
 import ParticipantsScreen from "./ParticipantsScreen";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
+
+type Props = {
+    route: RouteProp<RootStackParamList, "RoomDetails">,
+    navigation: NavigationProp<RootStackParamList, "RoomDetails">
+}
 
 export type RoomDetailsParamList = {
     Participants: {
@@ -49,5 +54,3 @@ export default function RoomDetailsScreen({ route }: Props) {
         </Tab.Navigator>
     );
 }
-
-type Props = NativeStackScreenProps<RootStackParamList, "RoomDetails">;

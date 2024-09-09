@@ -1,5 +1,4 @@
 import { SafeAreaView, View, StyleSheet, Text, TouchableHighlight, FlatList, Modal, TextInput, ActivityIndicator } from "react-native";
-import { RoomsNavigationProps } from "../../App";
 import Logo from "../components/Logo";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import { useEffect, useState } from "react";
@@ -7,8 +6,15 @@ import { Room } from "../models/room";
 import LokatorButton from "../components/LokatorButton";
 import { createRoom, getRoomsForUser } from "../services/room-service";
 import { requestUser } from "../services/user-service";
+import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
 
-export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
+type Props = {
+    route: RouteProp<RootStackParamList, "Rooms">,
+    navigation: NavigationProp<RootStackParamList, "Rooms">
+}
+
+export default function RoomsScreen({ route, navigation }: Props) {
     // const [user, setUser] = useState<User | null>(null);
     const [rooms, setRooms] = useState<Room[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
@@ -43,9 +49,9 @@ export default function RoomsScreen(navigationProps: RoomsNavigationProps) {
                 renderItem={(itemInfo) => (
                     <TouchableHighlight 
                         onPress={() => {
-                            navigationProps.navigation.navigate("RoomDetails", {
+                            navigation.navigate("RoomDetails", {
                                 room: itemInfo.item,
-                                user: navigationProps.route.params.user
+                                user: route.params.user
                             });
                         }} 
                         style={ styles.viewContainer } 

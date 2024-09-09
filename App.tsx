@@ -2,11 +2,6 @@ import { StatusBar } from "expo-status-bar";
 import LoginComponent from "./app/screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import RoomsScreen from "./app/screens/RoomsScreen";
-import LokatorButton from "./app/components/LokatorButton";
-import RoomDetailsScreen from "./app/screens/RoomDetailsScreen";
-import { BRAND_RED } from "./app/constants/colors";
-import { logout } from "./app/services/auth-service";
 import RegisterScreen from "./app/screens/RegisterScreen";
 import { User } from "./app/models/user";
 import { useEffect, useState } from "react";
@@ -14,6 +9,7 @@ import { Room } from "./app/models/room";
 import * as encoding from "text-encoding" // Needed for stompjs library
 import { userObservable } from "./app/utils/requestUtil";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import HomeScreen from "./app/screens/HomeScreen";
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -38,31 +34,13 @@ export default function App() {
 			<NavigationContainer>
 				{
 					user ? (
-						<Stack.Navigator initialRouteName="Rooms"
-						screenOptions={{
-							headerTitleStyle: {
-								color: BRAND_RED
-							}
-						}}>
-							<Stack.Screen name="Rooms" component={ RoomsScreen } initialParams={{
+						<Stack.Navigator>
+							<Stack.Screen name="Home" component={HomeScreen} initialParams={{
 								user: user
 							}}
 							options={{
-								/* headerTitle: () => <Logo height={30} width={30} />, */
-								headerRight: () => {
-									return (
-										<LokatorButton type="Secondary" textValue="Log Out" handler={() => {
-											logout();
-										}} />
-									);
-								}
+								headerShown: false
 							}} />
-		
-							<Stack.Screen name="RoomDetails" component={ RoomDetailsScreen }
-							options={(options) => ({
-								title: options.route.params.room.name,
-								headerTintColor: BRAND_RED
-							})} />
 						</Stack.Navigator>
 					) : (
 						<Stack.Navigator initialRouteName="Login">
@@ -79,18 +57,27 @@ export default function App() {
 }
 
 type RootStackParamList = {
-	Login: undefined
-	Search: undefined
-	Rooms: {
+	Home: {
 		user: User
 	}
-	RoomDetails: {
+	Login: undefined
+	Search: undefined
+	Register: undefined
+	RoomsStack: {
+        user: User
+        room: Room
+    }
+    Notifications: {
+        user: User
+    }
+    Rooms: {
+        user: User
+    }
+    RoomDetails: {
 		room: Room,
 		user: User
 	}
-	Register: undefined
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
-type RoomsNavigationProps = NativeStackScreenProps<RootStackParamList, "Rooms">;
 
-export { RootStackParamList, LoginNavigationProps, RoomsNavigationProps }
+export { RootStackParamList, LoginNavigationProps }
