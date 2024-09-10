@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, FlatList, ScrollView, TextInput, Activit
 import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from "../constants/colors";
 import { useContext, useEffect, useState } from "react";
 import { Chat } from "../models/room";
-import { chatObservable, disconnectChat, establishChatConnection, getChatMessages, sendChatMessage } from "../services/room-service";
+import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from "../services/room-service";
 import { RootStackParamList } from "../../App";
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
@@ -13,10 +13,6 @@ type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, "Chat", undefined>
     route: RouteProp<RoomDetailsParamList, "Chat">
 }
-
-const messagesRef = {
-    messages: [] as Chat[]
-};
 
 export default function ChatScreen({ route }: Props) {
     const room = route.params.room;
@@ -30,23 +26,15 @@ export default function ChatScreen({ route }: Props) {
         getChatMessages(room.id)
         .then(response => response.json())
         .then((chats: Chat[]) => {
-            setMessages(chats);
-
-            messagesRef.messages = [];
-            for(let chat of chats) {
-                messagesRef.messages.push(chat);
-            }
+            emitChats(chats);
         })
         .finally(() => {
             setIsLoading(false);
         });
 
         establishChatConnection(room.id);
-        const chatSubscription = chatObservable().subscribe((newMessage) => {
-            const newArray = [...messagesRef.messages, newMessage];
-            setMessages(newArray);
-
-            messagesRef.messages = newArray;
+        const chatSubscription = chatObservable().subscribe((chats) => {
+            setMessages(chats);
         });
 
         return () => {

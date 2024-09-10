@@ -15,24 +15,49 @@ type StompClientHolder = {
 const serverPrefix = "http://localhost:8080/room";
 const socketUrl = 'ws://localhost:8080/chat';
 
-const chatSubject = new Subject<Chat>();
+let chats = [] as Chat[];
+let participants = [] as User[];
+let rooms = [] as Room[];
+let joinRequests = [] as JoinRoom[];
+
+const chatSubject = new Subject<Chat[]>();
 const chatObservable = () => {
     return chatSubject.asObservable();
 }
 
-const participantsSubject = new Subject<User>();
+const participantsSubject = new Subject<User[]>();
 const participantsObservable = () => {
     return participantsSubject.asObservable();
 }
 
-const acceptedRoomSubject = new Subject<Room>();
+const acceptedRoomSubject = new Subject<Room[]>();
 const acceptedRoomObservable = () => {
     return acceptedRoomSubject.asObservable();
 }
 
-const notificationSubject = new Subject<JoinRoom>();
+const notificationSubject = new Subject<JoinRoom[]>();
 const notificationObservable = () => {
     return notificationSubject.asObservable();
+}
+
+const emitChats = (updatedChats: Chat[]) => {
+    chats = updatedChats;
+    chatSubject.next(chats);
+}
+
+const emitParticipants = (updatedParticipants: User[]) => {
+    participants = updatedParticipants;
+    participantsSubject.next(participants);
+}
+
+const emitRooms = (updatedRooms: Room[]) => {
+    rooms = updatedRooms;
+    acceptedRoomSubject.next(rooms);
+}
+
+const emitJoinRequests = (requests: JoinRoom[]) => {
+    joinRequests = requests;
+    notificationSubject.next(joinRequests);
 }
 
 const clientHolder: StompClientHolder = {}
@@ -116,9 +141,9 @@ const establishChatConnection = (roomId: number) => {
         clientHolder.chatClient.onConnect = (frame) => {
             clientHolder.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
                 const chatMessage = JSON.parse(message.body) as Chat;
-                console.log(chatMessage);
+                chats = [...chats, chatMessage];
                 
-                chatSubject.next(chatMessage);
+                chatSubject.next(chats);
             });
         };
         
@@ -147,9 +172,9 @@ const establishParticipantsConnection = (roomId: number) => {
         clientHolder.participantsClient.onConnect = (frame) => {
             clientHolder.participantsClient?.subscribe(`/topic/room/${roomId}/members`, (message) => {
                 const newMember = JSON.parse(message.body) as User;
-                console.log(newMember);
+                participants = [...participants, newMember];
                 
-                participantsSubject.next(newMember);
+                participantsSubject.next(participants);
             });
         };
         
@@ -177,9 +202,9 @@ const establishRoomsConnection = (userId: number) => {
         clientHolder.roomsClient.onConnect = (frame) => {
             clientHolder.roomsClient?.subscribe(`/topic/room/join/${userId}/accepted`, (message) => {
                 const addedRoom = JSON.parse(message.body) as Room;
-                console.log(addedRoom);
-                
-                acceptedRoomSubject.next(addedRoom);
+                rooms = [...rooms, addedRoom];
+
+                acceptedRoomSubject.next(rooms);
             });
         };
         
@@ -207,9 +232,9 @@ const establishNotificationsConnection = (userId: number) => {
         clientHolder.notificationsClient.onConnect = (frame) => {
             clientHolder.notificationsClient?.subscribe(`/topic/room/join/${userId}`, (message) => {
                 const newRequest = JSON.parse(message.body) as JoinRoom;
-                console.log(newRequest);
+                joinRequests = [...joinRequests, newRequest];
                 
-                notificationSubject.next(newRequest);
+                notificationSubject.next(joinRequests);
             });
         };
         
@@ -240,5 +265,9 @@ export {
     acceptedRoomObservable,
     establishNotificationsConnection,
     disconnectNotificationSocket,
-    notificationObservable
+    notificationObservable,
+    emitChats,
+    emitParticipants,
+    emitRooms,
+    emitJoinRequests
 }

@@ -7,14 +7,13 @@ import LokatorButton from "../components/LokatorButton";
 import { useEffect, useRef, useState } from "react";
 import { AutocompleteDropdown, AutocompleteDropdownItem, IAutocompleteDropdownRef } from "react-native-autocomplete-dropdown";
 import { searchUsers } from "../services/user-service";
-import { UserSearchResult } from "../models/user";
-import { disconnectParticipantsSocket, establishParticipantsConnection, participantsObservable, sendJoinRoomRequest } from "../services/room-service";
+import { User, UserSearchResult } from "../models/user";
+import { disconnectParticipantsSocket, emitParticipants, establishParticipantsConnection, participantsObservable, sendJoinRoomRequest } from "../services/room-service";
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, "Participants", undefined>
     route: RouteProp<RoomDetailsParamList, "Participants">
 }
-
 
 export default function ParticipantsScreen({ route }: Props) {
     const dropdownController = useRef<IAutocompleteDropdownRef | null>(null);
@@ -22,13 +21,15 @@ export default function ParticipantsScreen({ route }: Props) {
     const room = route.params.room;
     const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [members, setMembers] = useState(room.members);
+    const [members, setMembers] = useState<User[]>([]);
 
     useEffect(() => {
+        // Set initial list of members/participants with initial emit to the participants subject.
+        emitParticipants(room.members);
+
         establishParticipantsConnection(room.id);
-        const subscription = participantsObservable().subscribe(newMember => {
-            const updatedList = [...members, newMember];
-            setMembers(updatedList);
+        const subscription = participantsObservable().subscribe(members => {
+            setMembers(members);
         });
 
         return () => {

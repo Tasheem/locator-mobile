@@ -2,7 +2,7 @@ import { NavigationProp, RouteProp } from "@react-navigation/native"
 import { StyleSheet, View, Text, FlatList, Image } from "react-native";
 import { RootStackParamList } from "../../App";
 import { useEffect, useState } from "react";
-import { disconnectNotificationSocket, establishNotificationsConnection, getJoinRoomRequests, notificationObservable, sendJoinRoomResponse } from "../services/room-service";
+import { disconnectNotificationSocket, emitJoinRequests, establishNotificationsConnection, getJoinRoomRequests, notificationObservable, sendJoinRoomResponse } from "../services/room-service";
 import { JoinRoom } from "../models/room";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import LokatorButton from "../components/LokatorButton";
@@ -13,10 +13,6 @@ type Props = {
     navigation: NavigationProp<RootStackParamList, "Notifications">
 }
 
-const requestsRef = {
-    requests: [] as JoinRoom[]
-}
-
 export default function NotificationScreen({ route, navigation }: Props) {
     const user = route.params.user;
     const [requests, setRequests] = useState<JoinRoom[]>([]);
@@ -25,8 +21,7 @@ export default function NotificationScreen({ route, navigation }: Props) {
         getJoinRoomRequests()
         .then(res => res.json())
         .then((joinRequests: JoinRoom[]) => {
-            setRequests(joinRequests);
-            requestsRef.requests = [...joinRequests];
+            emitJoinRequests(joinRequests);
         })
         .catch(err => {
             // console.log(err);
@@ -37,11 +32,9 @@ export default function NotificationScreen({ route, navigation }: Props) {
         }
 
         establishNotificationsConnection(user.id);
-        const subscription = notificationObservable().subscribe(joinRequest => {
-            const updatedList = [...requestsRef.requests, joinRequest];
-            setRequests(updatedList);
-
-            requestsRef.requests = updatedList;
+        const subscription = notificationObservable().subscribe(joinRequests => {
+            setRequests(joinRequests);
+            setTabBadge(navigation, joinRequests.length);
         });
 
         return () => {
@@ -57,7 +50,7 @@ export default function NotificationScreen({ route, navigation }: Props) {
 
             <FlatList
             data={requests}
-            keyExtractor={item => item.id + ""}
+            keyExtractor={item => Math.floor(Math.random() * 100) + ""}
             renderItem={({ item }) => {
                 return (
                     <View style={style.itemContainer}>
@@ -89,9 +82,7 @@ export default function NotificationScreen({ route, navigation }: Props) {
                                 .then((response) => {
                                     if(response.status === 204 || response.status === 200) {
                                         const updatedList = requests.filter((request) => request.id !== item.id);
-                                        setRequests(updatedList);
-
-                                        requestsRef.requests = [...updatedList];
+                                        emitJoinRequests(updatedList);
                                     } else {
                                         Alert.alert(errorTitle, errorMessage);
                                     }
@@ -108,9 +99,7 @@ export default function NotificationScreen({ route, navigation }: Props) {
                                 .then((response) => {
                                     if(response.status === 204 || response.status === 200) {
                                         const updatedList = requests.filter((request) => request.id !== item.id);
-                                        setRequests(updatedList);
-
-                                        requestsRef.requests = [...updatedList];
+                                        emitJoinRequests(updatedList);
                                     } else {
                                         Alert.alert(errorTitle, errorMessage);
                                     }
@@ -125,6 +114,12 @@ export default function NotificationScreen({ route, navigation }: Props) {
             }} />
         </View>
     );
+}
+
+const setTabBadge = (navigation: NavigationProp<RootStackParamList, "Notifications">, count?: number) => {
+    navigation.setOptions({
+        tabBarBadge: count ? count : null
+    });
 }
 
 const style = StyleSheet.create({
