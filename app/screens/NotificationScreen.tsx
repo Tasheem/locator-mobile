@@ -2,7 +2,7 @@ import { NavigationProp, RouteProp } from "@react-navigation/native"
 import { StyleSheet, View, Text, FlatList, Image } from "react-native";
 import { RootStackParamList } from "../../App";
 import { useEffect, useState } from "react";
-import { getJoinRoomRequests, sendJoinRoomResponse } from "../services/room-service";
+import { disconnectNotificationSocket, establishNotificationsConnection, getJoinRoomRequests, notificationObservable, sendJoinRoomResponse } from "../services/room-service";
 import { JoinRoom } from "../models/room";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import LokatorButton from "../components/LokatorButton";
@@ -11,6 +11,10 @@ import { Alert } from "react-native";
 type Props = {
     route: RouteProp<RootStackParamList, "Notifications">,
     navigation: NavigationProp<RootStackParamList, "Notifications">
+}
+
+const requestsRef = {
+    requests: [] as JoinRoom[]
 }
 
 export default function NotificationScreen({ route, navigation }: Props) {
@@ -22,10 +26,28 @@ export default function NotificationScreen({ route, navigation }: Props) {
         .then(res => res.json())
         .then((joinRequests: JoinRoom[]) => {
             setRequests(joinRequests);
+            requestsRef.requests = [...joinRequests];
         })
         .catch(err => {
             // console.log(err);
         });
+
+        if(!user.id) {
+            return;
+        }
+
+        establishNotificationsConnection(user.id);
+        const subscription = notificationObservable().subscribe(joinRequest => {
+            const updatedList = [...requestsRef.requests, joinRequest];
+            setRequests(updatedList);
+
+            requestsRef.requests = updatedList;
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            disconnectNotificationSocket();
+        }
     }, []);
 
 

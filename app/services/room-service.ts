@@ -1,9 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Client } from "@stomp/stompjs";
-import { Chat } from "../models/room";
+import { Chat, JoinRoom, Room } from "../models/room";
 import { Subject } from "rxjs";
 import { sendRequest } from "../utils/requestUtil";
 import { User } from "../models/user";
+
+type StompClientHolder = {
+    chatClient?: Client
+    participantsClient?: Client
+    roomsClient?: Client
+    notificationsClient?: Client
+}
 
 const serverPrefix = "http://localhost:8080/room";
 const socketUrl = 'ws://localhost:8080/chat';
@@ -18,10 +25,17 @@ const participantsObservable = () => {
     return participantsSubject.asObservable();
 }
 
-const stompClient: {
-    chatClient?: Client,
-    participantsClient?: Client
-} = {}
+const acceptedRoomSubject = new Subject<Room>();
+const acceptedRoomObservable = () => {
+    return acceptedRoomSubject.asObservable();
+}
+
+const notificationSubject = new Subject<JoinRoom>();
+const notificationObservable = () => {
+    return notificationSubject.asObservable();
+}
+
+const clientHolder: StompClientHolder = {}
 
 const createRoom = async (roomName: string) => {
     const options = {
@@ -89,7 +103,7 @@ const sendChatMessage = async (message: string, roomId: number) => {
 const establishChatConnection = (roomId: number) => {
     AsyncStorage.getItem("bearerToken")
     .then(token => {
-        stompClient.chatClient = new Client({
+        clientHolder.chatClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
                 "Authorization": token ? token : ""
@@ -99,8 +113,8 @@ const establishChatConnection = (roomId: number) => {
             logRawCommunication: true
         });
 
-        stompClient.chatClient.onConnect = (frame) => {
-            stompClient.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
+        clientHolder.chatClient.onConnect = (frame) => {
+            clientHolder.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
                 const chatMessage = JSON.parse(message.body) as Chat;
                 console.log(chatMessage);
                 
@@ -108,19 +122,19 @@ const establishChatConnection = (roomId: number) => {
             });
         };
         
-        stompClient.chatClient.activate();
+        clientHolder.chatClient.activate();
     });
 }
 
 const disconnectChat = () => {
     // console.log("Deactivating Chat...");
-    stompClient.chatClient?.deactivate();
+    clientHolder.chatClient?.deactivate();
 }
 
 const establishParticipantsConnection = (roomId: number) => {
     AsyncStorage.getItem("bearerToken")
     .then(token => {
-        stompClient.participantsClient = new Client({
+        clientHolder.participantsClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
                 "Authorization": token ? token : ""
@@ -130,8 +144,8 @@ const establishParticipantsConnection = (roomId: number) => {
             logRawCommunication: true
         });
 
-        stompClient.participantsClient.onConnect = (frame) => {
-            stompClient.participantsClient?.subscribe(`/topic/room/${roomId}/members`, (message) => {
+        clientHolder.participantsClient.onConnect = (frame) => {
+            clientHolder.participantsClient?.subscribe(`/topic/room/${roomId}/members`, (message) => {
                 const newMember = JSON.parse(message.body) as User;
                 console.log(newMember);
                 
@@ -139,12 +153,72 @@ const establishParticipantsConnection = (roomId: number) => {
             });
         };
         
-        stompClient.participantsClient.activate();
+        clientHolder.participantsClient.activate();
     });
 }
 
 const disconnectParticipantsSocket = () => {
-    stompClient.participantsClient?.deactivate();
+    clientHolder.participantsClient?.deactivate();
+}
+
+const establishRoomsConnection = (userId: number) => {
+    AsyncStorage.getItem("bearerToken")
+    .then(token => {
+        clientHolder.roomsClient = new Client({
+            brokerURL: socketUrl,
+            connectHeaders: {
+                "Authorization": token ? token : ""
+            },
+            forceBinaryWSFrames: true,
+            appendMissingNULLonIncoming: true,
+            logRawCommunication: true
+        });
+
+        clientHolder.roomsClient.onConnect = (frame) => {
+            clientHolder.roomsClient?.subscribe(`/topic/room/join/${userId}/accepted`, (message) => {
+                const addedRoom = JSON.parse(message.body) as Room;
+                console.log(addedRoom);
+                
+                acceptedRoomSubject.next(addedRoom);
+            });
+        };
+        
+        clientHolder.roomsClient.activate();
+    });
+}
+
+const disconnectRoomsConnection = () => {
+    clientHolder.roomsClient?.deactivate();
+}
+
+const establishNotificationsConnection = (userId: number) => {
+    AsyncStorage.getItem("bearerToken")
+    .then(token => {
+        clientHolder.notificationsClient = new Client({
+            brokerURL: socketUrl,
+            connectHeaders: {
+                "Authorization": token ? token : ""
+            },
+            forceBinaryWSFrames: true,
+            appendMissingNULLonIncoming: true,
+            logRawCommunication: true
+        });
+
+        clientHolder.notificationsClient.onConnect = (frame) => {
+            clientHolder.notificationsClient?.subscribe(`/topic/room/join/${userId}`, (message) => {
+                const newRequest = JSON.parse(message.body) as JoinRoom;
+                console.log(newRequest);
+                
+                notificationSubject.next(newRequest);
+            });
+        };
+        
+        clientHolder.notificationsClient.activate();
+    });
+}
+
+const disconnectNotificationSocket = () => {
+    clientHolder.notificationsClient?.deactivate;
 }
 
 export { 
@@ -160,5 +234,11 @@ export {
     sendJoinRoomResponse,
     establishParticipantsConnection,
     participantsObservable,
-    disconnectParticipantsSocket
+    disconnectParticipantsSocket,
+    establishRoomsConnection,
+    disconnectRoomsConnection,
+    acceptedRoomObservable,
+    establishNotificationsConnection,
+    disconnectNotificationSocket,
+    notificationObservable
 }

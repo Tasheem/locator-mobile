@@ -4,7 +4,7 @@ import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constant
 import { useEffect, useState } from "react";
 import { Room } from "../models/room";
 import LokatorButton from "../components/LokatorButton";
-import { createRoom, getRoomsForUser } from "../services/room-service";
+import { acceptedRoomObservable, createRoom, disconnectRoomsConnection, establishRoomsConnection, getRoomsForUser } from "../services/room-service";
 import { requestUser } from "../services/user-service";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
@@ -12,6 +12,10 @@ import { RootStackParamList } from "../../App";
 type Props = {
     route: RouteProp<RootStackParamList, "Rooms">,
     navigation: NavigationProp<RootStackParamList, "Rooms">
+}
+
+const roomsRef = {
+    rooms: [] as Room[]
 }
 
 export default function RoomsScreen({ route, navigation }: Props) {
@@ -29,10 +33,29 @@ export default function RoomsScreen({ route, navigation }: Props) {
         })
         .then(rooms => {
             setRooms(rooms);
+            roomsRef.rooms = [...rooms];
         })
         .catch(err => {
             setRooms([]);
         });
+        
+        const userId = route.params.user.id;
+        if(!userId) {
+            return;  
+        }
+
+        establishRoomsConnection(userId);
+        const subscription = acceptedRoomObservable().subscribe(room => {
+            const updatedRooms = [...roomsRef.rooms, room];
+            setRooms(updatedRooms);
+
+            roomsRef.rooms = updatedRooms;
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            disconnectRoomsConnection();
+        }
     }, []);
 
     return (
