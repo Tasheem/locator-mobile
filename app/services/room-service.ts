@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Client } from "@stomp/stompjs";
 import { Chat, JoinRoom, Room } from "../models/room";
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { sendRequest } from "../utils/requestUtil";
 import { User } from "../models/user";
 
@@ -20,22 +20,22 @@ let participants = [] as User[];
 let rooms = [] as Room[];
 let joinRequests = [] as JoinRoom[];
 
-const chatSubject = new Subject<Chat[]>();
+const chatSubject = new BehaviorSubject<Chat[]>(chats);
 const chatObservable = () => {
     return chatSubject.asObservable();
 }
 
-const participantsSubject = new Subject<User[]>();
+const participantsSubject = new BehaviorSubject<User[]>(participants);
 const participantsObservable = () => {
     return participantsSubject.asObservable();
 }
 
-const acceptedRoomSubject = new Subject<Room[]>();
+const acceptedRoomSubject = new BehaviorSubject<Room[]>(rooms);
 const acceptedRoomObservable = () => {
     return acceptedRoomSubject.asObservable();
 }
 
-const notificationSubject = new Subject<JoinRoom[]>();
+const notificationSubject = new BehaviorSubject<JoinRoom[]>(joinRequests);
 const notificationObservable = () => {
     return notificationSubject.asObservable();
 }
