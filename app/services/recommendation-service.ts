@@ -1,6 +1,7 @@
+import { appConfig } from "../utils/config";
 import { sendRequest } from "../utils/requestUtil";
 
-const serverPrefix = "http://localhost:8080/recommendation"
+const serverPrefix = `${appConfig.serverURL}/recommendation`;
 const fetchRecommendedPlaces = (roomId: number) => {
     const options = {
         method: "POST",

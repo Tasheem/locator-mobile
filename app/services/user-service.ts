@@ -1,7 +1,8 @@
 import { User } from "../models/user";
+import { appConfig } from "../utils/config";
 import { emitUser, sendRequest } from "../utils/requestUtil";
 
-const serverPrefix = "http://localhost:8080/user";
+const serverPrefix = `${appConfig.serverURL}/user`;
 const requestUser = async () => {
     const response = sendRequest(serverPrefix);
     response.then((res) => {

@@ -4,6 +4,7 @@ import { Chat, JoinRoom, Room } from "../models/room";
 import { BehaviorSubject, Subject } from "rxjs";
 import { sendRequest } from "../utils/requestUtil";
 import { User } from "../models/user";
+import { appConfig } from "../utils/config";
 
 type StompClientHolder = {
     chatClient?: Client
@@ -12,8 +13,8 @@ type StompClientHolder = {
     notificationsClient?: Client
 }
 
-const serverPrefix = "http://localhost:8080/room";
-const socketUrl = 'ws://localhost:8080/chat';
+const serverPrefix = `${appConfig.serverURL}/room`;
+const socketUrl = `${appConfig.socketURL}/chat`;
 
 let chats = [] as Chat[];
 let participants = [] as User[];

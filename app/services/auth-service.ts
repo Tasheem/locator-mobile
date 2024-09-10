@@ -1,7 +1,8 @@
 import { User } from "../models/user";
+import { appConfig } from "../utils/config";
 import { emitToken, emitUser, sendRequest } from "../utils/requestUtil";
 
-const serverPrefix = "http://localhost:8080/auth";
+const serverPrefix = `${appConfig.serverURL}/auth`;
 const login = async (username: string, password: string) => {
     const payload = {
         "username": username,
