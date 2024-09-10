@@ -149,67 +149,21 @@ export default function ParticipantsScreen({ route }: Props) {
                 rowGap: 40
             }}
             renderItem={({ item }) => (
-                    <View style={ style.itemContainer }>
-                        <Image source={require("../assets/no-profile-pic.png")}
-                        style={{
-                            width: 50,
-                            height: 50,
-                            borderRadius: 40,
-                            borderColor: "black",
-                            borderWidth: 2
-                        }} />
-                        <Text style={style.username}>{ item.username }</Text>
-                    </View>
+                <View style={ style.itemContainer }>
+                    <Image source={require("../assets/no-profile-pic.png")}
+                    style={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: 40,
+                        borderColor: "black",
+                        borderWidth: 2
+                    }} />
+                    <Text style={style.username}>{ item.username }</Text>
+                </View>
             )} />
         </View>
     )
 }
-
-/* const renderSearchText = (item?: AutocompleteDropdownItem | null) => {
-    if(!item) {
-        return;
-    }
-
-    console.log(item.title)
-    
-    const tokens = item.title?.split(" ");
-    if(!tokens) {
-        return null;
-    }
-
-    console.log(tokens)
-    console.log(tokens.length)
-    const renderToken = (token?: string) => {
-        if(!token) {
-            return null;
-        }
-
-        if(token.includes("<strong>")) {
-            let removedPrefix = token.replace("<strong>", "");
-            const removedSuffix = removedPrefix.replace("</strong>", "");
-
-            return (
-                <Text style={{
-                    fontWeight: "bold"
-                }}>
-                    { removedSuffix }
-                </Text>
-            )
-        } else {
-            return token;
-        }
-    }
-
-    const result = (
-        <Text>
-            { renderToken(tokens[0]) } { renderToken(tokens[1]) } { renderToken(tokens[2]) }
-        </Text>
-    )
-
-    console.log(result);
-    
-    return result;
-} */
 
 const style = StyleSheet.create({
     rootContainer: {
@@ -234,7 +188,7 @@ const style = StyleSheet.create({
         backgroundColor: CARD_PRIMARY_COLOR,
         flexDirection: "row",
         alignItems: "center",
-        width: "45%",
+        minWidth: "45%",
         marginLeft: 10,
         marginRight: 10
     },
