@@ -37,6 +37,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
         })
         .catch(err => {
             setRooms([]);
+            roomsRef.rooms = [];
         });
         
         const userId = route.params.user.id;

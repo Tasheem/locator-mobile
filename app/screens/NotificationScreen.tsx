@@ -90,6 +90,8 @@ export default function NotificationScreen({ route, navigation }: Props) {
                                     if(response.status === 204 || response.status === 200) {
                                         const updatedList = requests.filter((request) => request.id !== item.id);
                                         setRequests(updatedList);
+
+                                        requestsRef.requests = [...updatedList];
                                     } else {
                                         Alert.alert(errorTitle, errorMessage);
                                     }
@@ -107,6 +109,8 @@ export default function NotificationScreen({ route, navigation }: Props) {
                                     if(response.status === 204 || response.status === 200) {
                                         const updatedList = requests.filter((request) => request.id !== item.id);
                                         setRequests(updatedList);
+
+                                        requestsRef.requests = [...updatedList];
                                     } else {
                                         Alert.alert(errorTitle, errorMessage);
                                     }
