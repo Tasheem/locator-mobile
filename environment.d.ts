@@ -3,6 +3,8 @@ declare global {
         interface ProcessEnv {
             EXPO_PUBLIC_SERVER_URL: string
             EXPO_PUBLIC_SERVER_URL_ANDROID: string
+            EXPO_PUBLIC_SOCKET_URL: string
+            EXPO_PUBLIC_SOCKET_URL_ANDROID: string
             NODE_ENV: "development" | "production" | "test";
             EXPO_PUBLIC_PLACES_API_KEY: string
         }
