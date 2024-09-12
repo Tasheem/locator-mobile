@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "../models/user";
 import { BehaviorSubject } from "rxjs";
+import { appConfig } from "./config";
 
-const serverUrl = "http://localhost:8080";
+const serverUrl = appConfig.serverURL;
 
 const userSubject = new BehaviorSubject<User | null>(null);
 const tokenSubject = new BehaviorSubject<string | null>(null);
