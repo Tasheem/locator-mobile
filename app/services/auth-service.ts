@@ -44,16 +44,15 @@ const logout = () => {
 }
 
 const register = async (payload: User) => {
-    const headers = new Headers();
-    headers.set("Content-Type", "application/json");
-
     const options: RequestInit = {
         method: "POST",
-        headers: headers,
+        headers: {
+            "Content-Type": "application/json"
+        },
         body: JSON.stringify(payload)
     }
 
-    const response = await sendRequest(serverPrefix + "/user/register", options);
+    const response = await sendRequest(serverPrefix + "/register", options);
     if(response.status !== 200 && response.status !== 201) {
         // Error registering a user.
         throw Error(response.status + "");
