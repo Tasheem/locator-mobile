@@ -8,7 +8,8 @@ import { useEffect, useRef, useState } from "react";
 import { AutocompleteDropdown, AutocompleteDropdownItem, IAutocompleteDropdownRef } from "react-native-autocomplete-dropdown";
 import { searchUsers } from "../services/user-service";
 import { User, UserSearchResult } from "../models/user";
-import { disconnectParticipantsSocket, emitParticipants, establishParticipantsConnection, participantsObservable, sendJoinRoomRequest } from "../services/room-service";
+import { disconnectParticipantsSocket, emitParticipants, emitRooms, establishParticipantsConnection, getRoomsForUser, participantsObservable, sendJoinRoomRequest } from "../services/room-service";
+import { Room } from "../models/room";
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, "Participants", undefined>
@@ -30,6 +31,15 @@ export default function ParticipantsScreen({ route }: Props) {
         establishParticipantsConnection(room.id);
         const subscription = participantsObservable().subscribe(members => {
             setMembers(members);
+
+            // Refresh rooms screen to account for updated participant.
+            getRoomsForUser()
+            .then(response => {
+                return response.json() as Promise<Room[]>;
+            })
+            .then(rooms => {
+                emitRooms(rooms);
+            });
         });
 
         return () => {
