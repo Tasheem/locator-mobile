@@ -88,7 +88,7 @@ const sendRequest = async (url: string, options?: RequestInit) => {
         }
     }
 
-    console.log(requestInit); 
+    console.log("request options:", requestInit); 
     const response = await fetch(url, requestInit);
     console.log(url);
     console.log(response.status)

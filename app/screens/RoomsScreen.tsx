@@ -19,10 +19,12 @@ export default function RoomsScreen({ route, navigation }: Props) {
     const [rooms, setRooms] = useState<Room[]>([]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [newRoomName, setNewRoomName] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isRoomsLoading, setIsRoomsLoading] = useState(false);
+    const [isModalButtonLoading, setIsModalButtonLoading] = useState(false);
     const [isError, setIsError] = useState(false);
     
     useEffect(() => {
+        setIsRoomsLoading(true);
         getRoomsForUser()
         .then(response => {
             return response.json() as Promise<Room[]>;
@@ -32,6 +34,9 @@ export default function RoomsScreen({ route, navigation }: Props) {
         })
         .catch(err => {
             emitRooms([]);
+        })
+        .finally(() => {
+            setIsRoomsLoading(false);
         });
         
         const userId = route.params.user.id;
@@ -57,7 +62,11 @@ export default function RoomsScreen({ route, navigation }: Props) {
                     setIsModalVisible(true);
                 }} />
             </View>
-                                    
+
+            <ActivityIndicator 
+                animating={isRoomsLoading}
+                color={BRAND_RED}
+            />
             <FlatList
                 data={rooms}
                 keyExtractor={(item) => item.id + ""}
@@ -80,7 +89,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
                         </View>
                     </TouchableHighlight>
                 )}
-            />
+            />                    
 
             <Modal
                 animationType="slide"
@@ -105,7 +114,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
                             </Text>
 
                             {
-                                isError && !isLoading ? (
+                                isError && !isModalButtonLoading ? (
                                     <Text style={modalStyle.errorText}>
                                         An error occurred while creating a new room.
                                     </Text>
@@ -121,17 +130,17 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                 />
 
                                 {
-                                    isLoading ? (
+                                    isModalButtonLoading ? (
                                         <View style={modalStyle.loaderContainer}>
                                             <ActivityIndicator 
-                                                animating={isLoading}
+                                                animating={isModalButtonLoading}
                                                 color={BRAND_RED}
                                             />
                                         </View>
                                     ) : (
                                         <LokatorButton type="Primary" textValue="Submit"
                                         handler={async () => {
-                                            setIsLoading(true);
+                                            setIsModalButtonLoading(true);
         
                                             try {
                                                 const response = await createRoom(newRoomName);
@@ -150,7 +159,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                             } catch(err: any) {
                                                 setIsError(true);
                                             } finally {
-                                                setIsLoading(false);
+                                                setIsModalButtonLoading(false);
                                             }
                                         }} />
                                     )

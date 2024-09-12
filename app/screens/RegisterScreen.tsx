@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal, Alert } from "react-native";
+import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal, Alert, ActivityIndicator } from "react-native";
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
 import { PlaceType } from "../models/places";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -27,6 +27,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
     const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [displayingSuccess, setDisplayingSuccess] = useState(false);
+    const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
 
     useEffect(() => {
         // Making sure that the selected preferences go away when navigating back to the home screen
@@ -35,9 +36,14 @@ export default function RegisterScreen({ navigation }: PageProps) {
             preferenceIds.clear();
         }
 
+        setPlaceTypesLoading(true);
+
         fetchPlaceTypes()
         .then(types => {
             setPlaceTypes(types);
+        })
+        .finally(() => {
+            setPlaceTypesLoading(false);
         });
     }, []);
 
@@ -172,9 +178,10 @@ export default function RegisterScreen({ navigation }: PageProps) {
                         handler={() => {
                             setModalVisible(false);
                         }} />
+
                         <View style={style.preferencesContainer}>
                             <Text style={style.title}>Choose Preferences</Text>
-                            { renderPlaceTypes(placeTypes) }
+                            { renderPlaceTypes(placeTypes, placeTypesLoading) }
                         </View>
                     </SafeAreaView>
                 </Modal>
@@ -183,39 +190,45 @@ export default function RegisterScreen({ navigation }: PageProps) {
     );
 }
 
-const renderPlaceTypes = (placeTypes: PlaceType[]) => {
+const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean) => {
     return (
-        <FlatList
-            data={placeTypes}
-            numColumns={2}
-            columnWrapperStyle={{
-                gap: 30
-            }}
-            contentContainerStyle={style.flatListContainer}
-			keyExtractor={ placeType => placeType.id + "" }
-			renderItem={({ item }) => (
-                <View style={style.itemContainer}>
-                    <View style={style.itemTextContainer}>
-                        <Text>{ item.displayName }</Text>
+        <View>
+            <ActivityIndicator 
+                animating={placeTypesLoading}
+                color={BRAND_RED}
+            />
+            <FlatList
+                data={placeTypes}
+                numColumns={2}
+                columnWrapperStyle={{
+                    gap: 30
+                }}
+                contentContainerStyle={style.flatListContainer}
+                keyExtractor={ placeType => placeType.id + "" }
+                renderItem={({ item }) => (
+                    <View style={style.itemContainer}>
+                        <View style={style.itemTextContainer}>
+                            <Text>{ item.displayName }</Text>
+                        </View>
+                        <BouncyCheckbox
+                            size={25}
+                            fillColor={BRAND_RED}
+                            unfillColor="#FFFFFF"
+                            iconStyle={{ borderColor: BRAND_RED }}
+                            innerIconStyle={{ borderWidth: 2 }}
+                            isChecked={ preferenceIds.has(item.id) }
+                            onPress={(isChecked) => {
+                                if(isChecked) {
+                                    preferenceIds.add(item.id);
+                                } else {
+                                    preferenceIds.delete(item.id);
+                                }
+                            }}
+                        />
                     </View>
-                    <BouncyCheckbox
-						size={25}
-						fillColor={BRAND_RED}
-						unfillColor="#FFFFFF"
-						iconStyle={{ borderColor: BRAND_RED }}
-						innerIconStyle={{ borderWidth: 2 }}
-                        isChecked={ preferenceIds.has(item.id) }
-                        onPress={(isChecked) => {
-                            if(isChecked) {
-                                preferenceIds.add(item.id);
-                            } else {
-                                preferenceIds.delete(item.id);
-                            }
-                        }}
-					/>
-                </View>
-            )}
-        />
+                )}
+            />
+        </View>
     );
 }
 
