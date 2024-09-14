@@ -2,25 +2,97 @@ import { StatusBar } from "expo-status-bar";
 import LoginComponent from "./app/screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import YelpAPIComponent from "./app/screens/SearchScreen";
+import RegisterScreen from "./app/screens/RegisterScreen";
+import { User } from "./app/models/user";
+import { useEffect, useState } from "react";
+import { Room } from "./app/models/room";
+import * as encoding from "text-encoding" // Needed for stompjs library
+import { userObservable } from "./app/utils/requestUtil";
+import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
+import HomeScreen from "./app/screens/HomeScreen";
+import * as Location from "expo-location";
+import { Alert } from "react-native";
+
+global.TextEncoder = encoding.TextEncoder
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+	const [user, setUser] = useState<User | null>(null);
+	
+	useEffect(() => {
+		const userSubscription = userObservable().subscribe((nextValue) => {
+			// console.log("User emitted:", nextValue);
+			setUser(nextValue);
+		});
+
+		checkLocationPermissions();
+		return () => {
+			userSubscription.unsubscribe();
+		};
+	}, []);
+
 	return (
-		<NavigationContainer>
-			<Stack.Navigator initialRouteName="Login">
-				<Stack.Screen name="Login" component={LoginComponent} />
-				<Stack.Screen name="Search" component={YelpAPIComponent} />
-			</Stack.Navigator>
-			<StatusBar style="auto" />
-		</NavigationContainer>
+		<AutocompleteDropdownContextProvider>
+			<NavigationContainer>
+				{
+					user ? (
+						<Stack.Navigator>
+							<Stack.Screen name="Home" component={HomeScreen} initialParams={{
+								user: user
+							}}
+							options={{
+								headerShown: false
+							}} />
+						</Stack.Navigator>
+					) : (
+						<Stack.Navigator initialRouteName="Login">
+							<Stack.Screen name="Login" component={LoginComponent} />
+							<Stack.Screen name="Register" component={RegisterScreen} />
+						</Stack.Navigator>
+					)
+				}
+				
+				<StatusBar style="auto" />
+			</NavigationContainer>
+		</AutocompleteDropdownContextProvider>
 	);
 }
 
+const checkLocationPermissions = async () => {
+	const { status } = await Location.getForegroundPermissionsAsync();
+	console.log("Saved status: " + status);
+
+	if(status !== "granted") {
+		const permissionResponse = await Location.requestForegroundPermissionsAsync();
+		console.log("Status after request: " + permissionResponse.status);
+		if(permissionResponse.status !== "granted") {
+			Alert.alert("Location", "The recommendation feature of this app will not operate correctly without location permissions.");
+		}
+	}
+}
+
 type RootStackParamList = {
-	Login: undefined;
-	Search: undefined;
+	Home: {
+		user: User
+	}
+	Login: undefined
+	Search: undefined
+	Register: undefined
+	RoomsStack: {
+        user: User
+        room: Room
+    }
+    Notifications: {
+        user: User
+    }
+    Rooms: {
+        user: User
+    }
+    RoomDetails: {
+		room: Room,
+		user: User
+	}
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
 

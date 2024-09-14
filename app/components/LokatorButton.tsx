@@ -1,6 +1,7 @@
-import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight } from "react-native";
+import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight, DimensionValue } from "react-native";
 import { BRAND_RED } from "../constants/colors";
 import Logo from "./Logo";
+import { useState } from "react";
 
 type LokatorButtonProps = {
     handler: () => void;
@@ -9,9 +10,21 @@ type LokatorButtonProps = {
     fontSize?: number;
     padding?: "wide" | "normal";
     textValue: string;
+    width?: DimensionValue
+    height?: DimensionValue
 }
 
 export default function LokatorButton(props: LokatorButtonProps) {
+    const [isPressed, setIsPressed] = useState(false);
+
+    const textColorStyling = () => {
+        if(props.type === 'Primary') {
+            return "#f2f0f0";
+        }
+
+        return isPressed ? "#f2f0f0" : BRAND_RED;
+    }
+
     const styles = StyleSheet.create({
         btn: {
             flexDirection: "row",
@@ -24,7 +37,9 @@ export default function LokatorButton(props: LokatorButtonProps) {
             paddingTop: "1.5%",
             paddingBottom: "1.5%",
             paddingRight: props.padding ? (props.padding === "normal" ? "4%" : "6%") : "4%",
-            borderRadius: 8
+            borderRadius: 8,
+            width: props.width ? props.width : "auto",
+            height: props.height ? props.height : "auto"
         },
         contentContainer: {
             flexDirection: "row",
@@ -34,7 +49,7 @@ export default function LokatorButton(props: LokatorButtonProps) {
         },
         btnText: {
             fontSize: props.fontSize ? props.fontSize : 16,
-            color: props.type === 'Primary' ? "#f2f0f0" : BRAND_RED
+            color: textColorStyling()
         },
         btnImage: {
             width: props.fontSize ? props.fontSize + 3 : 19,
@@ -43,7 +58,14 @@ export default function LokatorButton(props: LokatorButtonProps) {
     });
 
     return (
-		<TouchableHighlight onPress={props.handler} underlayColor={ props.type === "Primary" ? "#965050" : BRAND_RED } style={styles.btn}>
+		<TouchableHighlight onPressIn={() => {
+            setIsPressed(true);
+        }} 
+        onPressOut={() => {
+            setIsPressed(false);
+        }}
+        onPress={props.handler} underlayColor={ props.type === "Primary" ? "#965050" : BRAND_RED } 
+        style={styles.btn}>
 			<View style={styles.contentContainer}>
 				<Text style={styles.btnText}>{props.textValue}</Text>
                 {
