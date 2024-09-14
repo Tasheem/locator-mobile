@@ -25,6 +25,9 @@
     },
     "web": {
       "favicon": "app/assets/locater_center_solid.png"
-    }
+    },
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }

@@ -9,7 +9,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RoomDetailsParamList } from "./RoomDetailsScreen";
 import { RouteProp } from "@react-navigation/native";
 import * as Location from "expo-location";
-import moment from "moment";
+import moment from "moment-timezone";
 
 const apiKey = process.env.EXPO_PUBLIC_PLACES_API_KEY;
 

@@ -1,13 +1,13 @@
-import { View, Text, StyleSheet, Image, FlatList, ScrollView, TextInput, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TextInput, ActivityIndicator } from "react-native";
 import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from "../constants/colors";
 import { useContext, useEffect, useState } from "react";
 import { Chat } from "../models/room";
 import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from "../services/room-service";
-import { RootStackParamList } from "../../App";
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { RoomDetailsParamList } from "./RoomDetailsScreen";
-import moment from "moment";
+import moment from "moment-timezone";
+import { getCalendars, useCalendars } from "expo-localization";
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, "Chat", undefined>
@@ -20,6 +20,7 @@ export default function ChatScreen({ route }: Props) {
     const [messages, setMessages] = useState<Chat[]>([]);
     const [userMessage, setUserMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [timezone, setTimezone] = useState<string>("UTC");
     
     useEffect(() => {
         setIsLoading(true);
@@ -36,6 +37,14 @@ export default function ChatScreen({ route }: Props) {
         const chatSubscription = chatObservable().subscribe((chats) => {
             setMessages(chats);
         });
+
+        const calendars = getCalendars();
+        console.log("calendars:");
+        console.log(calendars);
+        const firstCalendar = calendars[0];
+        console.log("Timezone:", firstCalendar.timeZone);
+
+        setTimezone(firstCalendar.timeZone ? firstCalendar.timeZone : "UTC");
 
         return () => {
             chatSubscription.unsubscribe();
@@ -65,10 +74,10 @@ export default function ChatScreen({ route }: Props) {
                         </View>
                         <View style={style.dateContainer}>
                             <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
-                                { moment(item.createDate).format("MMM Do YYYY").toString() }
+                                { moment.utc(item.createDate).tz(timezone).format("MMM Do YYYY") }
                             </Text>
                             <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
-                                { moment(item.createDate).format("h:mm:ss a").toString() }
+                                { moment.utc(item.createDate).tz(timezone).format("h:mm:ss a") }
                             </Text>
                         </View>
                     </View>
