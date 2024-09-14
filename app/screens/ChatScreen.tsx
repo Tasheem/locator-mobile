@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, Image, ScrollView, TextInput, ActivityIndicator } from "react-native";
 import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from "../constants/colors";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Chat } from "../models/room";
 import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from "../services/room-service";
 import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -15,6 +15,8 @@ type Props = {
 }
 
 export default function ChatScreen({ route }: Props) {
+    const scrollViewRef = useRef<ScrollView>(null);
+
     const room = route.params.room;
     const user = route.params.user;
     const [messages, setMessages] = useState<Chat[]>([]);
@@ -39,11 +41,7 @@ export default function ChatScreen({ route }: Props) {
         });
 
         const calendars = getCalendars();
-        console.log("calendars:");
-        console.log(calendars);
         const firstCalendar = calendars[0];
-        console.log("Timezone:", firstCalendar.timeZone);
-
         setTimezone(firstCalendar.timeZone ? firstCalendar.timeZone : "UTC");
 
         return () => {
@@ -97,7 +95,12 @@ export default function ChatScreen({ route }: Props) {
                 animating={isLoading}
                 color={BRAND_RED}
             />
-            <ScrollView>
+            <ScrollView
+                ref={scrollViewRef}
+                onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({
+                    animated: true
+                })}
+            >
                 { renderedElements }
             </ScrollView>
             <View style={style.messageWriterContainer}>
