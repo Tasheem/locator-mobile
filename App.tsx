@@ -10,6 +10,8 @@ import * as encoding from "text-encoding" // Needed for stompjs library
 import { userObservable } from "./app/utils/requestUtil";
 import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
 import HomeScreen from "./app/screens/HomeScreen";
+import * as Location from "expo-location";
+import { Alert } from "react-native";
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -24,6 +26,7 @@ export default function App() {
 			setUser(nextValue);
 		});
 
+		checkLocationPermissions();
 		return () => {
 			userSubscription.unsubscribe();
 		};
@@ -54,6 +57,19 @@ export default function App() {
 			</NavigationContainer>
 		</AutocompleteDropdownContextProvider>
 	);
+}
+
+const checkLocationPermissions = async () => {
+	const { status } = await Location.getForegroundPermissionsAsync();
+	console.log("Saved status: " + status);
+
+	if(status !== "granted") {
+		const permissionResponse = await Location.requestForegroundPermissionsAsync();
+		console.log("Status after request: " + permissionResponse.status);
+		if(permissionResponse.status !== "granted") {
+			Alert.alert("Location", "The recommendation feature of this app will not operate correctly without location permissions.");
+		}
+	}
 }
 
 type RootStackParamList = {

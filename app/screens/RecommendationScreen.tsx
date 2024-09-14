@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet } from "react-native";
+import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet, Alert } from "react-native";
 import renderImage from "../utils/renderImage";
 import { useEffect, useState } from "react";
 import { Place } from "../models/places";
@@ -8,6 +8,8 @@ import { fetchRecommendedPlaces } from "../services/recommendation-service";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RoomDetailsParamList } from "./RoomDetailsScreen";
 import { RouteProp } from "@react-navigation/native";
+import * as Location from "expo-location";
+import moment from "moment";
 
 const apiKey = process.env.EXPO_PUBLIC_PLACES_API_KEY;
 
@@ -32,15 +34,32 @@ export default function RecommendationScreen({ route }: Props) {
 	}, []); */
 
     useEffect(() => {
-        setIsLoading(true);
-        fetchRecommendedPlaces(room.id)
-        .then(res => res.json())
-        .then((places: Place[]) => {
-            setPlaces(places ? places : []);
-        })
-        .finally(() => {
-            setIsLoading(false);
-        });
+        (async () => {
+            const { status } = await Location.getForegroundPermissionsAsync();
+            if(status === "granted") {
+                setIsLoading(true);
+                
+                try {
+                    let location = await Location.getLastKnownPositionAsync();
+                    if(locationIsOld(location?.timestamp)) {
+                        location = await Location.getCurrentPositionAsync();
+                    }
+
+                    if(!location || location.coords.latitude == null || location.coords.longitude == null) {
+                        return;
+                    }
+
+                    const response = await fetchRecommendedPlaces(room.id, location.coords.latitude, location.coords.longitude);
+                    const places = await response.json() as Place[];
+                    setPlaces(places);
+                } finally {
+                    setIsLoading(false);
+                }
+            } else {
+                Alert.alert("Error", "Location needs to be granted to receive recommendations for your room.");
+                setPlaces([]);
+            }
+        })();
     }, []);
     
     useEffect(() => {
@@ -117,6 +136,18 @@ const renderResultsList = (places: Place[]) => {
 			)}
 		/>
 	)
+}
+
+const locationIsOld = (timestamp?: number) => {
+    if(!timestamp) {
+        return false;
+    }
+
+    const lastTimeChecked = moment(timestamp);
+    const today = moment();
+    const aWeekAgo = today.subtract(7, "days");
+
+    return lastTimeChecked.isBefore(aWeekAgo);
 }
 
 const resultsStyle = StyleSheet.create({
