@@ -63,10 +63,18 @@ export default function RoomsScreen({ route, navigation }: Props) {
                 }} />
             </View>
 
-            <ActivityIndicator 
-                animating={isRoomsLoading}
-                color={BRAND_RED}
-            />
+            {
+                isRoomsLoading ? (
+                    <ActivityIndicator 
+                        animating={true}
+                        color={BRAND_RED}
+                        style={{
+                            marginTop: 10
+                        }}
+                    />
+                ) : null
+            }
+
             <FlatList
                 data={rooms}
                 keyExtractor={(item) => item.id + ""}
@@ -78,8 +86,8 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                 user: route.params.user
                             });
                         }} 
-                        style={ styles.viewContainer } 
-                        underlayColor={"red"}>
+                        style={ styles.viewContainer }
+                        underlayColor={BRAND_RED}>
                         <View style={ styles.roomContainer }>
                             <Logo height={50} width={50} />
                             <View style={ styles.descriptionContainer }>
@@ -176,7 +184,10 @@ const styles = StyleSheet.create({
     viewContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 10
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        borderRadius: 8
     },
     roomContainer: {
         flexDirection: 'row',
@@ -184,7 +195,7 @@ const styles = StyleSheet.create({
         borderColor: CARD_SECONDARY_COLOR,
         backgroundColor: CARD_PRIMARY_COLOR,
         borderRadius: 8,
-        width: '98%',
+        width: '100%',
         padding: 10
     },
     descriptionContainer: {
