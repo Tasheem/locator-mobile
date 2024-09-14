@@ -31,15 +31,12 @@ export default function NotificationScreen({ route, navigation }: Props) {
             return;
         }
 
-        establishNotificationsConnection(user.id);
         const subscription = notificationObservable().subscribe(joinRequests => {
             setRequests(joinRequests);
-            setTabBadge(navigation, joinRequests.length);
         });
 
         return () => {
             subscription.unsubscribe();
-            disconnectNotificationSocket();
         }
     }, []);
 
@@ -114,12 +111,6 @@ export default function NotificationScreen({ route, navigation }: Props) {
             }} />
         </View>
     );
-}
-
-const setTabBadge = (navigation: NavigationProp<RootStackParamList, "Notifications">, count?: number) => {
-    navigation.setOptions({
-        tabBarBadge: count ? count : null
-    });
 }
 
 const style = StyleSheet.create({

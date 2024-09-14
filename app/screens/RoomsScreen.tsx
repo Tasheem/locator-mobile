@@ -145,14 +145,9 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                             try {
                                                 const response = await createRoom(newRoomName);
                                                 if(response.status === 201) {
-                                                    // const rooms = await response.json() as Room[];
-                                                    const userRequestResult = await requestUser();
-                                                    if(userRequestResult.status === 200) {
-                                                        setIsError(false);
-                                                        setIsModalVisible(false);
-                                                    } else {
-                                                        setIsError(true);
-                                                    }
+                                                    const room = await response.json() as Room;
+                                                    setRooms([...rooms, room]);
+                                                    setIsModalVisible(false);
                                                 } else {
                                                     setIsError(true);
                                                 }

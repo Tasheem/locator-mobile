@@ -9,6 +9,8 @@ import LokatorButton from "../components/LokatorButton";
 import { logout } from "../services/auth-service";
 import RoomDetailsScreen from "./RoomDetailsScreen";
 import Ionicons from "react-native-vector-icons/Ionicons"
+import { useEffect, useState } from "react";
+import { disconnectNotificationSocket, establishNotificationsConnection, notificationObservable } from "../services/room-service";
 
 type Props = {
     route: RouteProp<RootStackParamList, "Home">
@@ -17,8 +19,24 @@ type Props = {
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function HomeScreen({ route }: Props) {
-    console.log(route.params);
     const user = route.params.user;
+    const [notificationCount, setNotificationCount] = useState(0);
+
+    useEffect(() => {
+        if(!user.id) {
+            return;
+        }
+
+        establishNotificationsConnection(user.id);
+        const subscription = notificationObservable().subscribe(joinRequests => {
+            setNotificationCount(joinRequests.length);
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            disconnectNotificationSocket();
+        }
+    }, []);
 
     return (
         <Tab.Navigator
@@ -51,7 +69,8 @@ export default function HomeScreen({ route }: Props) {
             <Tab.Screen name="Notifications" component={NotificationScreen} initialParams={{
                 user: user
             }} options={{
-                headerTintColor: BRAND_RED
+                headerTintColor: BRAND_RED,
+                tabBarBadge: notificationCount > 0 ? notificationCount : undefined
             }} />
         </Tab.Navigator>
     );
