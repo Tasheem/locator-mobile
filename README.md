@@ -8,7 +8,7 @@ node --version
 npm --version
 ```
 
-- You also need to have android emulator setup through Android studio and/or iOS simulator setup through Xcode.
+- You also need to have Android Emulator setup through Android Studio and/or iOS Simulator setup through Xcode.
 - Clone this repo onto your local machine.
 
 # Running The Project
@@ -16,14 +16,14 @@ npm --version
 ```bash
 npm start
 ```
-- This will run the mobile app connected to the lokator server hosted in the Cloud.
+- This will run the mobile app connected to the Lokator server hosted in the Cloud.
 - If you want to run the app connected to the localhost backend, boot the app like this:
 ```bash
 npm run start:development
 ```
 
-- The expo cli will come and prompt you with options to run the app on Android emulator, iOS Simulator, and more.
-- You can enter the keys "a" or "i" to allow expo to open up your Android emulator or iOS Simulator.
+- The Expo CLI will come and prompt you with options to run the app on Android emulator, iOS Simulator, and more.
+- You can enter the keys "a" or "i" to allow Expo to open up your Android Emulator or iOS Simulator.
 
 # In The App
 - The login screen will be presented to you.
