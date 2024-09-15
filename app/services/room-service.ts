@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Client } from "@stomp/stompjs";
+import { Client, StompSubscription } from "@stomp/stompjs";
 import { Chat, JoinRoom, Room } from "../models/room";
 import { BehaviorSubject, Subject } from "rxjs";
 import { sendRequest } from "../utils/requestUtil";
@@ -11,6 +11,13 @@ type StompClientHolder = {
     participantsClient?: Client
     roomsClient?: Client
     notificationsClient?: Client
+}
+
+type StompSubscriptionHolder = {
+    chat?: StompSubscription
+    participants?: StompSubscription
+    rooms?: StompSubscription
+    notifications?: StompSubscription
 }
 
 const serverPrefix = `${appConfig.serverURL}/room`;
@@ -61,7 +68,8 @@ const emitJoinRequests = (requests: JoinRoom[]) => {
     notificationSubject.next(joinRequests);
 }
 
-const clientHolder: StompClientHolder = {}
+const clientHolder: StompClientHolder = {};
+const subscriptionHolder: StompSubscriptionHolder = {};
 
 const createRoom = async (roomName: string) => {
     const options = {
@@ -140,7 +148,7 @@ const establishChatConnection = (roomId: number) => {
         });
 
         clientHolder.chatClient.onConnect = (frame) => {
-            clientHolder.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
+            subscriptionHolder.chat = clientHolder.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
                 const chatMessage = JSON.parse(message.body) as Chat;
                 chats = [...chats, chatMessage];
                 
@@ -154,6 +162,7 @@ const establishChatConnection = (roomId: number) => {
 
 const disconnectChat = () => {
     // console.log("Deactivating Chat...");
+    subscriptionHolder.chat?.unsubscribe();
     clientHolder.chatClient?.deactivate();
 }
 
@@ -171,7 +180,7 @@ const establishParticipantsConnection = (roomId: number) => {
         });
 
         clientHolder.participantsClient.onConnect = (frame) => {
-            clientHolder.participantsClient?.subscribe(`/topic/room/${roomId}/members`, (message) => {
+            subscriptionHolder.participants = clientHolder.participantsClient?.subscribe(`/topic/room/${roomId}/members`, (message) => {
                 const newMember = JSON.parse(message.body) as User;
                 participants = [...participants, newMember];
                 
@@ -184,6 +193,7 @@ const establishParticipantsConnection = (roomId: number) => {
 }
 
 const disconnectParticipantsSocket = () => {
+    subscriptionHolder.participants?.unsubscribe();
     clientHolder.participantsClient?.deactivate();
 }
 
@@ -201,7 +211,7 @@ const establishRoomsConnection = (userId: number) => {
         });
 
         clientHolder.roomsClient.onConnect = (frame) => {
-            clientHolder.roomsClient?.subscribe(`/topic/room/join/${userId}/accepted`, (message) => {
+            subscriptionHolder.rooms = clientHolder.roomsClient?.subscribe(`/topic/room/join/${userId}/accepted`, (message) => {
                 const addedRoom = JSON.parse(message.body) as Room;
                 rooms = [...rooms, addedRoom];
 
@@ -214,6 +224,7 @@ const establishRoomsConnection = (userId: number) => {
 }
 
 const disconnectRoomsConnection = () => {
+    subscriptionHolder.rooms?.unsubscribe();
     clientHolder.roomsClient?.deactivate();
 }
 
@@ -231,9 +242,11 @@ const establishNotificationsConnection = (userId: number) => {
         });
 
         clientHolder.notificationsClient.onConnect = (frame) => {
-            clientHolder.notificationsClient?.subscribe(`/topic/room/join/${userId}`, (message) => {
+            subscriptionHolder.notifications = clientHolder.notificationsClient?.subscribe(`/topic/room/join/${userId}`, (message) => {
                 const newRequest = JSON.parse(message.body) as JoinRoom;
+                console.log("Current joinRequests:", joinRequests);
                 joinRequests = [...joinRequests, newRequest];
+                console.log("Updated joinRequests:", joinRequests);
                 
                 notificationSubject.next(joinRequests);
             });
@@ -244,6 +257,7 @@ const establishNotificationsConnection = (userId: number) => {
 }
 
 const disconnectNotificationSocket = () => {
+    subscriptionHolder.notifications?.unsubscribe();
     clientHolder.notificationsClient?.deactivate;
 }
 
