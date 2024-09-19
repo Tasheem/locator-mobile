@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Client, StompSubscription } from '@stomp/stompjs';
 import { Chat, JoinRoom, Room } from '../models/room';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { sendRequest } from '../utils/requestUtil';
 import { User } from '../models/user';
 import { appConfig } from '../utils/config';

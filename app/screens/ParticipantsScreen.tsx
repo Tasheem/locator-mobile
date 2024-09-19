@@ -1,9 +1,8 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StyleSheet, View, Image, Text, FlatList, TextInput, Dimensions, Alert } from 'react-native';
+import { StyleSheet, View, Image, Text, FlatList, Dimensions, Alert } from 'react-native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { RouteProp } from '@react-navigation/native';
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors';
-import LokatorButton from '../components/LokatorButton';
 import { useEffect, useRef, useState } from 'react';
 import { AutocompleteDropdown, AutocompleteDropdownItem, IAutocompleteDropdownRef } from 'react-native-autocomplete-dropdown';
 import { searchUsers } from '../services/user-service';

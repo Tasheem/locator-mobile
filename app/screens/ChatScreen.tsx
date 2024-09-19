@@ -1,13 +1,13 @@
 import { View, Text, StyleSheet, Image, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from '../constants/colors';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chat } from '../models/room';
 import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from '../services/room-service';
-import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import moment from 'moment-timezone';
-import { getCalendars, useCalendars } from 'expo-localization';
+import { getCalendars } from 'expo-localization';
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Chat', undefined>

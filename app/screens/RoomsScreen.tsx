@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { Room } from '../models/room';
 import LokatorButton from '../components/LokatorButton';
 import { acceptedRoomObservable, createRoom, disconnectRoomsConnection, emitRooms, establishRoomsConnection, getRoomsForUser } from '../services/room-service';
-import { requestUser } from '../services/user-service';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import Ionicons from '@expo/vector-icons/Ionicons';

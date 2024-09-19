@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, Dimensions, Image, TouchableHighlight, DimensionValue } from 'react-native';
+import { StyleSheet, Text, View, TouchableHighlight, DimensionValue } from 'react-native';
 import { BRAND_RED } from '../constants/colors';
 import Logo from './Logo';
 import { useState } from 'react';

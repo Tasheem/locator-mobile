@@ -2,9 +2,9 @@ import { NavigationProp, RouteProp } from '@react-navigation/native'
 import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
 import { RootStackParamList } from '../../App';
 import { useEffect, useState } from 'react';
-import { disconnectNotificationSocket, emitJoinRequests, establishNotificationsConnection, getJoinRoomRequests, notificationObservable, sendJoinRoomResponse } from '../services/room-service';
+import { emitJoinRequests, getJoinRoomRequests, notificationObservable, sendJoinRoomResponse } from '../services/room-service';
 import { JoinRoom } from '../models/room';
-import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors';
+import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR } from '../constants/colors';
 import LokatorButton from '../components/LokatorButton';
 import { Alert } from 'react-native';
 
