@@ -15,7 +15,8 @@ type Props = {
 
 export type RoomDetailsParamList = {
     Participants: {
-        room: Room
+        room: Room,
+        user: User
     },
     Chat: {
         room: Room,
@@ -42,7 +43,8 @@ export default function RoomDetailsScreen({ route }: Props) {
             }
         }} >
             <Tab.Screen name="Participants" component={ ParticipantsScreen } initialParams={{
-                room: room
+                room: room,
+                user: user
             }} />
             <Tab.Screen name="Chat" component={ ChatScreen } initialParams={{
                 room: room,

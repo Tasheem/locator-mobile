@@ -2,7 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StyleSheet, View, Image, Text, FlatList, TextInput, Dimensions, Alert } from "react-native";
 import { RoomDetailsParamList } from "./RoomDetailsScreen";
 import { RouteProp } from "@react-navigation/native";
-import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
+import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import LokatorButton from "../components/LokatorButton";
 import { useEffect, useRef, useState } from "react";
 import { AutocompleteDropdown, AutocompleteDropdownItem, IAutocompleteDropdownRef } from "react-native-autocomplete-dropdown";
@@ -20,6 +20,7 @@ export default function ParticipantsScreen({ route }: Props) {
     const dropdownController = useRef<IAutocompleteDropdownRef | null>(null);
 
     const room = route.params.room;
+    const currentUser = route.params.user;
     const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [members, setMembers] = useState<User[]>([]);
@@ -160,7 +161,7 @@ export default function ParticipantsScreen({ route }: Props) {
                 rowGap: 40
             }}
             renderItem={({ item }) => (
-                <View style={ style.itemContainer }>
+                <View style={ item.id === currentUser.id ? [style.itemContainer, style.itemContainerUser] : style.itemContainer }>
                     <Image source={require("../assets/no-profile-pic.png")}
                     style={{
                         width: 50,
@@ -169,7 +170,7 @@ export default function ParticipantsScreen({ route }: Props) {
                         borderColor: "black",
                         borderWidth: 2
                     }} />
-                    <Text style={style.username}>{ item.username }</Text>
+                    <Text style={ item.id === currentUser.id ? [style.username, style.mainUser] : style.username}>{ item.username }</Text>
                 </View>
             )} />
         </View>
@@ -203,7 +204,14 @@ const style = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10
     },
+    itemContainerUser: {
+        borderColor: CARD_RED_SECONDARY_COLOR,
+        backgroundColor: CARD_RED_PRIMARY_COLOR
+    },
     username: {
         paddingLeft: 10
+    },
+    mainUser: {
+        color: "white"
     }
 });
