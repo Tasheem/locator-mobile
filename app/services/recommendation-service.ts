@@ -1,16 +1,16 @@
-import { appConfig } from "../utils/config";
-import { sendRequest } from "../utils/requestUtil";
+import { appConfig } from '../utils/config';
+import { sendRequest } from '../utils/requestUtil';
 
 const serverPrefix = `${appConfig.serverURL}/recommendation`;
 const fetchRecommendedPlaces = (roomId: number, latitude: number, longitude: number) => {
     const options = {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({
-            "latitude": latitude,
-            "longitude": longitude
+            'latitude': latitude,
+            'longitude': longitude
         }),
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         }
     };
 

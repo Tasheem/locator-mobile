@@ -1,33 +1,33 @@
-import { User } from "../models/user";
-import { appConfig } from "../utils/config";
-import { emitToken, emitUser, sendRequest } from "../utils/requestUtil";
+import { User } from '../models/user';
+import { appConfig } from '../utils/config';
+import { emitToken, emitUser, sendRequest } from '../utils/requestUtil';
 
 const serverPrefix = `${appConfig.serverURL}/auth`;
 const login = async (username: string, password: string) => {
     const payload = {
-        "username": username,
-        "password": password,
+        'username': username,
+        'password': password,
     };
     
     const options: RequestInit = {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
     };
 
     console.log(payload);
 
-    const response = await sendRequest(serverPrefix + "/login", options);
-    /* console.log("STATUS:", response.status);
-    console.log("Headers:", response.headers); */
+    const response = await sendRequest(serverPrefix + '/login', options);
+    /* console.log('STATUS:', response.status);
+    console.log('Headers:', response.headers); */
     if(response.status === 200) {
-        const token = response.headers.get("authorization");
-        // console.log("Token:", token);
+        const token = response.headers.get('authorization');
+        // console.log('Token:', token);
 
         const user = await response.json() as User;
-        // console.log("User:", user);
+        // console.log('User:', user);
 
         emitUser(user);
         emitToken(token);
@@ -45,17 +45,17 @@ const logout = () => {
 
 const register = async (payload: User) => {
     const options: RequestInit = {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
     }
 
-    const response = await sendRequest(serverPrefix + "/register", options);
+    const response = await sendRequest(serverPrefix + '/register', options);
     if(response.status !== 200 && response.status !== 201) {
         // Error registering a user.
-        throw Error(response.status + "");
+        throw Error(response.status + '');
     }
     
     return response;

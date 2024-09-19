@@ -1,5 +1,5 @@
-import { PlaceType } from "./places"
-import { Room } from "./room"
+import { PlaceType } from './places'
+import { Room } from './room'
 
 export type User = {
     id?: number

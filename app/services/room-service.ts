@@ -1,10 +1,10 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Client, StompSubscription } from "@stomp/stompjs";
-import { Chat, JoinRoom, Room } from "../models/room";
-import { BehaviorSubject, Subject } from "rxjs";
-import { sendRequest } from "../utils/requestUtil";
-import { User } from "../models/user";
-import { appConfig } from "../utils/config";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Client, StompSubscription } from '@stomp/stompjs';
+import { Chat, JoinRoom, Room } from '../models/room';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { sendRequest } from '../utils/requestUtil';
+import { User } from '../models/user';
+import { appConfig } from '../utils/config';
 
 type StompClientHolder = {
     chatClient?: Client
@@ -73,12 +73,12 @@ const subscriptionHolder: StompSubscriptionHolder = {};
 
 const createRoom = async (roomName: string) => {
     const options = {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({
-            "name": roomName
+            'name': roomName
         }),
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         }
     };
 
@@ -99,13 +99,13 @@ const getJoinRoomRequests = async () => {
 
 const sendJoinRoomRequest = async (roomId: number, targetUserId: number) => {
     const options = {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "targetRoomId": roomId,
-            "targetUserId": targetUserId
+            'targetRoomId': roomId,
+            'targetUserId': targetUserId
         })
     } as RequestInit;
 
@@ -114,7 +114,7 @@ const sendJoinRoomRequest = async (roomId: number, targetUserId: number) => {
 
 const sendJoinRoomResponse = async (joinRequestId: number, accepted: boolean) => {
     const options = {
-        method: "PATCH"
+        method: 'PATCH'
     } as RequestInit;
 
     return sendRequest(`${serverPrefix}/join/id/${joinRequestId}/accepted/${accepted}`, options);
@@ -122,12 +122,12 @@ const sendJoinRoomResponse = async (joinRequestId: number, accepted: boolean) =>
 
 const sendChatMessage = async (message: string, roomId: number) => {
     const options = {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            "message": message
+            'message': message
         })
     } as RequestInit;
     
@@ -135,12 +135,12 @@ const sendChatMessage = async (message: string, roomId: number) => {
 }
 
 const establishChatConnection = (roomId: number) => {
-    AsyncStorage.getItem("bearerToken")
+    AsyncStorage.getItem('bearerToken')
     .then(token => {
         clientHolder.chatClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
-                "Authorization": token ? token : ""
+                'Authorization': token ? token : ''
             },
             forceBinaryWSFrames: true,
             appendMissingNULLonIncoming: true,
@@ -148,7 +148,7 @@ const establishChatConnection = (roomId: number) => {
         });
 
         clientHolder.chatClient.onConnect = (frame) => {
-            subscriptionHolder.chat = clientHolder.chatClient?.subscribe("/topic/room/" + roomId, (message) => {
+            subscriptionHolder.chat = clientHolder.chatClient?.subscribe('/topic/room/' + roomId, (message) => {
                 const chatMessage = JSON.parse(message.body) as Chat;
                 chats = [...chats, chatMessage];
                 
@@ -161,18 +161,18 @@ const establishChatConnection = (roomId: number) => {
 }
 
 const disconnectChat = () => {
-    // console.log("Deactivating Chat...");
+    // console.log('Deactivating Chat...');
     subscriptionHolder.chat?.unsubscribe();
     clientHolder.chatClient?.deactivate();
 }
 
 const establishParticipantsConnection = (roomId: number) => {
-    AsyncStorage.getItem("bearerToken")
+    AsyncStorage.getItem('bearerToken')
     .then(token => {
         clientHolder.participantsClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
-                "Authorization": token ? token : ""
+                'Authorization': token ? token : ''
             },
             forceBinaryWSFrames: true,
             appendMissingNULLonIncoming: true,
@@ -198,12 +198,12 @@ const disconnectParticipantsSocket = () => {
 }
 
 const establishRoomsConnection = (userId: number) => {
-    AsyncStorage.getItem("bearerToken")
+    AsyncStorage.getItem('bearerToken')
     .then(token => {
         clientHolder.roomsClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
-                "Authorization": token ? token : ""
+                'Authorization': token ? token : ''
             },
             forceBinaryWSFrames: true,
             appendMissingNULLonIncoming: true,
@@ -229,12 +229,12 @@ const disconnectRoomsConnection = () => {
 }
 
 const establishNotificationsConnection = (userId: number) => {
-    AsyncStorage.getItem("bearerToken")
+    AsyncStorage.getItem('bearerToken')
     .then(token => {
         clientHolder.notificationsClient = new Client({
             brokerURL: socketUrl,
             connectHeaders: {
-                "Authorization": token ? token : ""
+                'Authorization': token ? token : ''
             },
             forceBinaryWSFrames: true,
             appendMissingNULLonIncoming: true,
@@ -244,9 +244,9 @@ const establishNotificationsConnection = (userId: number) => {
         clientHolder.notificationsClient.onConnect = (frame) => {
             subscriptionHolder.notifications = clientHolder.notificationsClient?.subscribe(`/topic/room/join/${userId}`, (message) => {
                 const newRequest = JSON.parse(message.body) as JoinRoom;
-                console.log("Current joinRequests:", joinRequests);
+                console.log('Current joinRequests:', joinRequests);
                 joinRequests = [...joinRequests, newRequest];
-                console.log("Updated joinRequests:", joinRequests);
+                console.log('Updated joinRequests:', joinRequests);
                 
                 notificationSubject.next(joinRequests);
             });

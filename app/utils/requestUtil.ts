@@ -1,14 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { User } from "../models/user";
-import { BehaviorSubject } from "rxjs";
-import { appConfig } from "./config";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { User } from '../models/user';
+import { BehaviorSubject } from 'rxjs';
+import { appConfig } from './config';
 
 const serverUrl = appConfig.serverURL;
 
 const userSubject = new BehaviorSubject<User | null>(null);
 const tokenSubject = new BehaviorSubject<string | null>(null);
 
-AsyncStorage.getItem("user")
+AsyncStorage.getItem('user')
 .then((item) => {
     if(!item) {
         return;
@@ -18,7 +18,7 @@ AsyncStorage.getItem("user")
     userSubject.next(user);
 });
 
-AsyncStorage.getItem("bearerToken")
+AsyncStorage.getItem('bearerToken')
 .then((token) => {
     if(!token) {
         return;
@@ -29,20 +29,20 @@ AsyncStorage.getItem("bearerToken")
 
 const emitUser = (user: User | null) => {
     if(user) {
-        AsyncStorage.setItem("user", JSON.stringify(user));
+        AsyncStorage.setItem('user', JSON.stringify(user));
     } else {
-        AsyncStorage.removeItem("user");
+        AsyncStorage.removeItem('user');
     }
 
     userSubject.next(user);
 }
 
 const emitToken = (token: string | null) => {
-    console.log("Emit Token:", token);
+    console.log('Emit Token:', token);
     if(token) {
-        AsyncStorage.setItem("bearerToken", token);
+        AsyncStorage.setItem('bearerToken', token);
     } else {
-        AsyncStorage.removeItem("bearerToken");
+        AsyncStorage.removeItem('bearerToken');
     }
 
     tokenSubject.next(token);
@@ -57,7 +57,7 @@ const tokenObservable = () => {
 }
 
 const sendRequest = async (url: string, options?: RequestInit) => {
-    const token = await AsyncStorage.getItem("bearerToken");
+    const token = await AsyncStorage.getItem('bearerToken');
     
     let requestInit: RequestInit | undefined;
     if(options) {
@@ -65,7 +65,7 @@ const sendRequest = async (url: string, options?: RequestInit) => {
         if(token) {
             headers = {
                 ...options.headers,
-                "Authorization": token ? token : null
+                'Authorization': token ? token : null
             };
         } else {
             headers = {
@@ -82,20 +82,20 @@ const sendRequest = async (url: string, options?: RequestInit) => {
         if(token) {
             requestInit = {
                 headers: {
-                    "Authorization": token ? token : null
+                    'Authorization': token ? token : null
                 }
             } as RequestInit
         }
     }
 
-    console.log("request options:", requestInit); 
+    console.log('request options:', requestInit); 
     const response = await fetch(url, requestInit);
     console.log(url);
     console.log(response.status)
     if(response.status === 401 && url.includes(serverUrl)) {
         // Token expired. Need to log in again.
-        await AsyncStorage.removeItem("bearerToken");
-        await AsyncStorage.removeItem("user");
+        await AsyncStorage.removeItem('bearerToken');
+        await AsyncStorage.removeItem('user');
         emitUser(null);
         emitToken(null);
     }
