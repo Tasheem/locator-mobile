@@ -1,21 +1,21 @@
-import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet, Alert } from "react-native";
-import renderImage from "../utils/renderImage";
-import { useEffect, useState } from "react";
-import { Place } from "../models/places";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { BRAND_RED } from "../constants/colors";
-import { fetchRecommendedPlaces } from "../services/recommendation-service";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RoomDetailsParamList } from "./RoomDetailsScreen";
-import { RouteProp } from "@react-navigation/native";
-import * as Location from "expo-location";
-import moment from "moment-timezone";
+import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import renderImage from '../utils/renderImage';
+import { useEffect, useState } from 'react';
+import { Place } from '../models/places';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { BRAND_RED } from '../constants/colors';
+import { fetchRecommendedPlaces } from '../services/recommendation-service';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RoomDetailsParamList } from './RoomDetailsScreen';
+import { RouteProp } from '@react-navigation/native';
+import * as Location from 'expo-location';
+import moment from 'moment-timezone';
 
 const apiKey = process.env.EXPO_PUBLIC_PLACES_API_KEY;
 
 type Props = {
-    navigation: NativeStackNavigationProp<RoomDetailsParamList, "Recommended", undefined>
-    route: RouteProp<RoomDetailsParamList, "Recommended">
+    navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Recommended', undefined>
+    route: RouteProp<RoomDetailsParamList, 'Recommended'>
 }
 
 export default function RecommendationScreen({ route }: Props) {
@@ -27,7 +27,7 @@ export default function RecommendationScreen({ route }: Props) {
     useEffect(() => {
         (async () => {
             const { status } = await Location.getForegroundPermissionsAsync();
-            if(status === "granted") {
+            if(status === 'granted') {
                 setIsLoading(true);
                 
                 try {
@@ -47,7 +47,7 @@ export default function RecommendationScreen({ route }: Props) {
                     setIsLoading(false);
                 }
             } else {
-                Alert.alert("Error", "Location needs to be granted to receive recommendations for your room.");
+                Alert.alert('Error', 'Location needs to be granted to receive recommendations for your room.');
                 setPlaces([]);
             }
         })();
@@ -64,7 +64,7 @@ export default function RecommendationScreen({ route }: Props) {
                 animating={isLoading}
                 color={BRAND_RED}
                 style={{
-                    height: isLoading ? "auto" : 0
+                    height: isLoading ? 'auto' : 0
                 }} 
             />
             { places.length > 0 ? renderResultsList(places) : <Text></Text> }
@@ -117,7 +117,7 @@ const renderResultsList = (places: Place[]) => {
 						<BouncyCheckbox
 							size={25}
 							fillColor={BRAND_RED}
-							unfillColor="#FFFFFF"
+							unfillColor='#FFFFFF'
 							iconStyle={{ borderColor: BRAND_RED }}
 							innerIconStyle={{ borderWidth: 2 }}
 							style={resultsStyle.checkbox}
@@ -136,7 +136,7 @@ const locationIsOld = (timestamp?: number) => {
 
     const lastTimeChecked = moment(timestamp);
     const today = moment();
-    const aWeekAgo = today.subtract(7, "days");
+    const aWeekAgo = today.subtract(7, 'days');
 
     return lastTimeChecked.isBefore(aWeekAgo);
 }
@@ -144,9 +144,9 @@ const locationIsOld = (timestamp?: number) => {
 const resultsStyle = StyleSheet.create({
 	resultsRowContainer: {
 		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 		padding: 10,
 		zIndex: 1,
 		borderColor: BRAND_RED,
@@ -161,31 +161,31 @@ const resultsStyle = StyleSheet.create({
 		height: 70,
 	},
 	informationContainer: {
-		justifyContent: "space-between",
+		justifyContent: 'space-between',
 		flex: 5,
 		paddingLeft: 20,
 		rowGap: 5
 	},
 	detailsRow: {
-		flexDirection: "row",
-		width: "60%",
+		flexDirection: 'row',
+		width: '60%',
 	},
 	label: {
-		fontWeight: "bold",
+		fontWeight: 'bold',
 		paddingRight: 5,
 	},
 	checkboxContainer: {
-		height: "100%"
+		height: '100%'
 	},
 	percentageContainer: {
 		paddingBottom: 10
 	},
 	percentage: {
-		color: "green",
+		color: 'green',
 		fontSize: 14
 	},
 	percentageRed: {
-		color: "red"
+		color: 'red'
 	},
 	checkbox: {
 	}

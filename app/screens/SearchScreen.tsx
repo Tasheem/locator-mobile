@@ -1,5 +1,5 @@
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import {
 	FlatList,
 	Image,
@@ -10,17 +10,17 @@ import {
 	Platform,
 	View,
 	ActivityIndicator,
-} from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { fetchYelpRestaurants } from "../services/fetchYelpRestaurants";
-import { Business } from "../models/yelp-api";
-import { formatPhoneNumber } from "../utils/formatUtil";
-import LokatorButton from "../components/LokatorButton";
+} from 'react-native';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { fetchYelpRestaurants } from '../services/fetchYelpRestaurants';
+import { Business } from '../models/yelp-api';
+import { formatPhoneNumber } from '../utils/formatUtil';
+import LokatorButton from '../components/LokatorButton';
 
-const brandColor = "#c96b6b";
+const brandColor = '#c96b6b';
 
 export default function SearchScreen() {
-	const [diet, setDiet] = useState("");
+	const [diet, setDiet] = useState('');
 	const [businesses, setBusinesses] = useState<Business[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -34,12 +34,12 @@ export default function SearchScreen() {
 		if (diet) {
 			setIsLoading(true);
 			
-			fetchYelpRestaurants(diet, "Bzz6M3phkh0W4XFEb1LtdBZmxC9TraSABAVGI-eLgf1O1VrWDNj8jLGiNO_kSY6nFPcaiUU8YaMDOhIJ3Jr3K7fLuYg6n37tPQagkuIZsYqNaakZCuL4GLdNPBNtZXYx")
+			fetchYelpRestaurants(diet, 'Bzz6M3phkh0W4XFEb1LtdBZmxC9TraSABAVGI-eLgf1O1VrWDNj8jLGiNO_kSY6nFPcaiUU8YaMDOhIJ3Jr3K7fLuYg6n37tPQagkuIZsYqNaakZCuL4GLdNPBNtZXYx')
 			.then((results) => {
 				setBusinesses(results);
 			})
 			.catch((error) => {
-				console.error("Error fetching restaurants:", error);
+				console.error('Error fetching restaurants:', error);
 				// Handle error appropriately
 			})
 			.finally(() => {
@@ -47,7 +47,7 @@ export default function SearchScreen() {
 			});
 		} else {
 			// Handle the case where 'diet' is not set
-			console.log("what the fuck?");
+			console.log('what the fuck?');
 		}
 	};
 
@@ -59,29 +59,29 @@ export default function SearchScreen() {
 			<View style={styles.formContainer}>
 				<TextInput
 					style={styles.inputField}
-					placeholder="Diet"
+					placeholder='Diet'
 					onChangeText={setDiet}
 					value={diet}
 				/>
 				
 				<LokatorButton 
 					handler={handlePress} 
-					type="Secondary"
+					type='Secondary'
 					fontSize={17}
 					useLogo={true}
-					textValue="Search"
+					textValue='Search'
 				/>
 			</View>
 			<ActivityIndicator 
 				animating={isLoading}
 				color={brandColor}
 				style={{
-					height: isLoading ? "auto" : 0
+					height: isLoading ? 'auto' : 0
 				}} 
 			/>
 			{ businesses.length > 0 ? renderResultsList(businesses) : <Text></Text> }
 
-			<StatusBar style="auto" />
+			<StatusBar style='auto' />
 		</SafeAreaView>
 	);
 }
@@ -129,7 +129,7 @@ const renderResultsList = (businesses: Business[]) => {
 					<BouncyCheckbox
 						size={25}
 						fillColor={brandColor}
-						unfillColor="#FFFFFF"
+						unfillColor='#FFFFFF'
 						iconStyle={{ borderColor: brandColor }}
 						innerIconStyle={{ borderWidth: 2 }}
 						style={resultsStyle.checkbox}
@@ -142,20 +142,20 @@ const renderResultsList = (businesses: Business[]) => {
 
 const styles = StyleSheet.create({
 	headerContainer: {
-		flexDirection: "row",
+		flexDirection: 'row',
 		marginTop: 20,
 		marginBottom: 20,
-		marginLeft: "auto",
-		marginRight: "auto",
+		marginLeft: 'auto',
+		marginRight: 'auto',
 		borderColor: brandColor,
 		borderBottomWidth: 2
 	},
 	heading: {
 		fontSize: 20,
-		fontWeight: "bold"
+		fontWeight: 'bold'
 	},
 	formContainer: {
-		flexDirection: "row",
+		flexDirection: 'row',
 		marginLeft: 5,
 		marginRight: 5,
 		marginBottom: 20,
@@ -175,9 +175,9 @@ const styles = StyleSheet.create({
 const resultsStyle = StyleSheet.create({
 	resultsRowContainer: {
 		flex: 1,
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between",
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 		padding: 10,
 		zIndex: 1,
 		borderColor: brandColor,
@@ -192,17 +192,17 @@ const resultsStyle = StyleSheet.create({
 		height: 70,
 	},
 	informationContainer: {
-		justifyContent: "space-between",
+		justifyContent: 'space-between',
 		flex: 5,
 		paddingLeft: 20,
 		rowGap: 5
 	},
 	detailsRow: {
-		flexDirection: "row",
-		width: "60%",
+		flexDirection: 'row',
+		width: '60%',
 	},
 	label: {
-		fontWeight: "bold",
+		fontWeight: 'bold',
 		paddingRight: 5,
 	},
 	checkbox: {

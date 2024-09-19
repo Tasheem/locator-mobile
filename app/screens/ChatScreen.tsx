@@ -1,17 +1,17 @@
-import { View, Text, StyleSheet, Image, ScrollView, TextInput, ActivityIndicator } from "react-native";
-import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from "../constants/colors";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Chat } from "../models/room";
-import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from "../services/room-service";
-import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RouteProp } from "@react-navigation/native";
-import { RoomDetailsParamList } from "./RoomDetailsScreen";
-import moment from "moment-timezone";
-import { getCalendars, useCalendars } from "expo-localization";
+import { View, Text, StyleSheet, Image, ScrollView, TextInput, ActivityIndicator } from 'react-native';
+import { CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR, BRAND_RED } from '../constants/colors';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { Chat } from '../models/room';
+import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from '../services/room-service';
+import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RouteProp } from '@react-navigation/native';
+import { RoomDetailsParamList } from './RoomDetailsScreen';
+import moment from 'moment-timezone';
+import { getCalendars, useCalendars } from 'expo-localization';
 
 type Props = {
-    navigation: NativeStackNavigationProp<RoomDetailsParamList, "Chat", undefined>
-    route: RouteProp<RoomDetailsParamList, "Chat">
+    navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Chat', undefined>
+    route: RouteProp<RoomDetailsParamList, 'Chat'>
 }
 
 export default function ChatScreen({ route }: Props) {
@@ -20,9 +20,9 @@ export default function ChatScreen({ route }: Props) {
     const room = route.params.room;
     const user = route.params.user;
     const [messages, setMessages] = useState<Chat[]>([]);
-    const [userMessage, setUserMessage] = useState("");
+    const [userMessage, setUserMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [timezone, setTimezone] = useState<string>("UTC");
+    const [timezone, setTimezone] = useState<string>('UTC');
     
     useEffect(() => {
         setIsLoading(true);
@@ -42,7 +42,7 @@ export default function ChatScreen({ route }: Props) {
 
         const calendars = getCalendars();
         const firstCalendar = calendars[0];
-        setTimezone(firstCalendar.timeZone ? firstCalendar.timeZone : "UTC");
+        setTimezone(firstCalendar.timeZone ? firstCalendar.timeZone : 'UTC');
 
         return () => {
             chatSubscription.unsubscribe();
@@ -54,12 +54,12 @@ export default function ChatScreen({ route }: Props) {
         return (
             <View key={item.id} style={item.source.id === user?.id ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}>
                 <View style={item.source.id === user?.id ? [style.imageContainer, style.redImageContainer] : style.imageContainer}>
-                    <Image source={require("../assets/no-profile-pic.png")}
+                    <Image source={require('../assets/no-profile-pic.png')}
                     style={{
                         width: 50,
                         height: 50,
                         borderRadius: 40,
-                        borderColor: "black",
+                        borderColor: 'black',
                         borderWidth: 2
                     }} />
                 </View>
@@ -72,10 +72,10 @@ export default function ChatScreen({ route }: Props) {
                         </View>
                         <View style={style.dateContainer}>
                             <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
-                                { moment.utc(item.createDate).tz(timezone).format("MMM Do YYYY") }
+                                { moment.utc(item.createDate).tz(timezone).format('MMM Do YYYY') }
                             </Text>
                             <Text style={item.source.id === user?.id ? [style.text, style.whiteText] : style.text}>
-                                { moment.utc(item.createDate).tz(timezone).format("h:mm:ss a") }
+                                { moment.utc(item.createDate).tz(timezone).format('h:mm:ss a') }
                             </Text>
                         </View>
                     </View>
@@ -105,7 +105,7 @@ export default function ChatScreen({ route }: Props) {
             </ScrollView>
             <View style={style.messageWriterContainer}>
                 <TextInput
-                    placeholder="Enter Message"
+                    placeholder='Enter Message'
                     style={style.messageWriter}
                     onChangeText={(text) => {
                         setUserMessage(text)
@@ -122,7 +122,7 @@ export default function ChatScreen({ route }: Props) {
                             console.log(err);
                         })
                         .finally(() => {
-                            setUserMessage("");
+                            setUserMessage('');
                         });
                     }}
                     value={userMessage}
@@ -143,10 +143,10 @@ const style = StyleSheet.create({
         padding: 10
     },
     messageContainer: {
-        flexDirection: "row",
+        flexDirection: 'row',
         borderColor: CARD_SECONDARY_COLOR,
         borderWidth: 2,
-        borderStyle: "solid",
+        borderStyle: 'solid',
         borderRadius: 18,
         backgroundColor: CARD_PRIMARY_COLOR,
         marginBottom: 10,
@@ -158,7 +158,7 @@ const style = StyleSheet.create({
     imageContainer: {
         borderRightColor: CARD_SECONDARY_COLOR,
         borderRightWidth: 2,
-        justifyContent: "center",
+        justifyContent: 'center',
         paddingLeft: 5,
         paddingRight: 5,
     },
@@ -170,20 +170,20 @@ const style = StyleSheet.create({
         flexGrow: 1
     },
     text: {
-        color: "black",
+        color: 'black',
         lineHeight: 18
     },
     whiteText: {
-        color: "white"
+        color: 'white'
     },
     messageDetailsContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         borderBottomColor: CARD_SECONDARY_COLOR,
         borderBottomWidth: 2,
         paddingLeft: 5,
         paddingRight: 5,
-        flexWrap: "wrap",
+        flexWrap: 'wrap',
         flex: 1
     },
     nameContainer: {
@@ -191,7 +191,7 @@ const style = StyleSheet.create({
     },
     dateContainer: {
         flex: 1,
-        alignItems: "flex-end"
+        alignItems: 'flex-end'
     },
     redDetailsContainer: {
         borderBottomColor: CARD_RED_SECONDARY_COLOR
@@ -202,8 +202,8 @@ const style = StyleSheet.create({
     },
     messageWriterContainer: {
         height: 100,
-        alignItems: "center",
-        justifyContent: "center"
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     messageWriter: {
         borderWidth: 2,
@@ -211,6 +211,6 @@ const style = StyleSheet.create({
         borderRadius: 20,
         paddingLeft: 10,
         height: 40,
-        width: "90%"
+        width: '90%'
     }
 });

@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal, Alert, ActivityIndicator } from "react-native";
-import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
-import { PlaceType } from "../models/places";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import LokatorButton from "../components/LokatorButton";
-import { fetchPlaceTypes } from "../services/places-service";
-import { User } from "../models/user";
-import { register } from "../services/auth-service";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
+import { useEffect, useState } from 'react';
+import { SafeAreaView, StyleSheet, TextInput, View, Text, FlatList, Modal, Alert, ActivityIndicator } from 'react-native';
+import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from '../constants/colors';
+import { PlaceType } from '../models/places';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import LokatorButton from '../components/LokatorButton';
+import { fetchPlaceTypes } from '../services/places-service';
+import { User } from '../models/user';
+import { register } from '../services/auth-service';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
 // This set contains the ids of the preferences the user has selected.
 const preferenceIds = new Set<number>();
 
 type PageProps = {
-    navigation: NativeStackNavigationProp<RootStackParamList, "Register">
+    navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>
 }
 
 export default function RegisterScreen({ navigation }: PageProps) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
     const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [displayingSuccess, setDisplayingSuccess] = useState(false);
@@ -49,17 +49,17 @@ export default function RegisterScreen({ navigation }: PageProps) {
 
     const isFormValid: () => boolean = () => {
         if(password.length < 3) {
-            Alert.alert("Invalid", "Your password must be at least 3 characters long.");
+            Alert.alert('Invalid', 'Your password must be at least 3 characters long.');
             return false;
         }
     
         if(password !== confirmPassword) {
-            Alert.alert("Invalid", "Password and Confirm Password do not match.");
+            Alert.alert('Invalid', 'Password and Confirm Password do not match.');
             return false;
         }
 
         if(preferenceIds.size === 0) {
-            Alert.alert("Invalid", "At least 1 preference is needed.");
+            Alert.alert('Invalid', 'At least 1 preference is needed.');
             return false;
         }
 
@@ -93,7 +93,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 navigation.goBack();
             }, 3500);
         } catch(error: any) {
-            Alert.alert("Error", "An error occurred when creating your account. Please try again later.");
+            Alert.alert('Error', 'An error occurred when creating your account. Please try again later.');
         }
     }
 
@@ -109,20 +109,20 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 <View style={style.formContainer}>
                     <View style={style.leftContainer}>
                         <TextInput
-                            placeholder="Username"
+                            placeholder='Username'
                             onChangeText={setUsername}
                             value={username}
                             style={style.textBox}
                         />
                         <TextInput
-                            placeholder="Password"
+                            placeholder='Password'
                             onChangeText={setPassword}
                             value={password}
                             style={style.textBox}
                             secureTextEntry
                         />
                         <TextInput
-                            placeholder="First Name"
+                            placeholder='First Name'
                             onChangeText={setFirstName}
                             value={firstName}
                             style={style.textBox}
@@ -131,20 +131,20 @@ export default function RegisterScreen({ navigation }: PageProps) {
 
                     <View style={style.rightContainer}>
                         <TextInput
-                            placeholder="Email"
+                            placeholder='Email'
                             onChangeText={setEmail}
                             value={email}
                             style={style.textBox}
                         />
                         <TextInput
-                            placeholder="Confirm Password"
+                            placeholder='Confirm Password'
                             onChangeText={setConfirmPassword}
                             value={confirmPassword}
                             style={style.textBox}
                             secureTextEntry
                         />
                         <TextInput
-                            placeholder="Last Name"
+                            placeholder='Last Name'
                             onChangeText={setLastName}
                             value={lastName}
                             style={style.textBox}
@@ -153,14 +153,14 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 </View>
 
                 <View style={style.btnContainer}>
-                    <LokatorButton type="Secondary" textValue="Preferences"
+                    <LokatorButton type='Secondary' textValue='Preferences'
                     handler={() => {
                         setModalVisible(true);
                     }} />
 
                     {
                         displayingSuccess ? null : (
-                            <LokatorButton type="Primary" textValue="Submit"
+                            <LokatorButton type='Primary' textValue='Submit'
                                 handler={submitData} 
                             />
                         )
@@ -168,13 +168,13 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 </View>
 
                 <Modal
-                animationType="fade"
+                animationType='fade'
                 visible={modalVisible}
                 onRequestClose={() => {
                     setModalVisible(false);
                 }}>
                     <SafeAreaView>
-                        <LokatorButton type="Secondary" textValue="Close"
+                        <LokatorButton type='Secondary' textValue='Close'
                         handler={() => {
                             setModalVisible(false);
                         }} />
@@ -204,7 +204,7 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean) =
                     gap: 30
                 }}
                 contentContainerStyle={style.flatListContainer}
-                keyExtractor={ placeType => placeType.id + "" }
+                keyExtractor={ placeType => placeType.id + '' }
                 renderItem={({ item }) => (
                     <View style={style.itemContainer}>
                         <View style={style.itemTextContainer}>
@@ -213,7 +213,7 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean) =
                         <BouncyCheckbox
                             size={25}
                             fillColor={BRAND_RED}
-                            unfillColor="#FFFFFF"
+                            unfillColor='#FFFFFF'
                             iconStyle={{ borderColor: BRAND_RED }}
                             innerIconStyle={{ borderWidth: 2 }}
                             isChecked={ preferenceIds.has(item.id) }
@@ -234,27 +234,27 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean) =
 
 const style = StyleSheet.create({
     successMessage: {
-        color: "green",
+        color: 'green',
         fontSize: 20
     },
     rootContainer: {
-        height: "90%",
-        justifyContent: "center",
-        alignItems: "center"
+        height: '90%',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     formContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        width: "100%"
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%'
     },
     leftContainer: {
         flex: 1,
-        alignItems: "center",
+        alignItems: 'center',
         gap: 35
     },
     rightContainer: {
         flex: 1,
-        alignItems: "center",
+        alignItems: 'center',
         gap: 35
     },
     textBox: {
@@ -273,21 +273,21 @@ const style = StyleSheet.create({
     },
     btnContainer: {
         marginTop: 40,
-        flexDirection: "row",
-        width: "80%",
-        justifyContent: "space-between"
+        flexDirection: 'row',
+        width: '80%',
+        justifyContent: 'space-between'
     },
     preferencesContainer: {
-        alignItems: "center"
+        alignItems: 'center'
     },
     flatListContainer: {
-        paddingBottom: "40%" // React Native FlatList has issue with bottom part of list cutting off.
-        /* flexDirection: "row",
-        flexWrap: "wrap" */
+        paddingBottom: '40%' // React Native FlatList has issue with bottom part of list cutting off.
+        /* flexDirection: 'row',
+        flexWrap: 'wrap' */
     },
     itemContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         borderColor: BRAND_RED,
         borderWidth: 2,
         height: 50,
@@ -296,10 +296,10 @@ const style = StyleSheet.create({
         paddingLeft: 15
     },
     itemTextContainer: {
-        flexDirection: "row",
-        width: "70%"
+        flexDirection: 'row',
+        width: '70%'
     },
     itemText: {
-        flexWrap: "wrap"
+        flexWrap: 'wrap'
     }
 });

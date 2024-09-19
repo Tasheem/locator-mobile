@@ -1,17 +1,17 @@
-import { StatusBar } from "expo-status-bar";
-import LoginComponent from "./app/screens/LoginScreen";
-import { NavigationContainer } from "@react-navigation/native";
-import { NativeStackScreenProps, createNativeStackNavigator } from "@react-navigation/native-stack";
-import RegisterScreen from "./app/screens/RegisterScreen";
-import { User } from "./app/models/user";
-import { useEffect, useState } from "react";
-import { Room } from "./app/models/room";
-import * as encoding from "text-encoding" // Needed for stompjs library
-import { userObservable } from "./app/utils/requestUtil";
-import { AutocompleteDropdownContextProvider } from "react-native-autocomplete-dropdown";
-import HomeScreen from "./app/screens/HomeScreen";
-import * as Location from "expo-location";
-import { Alert } from "react-native";
+import { StatusBar } from 'expo-status-bar';
+import LoginComponent from './app/screens/LoginScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
+import RegisterScreen from './app/screens/RegisterScreen';
+import { User } from './app/models/user';
+import { useEffect, useState } from 'react';
+import { Room } from './app/models/room';
+import * as encoding from 'text-encoding' // Needed for stompjs library
+import { userObservable } from './app/utils/requestUtil';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
+import HomeScreen from './app/screens/HomeScreen';
+import * as Location from 'expo-location';
+import { Alert } from 'react-native';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -22,7 +22,7 @@ export default function App() {
 	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
-			// console.log("User emitted:", nextValue);
+			// console.log('User emitted:', nextValue);
 			setUser(nextValue);
 		});
 
@@ -38,7 +38,7 @@ export default function App() {
 				{
 					user ? (
 						<Stack.Navigator>
-							<Stack.Screen name="Home" component={HomeScreen} initialParams={{
+							<Stack.Screen name='Home' component={HomeScreen} initialParams={{
 								user: user
 							}}
 							options={{
@@ -46,14 +46,14 @@ export default function App() {
 							}} />
 						</Stack.Navigator>
 					) : (
-						<Stack.Navigator initialRouteName="Login">
-							<Stack.Screen name="Login" component={LoginComponent} />
-							<Stack.Screen name="Register" component={RegisterScreen} />
+						<Stack.Navigator initialRouteName='Login'>
+							<Stack.Screen name='Login' component={LoginComponent} />
+							<Stack.Screen name='Register' component={RegisterScreen} />
 						</Stack.Navigator>
 					)
 				}
 				
-				<StatusBar style="auto" />
+				<StatusBar style='auto' />
 			</NavigationContainer>
 		</AutocompleteDropdownContextProvider>
 	);
@@ -61,13 +61,13 @@ export default function App() {
 
 const checkLocationPermissions = async () => {
 	const { status } = await Location.getForegroundPermissionsAsync();
-	console.log("Saved status: " + status);
+	console.log('Saved status: ' + status);
 
-	if(status !== "granted") {
+	if(status !== 'granted') {
 		const permissionResponse = await Location.requestForegroundPermissionsAsync();
-		console.log("Status after request: " + permissionResponse.status);
-		if(permissionResponse.status !== "granted") {
-			Alert.alert("Location", "The recommendation feature of this app will not operate correctly without location permissions.");
+		console.log('Status after request: ' + permissionResponse.status);
+		if(permissionResponse.status !== 'granted') {
+			Alert.alert('Location', 'The recommendation feature of this app will not operate correctly without location permissions.');
 		}
 	}
 }
@@ -94,6 +94,6 @@ type RootStackParamList = {
 		user: User
 	}
 };
-type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, "Login">;
+type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 export { RootStackParamList, LoginNavigationProps }
