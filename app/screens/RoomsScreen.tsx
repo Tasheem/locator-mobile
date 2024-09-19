@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet, Text, TouchableHighlight, FlatList, Modal, TextInput, ActivityIndicator } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TouchableHighlight, FlatList, Modal, TextInput, ActivityIndicator, TouchableOpacity } from "react-native";
 import Logo from "../components/Logo";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import { acceptedRoomObservable, createRoom, disconnectRoomsConnection, emitRoom
 import { requestUser } from "../services/user-service";
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 type Props = {
     route: RouteProp<RootStackParamList, "Rooms">,
@@ -94,6 +95,9 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                 <Text style={ styles.description }>{ itemInfo.item.name }</Text>
                                 <Text style={ styles.description }>Participants: { itemInfo.item.members.length }</Text>
                             </View>
+                            <TouchableOpacity style={styles.trashcanContainer}>
+                                <Ionicons name="trash" style={styles.trashcan} size={30} color={BRAND_RED} />
+                            </TouchableOpacity>
                         </View>
                     </TouchableHighlight>
                 )}
@@ -196,7 +200,8 @@ const styles = StyleSheet.create({
         backgroundColor: CARD_PRIMARY_COLOR,
         borderRadius: 8,
         width: '100%',
-        padding: 10
+        padding: 10,
+        alignItems: "center"
     },
     descriptionContainer: {
         marginLeft: 10,
@@ -204,6 +209,13 @@ const styles = StyleSheet.create({
     },
     description: {
         fontSize: 18
+    },
+    trashcanContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        flexBasis: "50%"
+    },
+    trashcan: {
     }
 });
 
