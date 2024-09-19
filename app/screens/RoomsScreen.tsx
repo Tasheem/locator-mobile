@@ -205,15 +205,13 @@ const styles = StyleSheet.create({
     },
     descriptionContainer: {
         marginLeft: 10,
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        flex: 1
     },
     description: {
         fontSize: 18
     },
     trashcanContainer: {
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        flexBasis: "50%"
     },
     trashcan: {
     }
