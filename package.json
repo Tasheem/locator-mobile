@@ -4,8 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "NODE_ENV=test expo start",
-    "start:test": "NODE_ENV=test expo start",
-    "start:development": "NODE_ENV=development expo start",
+    "test": "NODE_ENV=test expo start",
+    "dev": "NODE_ENV=development expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
