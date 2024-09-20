@@ -16,7 +16,7 @@ npm --version
 ```bash
 npm start
 ```
-- This will run the mobile app connected to the Lokator server hosted in the Cloud.
+- This will run the mobile app connected to the Locator server hosted in the Cloud.
 - If you want to run the app connected to the localhost backend, boot the app like this:
 ```bash
 npm run start:development

@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Lokator",
-    "slug": "Lokator",
+    "name": "Locator",
+    "slug": "Locator",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "app/assets/locater_center_solid.png",
+    "icon": "app/assets/locator_center_solid.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "app/assets/locater_center_solid.png",
+      "image": "app/assets/locator_center_solid.png",
       "resizeMode": "contain",
       "backgroundColor": "#292524"
     },
@@ -19,12 +19,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "app/assets/locater_center_solid.png",
+        "foregroundImage": "app/assets/locator_center_solid.png",
         "backgroundColor": "#292524"
       }
     },
     "web": {
-      "favicon": "app/assets/locater_center_solid.png"
+      "favicon": "app/assets/locator_center_solid.png"
     },
     "plugins": [
       "expo-localization"

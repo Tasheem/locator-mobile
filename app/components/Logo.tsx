@@ -10,6 +10,6 @@ export default function Logo(props: LogoProps) {
         <Image style={{
             height: props.height,
             width: props.width
-        }} source={require('../assets/locater_center_solid.png')} />
+        }} source={require('../assets/locator_center_solid.png')} />
     )
 }
