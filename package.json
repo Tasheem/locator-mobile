@@ -6,9 +6,12 @@
     "start": "NODE_ENV=test expo start",
     "test": "NODE_ENV=test expo start",
     "dev": "NODE_ENV=development expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "test:android": "NODE_ENV=test expo start --android",
+    "dev:android": "NODE_ENV=development expo start --android",
+    "test:ios": "NODE_ENV=test expo start --ios",
+    "dev:ios": "NODE_ENV=development expo start --ios",
+    "test:web": "NODE_ENV=test expo start --web",
+    "dev:web": "NODE_ENV=development expo start --web"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.0.0",
