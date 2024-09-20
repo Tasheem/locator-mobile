@@ -4,7 +4,7 @@ import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from '../constant
 import { useEffect, useState } from 'react';
 import { Room } from '../models/room';
 import LokatorButton from '../components/LokatorButton';
-import { acceptedRoomObservable, createRoom, disconnectRoomsConnection, emitRooms, establishRoomsConnection, getRoomsForUser } from '../services/room-service';
+import { acceptedRoomObservable, createRoom, deleteRoom, disconnectRoomsConnection, emitRooms, establishRoomsConnection, getRoomsForUser } from '../services/room-service';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -94,7 +94,17 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                 <Text style={ styles.description }>{ itemInfo.item.name }</Text>
                                 <Text style={ styles.description }>Participants: { itemInfo.item.members.length }</Text>
                             </View>
-                            <TouchableOpacity style={styles.trashcanContainer}>
+                            <TouchableOpacity style={styles.trashcanContainer} onPress={async () => {
+                                const response = await deleteRoom(itemInfo.item.id);
+                                if(response.ok) {
+                                    const roomsListUpdated = rooms.filter(room => {
+                                        // Keep any room that isn't equal to the one that was just deleted.
+                                        return room.id !== itemInfo.item.id;
+                                    });
+
+                                    emitRooms(roomsListUpdated);
+                                }
+                            }}>
                                 <Ionicons name='trash' style={styles.trashcan} size={30} color={BRAND_RED} />
                             </TouchableOpacity>
                         </View>
@@ -158,6 +168,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
                                                 if(response.status === 201) {
                                                     const room = await response.json() as Room;
                                                     setRooms([...rooms, room]);
+                                                    setNewRoomName('');
                                                     setIsModalVisible(false);
                                                 } else {
                                                     setIsError(true);

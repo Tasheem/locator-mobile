@@ -85,6 +85,14 @@ const createRoom = async (roomName: string) => {
     return sendRequest(serverPrefix, options);
 }
 
+const deleteRoom = async (roomId: number) => {
+    const options = {
+        method: "DELETE"
+    }
+
+    return sendRequest(`${serverPrefix}/id/${roomId}`, options);
+}
+
 const getRoomsForUser = async () => {
     return sendRequest(serverPrefix);
 }
@@ -262,7 +270,8 @@ const disconnectNotificationSocket = () => {
 }
 
 export { 
-    createRoom, 
+    createRoom,
+    deleteRoom,
     establishChatConnection, 
     disconnectChat, 
     chatObservable, 
