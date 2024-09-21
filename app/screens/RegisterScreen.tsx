@@ -5,20 +5,19 @@ import {
   TextInput,
   View,
   Text,
-  FlatList,
   Modal,
   Alert,
-  ActivityIndicator,
+  ScrollView
 } from "react-native";
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
 import { PlaceType } from "../models/places";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
 import LocatorButton from "../components/LocatorButton";
-import { fetchPlaceTypes } from "../services/places-service";
 import { User } from "../models/user";
 import { register } from "../services/auth-service";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
+import Preferences from "../components/Preferences";
+import { fetchPlaceTypes } from "../services/places-service";
 
 // This set contains the ids of the preferences the user has selected.
 const preferenceIds = new Set<number>();
@@ -34,9 +33,9 @@ export default function RegisterScreen({ navigation }: PageProps) {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [displayingSuccess, setDisplayingSuccess] = useState(false);
+  const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
   const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export default function RegisterScreen({ navigation }: PageProps) {
     if (preferenceIds.size > 0) {
       preferenceIds.clear();
     }
-
     setPlaceTypesLoading(true);
 
     fetchPlaceTypes()
@@ -195,66 +193,23 @@ export default function RegisterScreen({ navigation }: PageProps) {
           }}
         >
           <SafeAreaView>
-            <LocatorButton
-              type="Secondary"
-              textValue="Close"
-              handler={() => {
-                setModalVisible(false);
-              }}
-            />
+            <ScrollView>
+              <LocatorButton
+                type="Secondary"
+                textValue="Close"
+                handler={() => {
+                  setModalVisible(false);
+                }}
+              />
 
-            <View style={style.preferencesContainer}>
-              <Text style={style.title}>Choose Preferences</Text>
-              {renderPlaceTypes(placeTypes, placeTypesLoading)}
-            </View>
+              <Preferences placeTypes={placeTypes} placeTypesLoading={placeTypesLoading} selectedPlaceTypes={preferenceIds} />
+            </ScrollView>
           </SafeAreaView>
         </Modal>
       </View>
     </SafeAreaView>
   );
 }
-
-const renderPlaceTypes = (
-  placeTypes: PlaceType[],
-  placeTypesLoading: boolean
-) => {
-  return (
-    <View>
-      <ActivityIndicator animating={placeTypesLoading} color={BRAND_RED} />
-      <FlatList
-        data={placeTypes}
-        numColumns={2}
-        columnWrapperStyle={{
-          gap: 30,
-        }}
-        contentContainerStyle={style.flatListContainer}
-        keyExtractor={(placeType) => placeType.id + ""}
-        renderItem={({ item }) => (
-          <View style={style.itemContainer}>
-            <View style={style.itemTextContainer}>
-              <Text>{item.displayName}</Text>
-            </View>
-            <BouncyCheckbox
-              size={25}
-              fillColor={BRAND_RED}
-              unfillColor="#FFFFFF"
-              iconStyle={{ borderColor: BRAND_RED }}
-              innerIconStyle={{ borderWidth: 2 }}
-              isChecked={preferenceIds.has(item.id)}
-              onPress={(isChecked) => {
-                if (isChecked) {
-                  preferenceIds.add(item.id);
-                } else {
-                  preferenceIds.delete(item.id);
-                }
-              }}
-            />
-          </View>
-        )}
-      />
-    </View>
-  );
-};
 
 const style = StyleSheet.create({
   successMessage: {
@@ -289,25 +244,11 @@ const style = StyleSheet.create({
     borderRadius: 25,
     paddingLeft: 10,
   },
-  title: {
-    fontSize: 20,
-    color: CARD_RED_SECONDARY_COLOR,
-    marginTop: 15,
-    marginBottom: 15,
-  },
   btnContainer: {
     marginTop: 40,
     flexDirection: "row",
     width: "80%",
     justifyContent: "space-between",
-  },
-  preferencesContainer: {
-    alignItems: "center",
-  },
-  flatListContainer: {
-    paddingBottom: "40%", // React Native FlatList has issue with bottom part of list cutting off.
-    /* flexDirection: 'row',
-        flexWrap: 'wrap' */
   },
   itemContainer: {
     flexDirection: "row",
@@ -319,11 +260,10 @@ const style = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 15,
   },
-  itemTextContainer: {
-    flexDirection: "row",
-    width: "70%",
-  },
-  itemText: {
-    flexWrap: "wrap",
+  title: {
+    fontSize: 20,
+    color: CARD_RED_SECONDARY_COLOR,
+    marginTop: 15,
+    marginBottom: 15
   },
 });
