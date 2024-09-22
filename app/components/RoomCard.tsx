@@ -1,7 +1,7 @@
-import { StyleSheet, TouchableHighlight, TouchableOpacity, View, Text, DimensionValue } from 'react-native';
+import { StyleSheet, TouchableHighlight, TouchableOpacity, View, Text, DimensionValue, Alert } from 'react-native';
 import Logo from './Logo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { deleteRoom, deleteRoomAndEmit, emitRooms } from '../services/room-service';
+import { deleteRoom, deleteRoomAndEmit } from '../services/room-service';
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors';
 import { Room } from '../models/room';
 
@@ -61,10 +61,26 @@ export default function RoomCard({ room, width, onPress, onLongPress, deleteDisa
                 <TouchableOpacity
                     style={styles.trashcanContainer}
                     onPress={async () => {
-                        const response = await deleteRoom(room.id);
-                        if (response.ok) {
-                            deleteRoomAndEmit(room);
-                        }
+                        Alert.alert(
+                            'Delete',
+                            `Are you sure you want to delete ${room.name}?`,
+                            [
+                                {
+                                    text: 'cancel',
+                                    style: 'cancel',
+                                },
+                                {
+                                    text: 'delete',
+                                    style: 'destructive',
+                                    onPress: async () => {
+                                        const response = await deleteRoom(room.id);
+                                        if (response.ok) {
+                                            deleteRoomAndEmit(room);
+                                        }
+                                    }
+                                }
+                            ]
+                        )
                     }}
                     disabled={deleteDisabled}
                 >
