@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Client, StompSubscription } from '@stomp/stompjs';
-import { Chat, JoinRoom, Room } from '../models/room';
+import { ChatMessage, JoinRoom, Room } from '../models/room';
 import { BehaviorSubject } from 'rxjs';
 import { sendRequest } from '../utils/requestUtil';
 import { User } from '../models/user';
@@ -23,12 +23,12 @@ type StompSubscriptionHolder = {
 const serverPrefix = `${appConfig.serverURL}/room`;
 const socketUrl = `${appConfig.socketURL}/chat`;
 
-let chats = [] as Chat[];
+let chats = [] as ChatMessage[];
 let participants = [] as User[];
 let rooms = [] as Room[];
 let joinRequests = [] as JoinRoom[];
 
-const chatSubject = new BehaviorSubject<Chat[]>(chats);
+const chatSubject = new BehaviorSubject<ChatMessage[]>(chats);
 const chatObservable = () => {
     return chatSubject.asObservable();
 }
@@ -39,7 +39,7 @@ const participantsObservable = () => {
 }
 
 const roomsSubject = new BehaviorSubject<Room[]>(rooms);
-const acceptedRoomObservable = () => {
+const roomsObservable = () => {
     return roomsSubject.asObservable();
 }
 
@@ -48,7 +48,7 @@ const notificationObservable = () => {
     return notificationSubject.asObservable();
 }
 
-const emitChats = (updatedChats: Chat[]) => {
+const emitChats = (updatedChats: ChatMessage[]) => {
     chats = updatedChats;
     chatSubject.next(chats);
 }
@@ -174,7 +174,7 @@ const establishChatConnection = (roomId: number) => {
 
         clientHolder.chatClient.onConnect = (frame) => {
             subscriptionHolder.chat = clientHolder.chatClient?.subscribe('/topic/room/' + roomId, (message) => {
-                const chatMessage = JSON.parse(message.body) as Chat;
+                const chatMessage = JSON.parse(message.body) as ChatMessage;
                 chats = [...chats, chatMessage];
                 
                 chatSubject.next(chats);
@@ -303,7 +303,7 @@ export {
     disconnectParticipantsSocket,
     establishRoomsConnection,
     disconnectRoomsConnection,
-    acceptedRoomObservable,
+    roomsObservable,
     establishNotificationsConnection,
     disconnectNotificationSocket,
     notificationObservable,

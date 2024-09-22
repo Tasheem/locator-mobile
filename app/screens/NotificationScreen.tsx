@@ -27,15 +27,6 @@ export default function NotificationScreen({ route, navigation }: Props) {
   const [requests, setRequests] = useState<JoinRoom[]>([]);
 
   useEffect(() => {
-    getJoinRoomRequests()
-      .then((res) => res.json())
-      .then((joinRequests: JoinRoom[]) => {
-        emitJoinRequests(joinRequests);
-      })
-      .catch((err) => {
-        // console.log(err);
-      });
-
     if (!user.id) {
       return;
     }

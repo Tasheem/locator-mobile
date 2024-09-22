@@ -12,9 +12,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useEffect, useState } from "react";
 import {
   disconnectNotificationSocket,
+  emitJoinRequests,
   establishNotificationsConnection,
+  getJoinRoomRequests,
   notificationObservable,
 } from "../services/room-service";
+import { JoinRoom } from "../models/room";
 
 type Props = {
   route: RouteProp<RootStackParamList, "Home">;
@@ -30,6 +33,15 @@ export default function HomeScreen({ route }: Props) {
     if (!user.id) {
       return;
     }
+
+    getJoinRoomRequests()
+    .then((res) => res.json())
+    .then((joinRequests: JoinRoom[]) => {
+      emitJoinRequests(joinRequests);
+    })
+    .catch((err) => {
+      // console.log(err);
+    });
 
     establishNotificationsConnection(user.id);
     const subscription = notificationObservable().subscribe((joinRequests) => {

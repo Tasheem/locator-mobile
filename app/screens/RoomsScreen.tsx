@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { Room } from "../models/room";
 import LocatorButton from "../components/LocatorButton";
 import {
-  acceptedRoomObservable,
+  roomsObservable,
   createRoom,
   deleteRoom,
   disconnectRoomsConnection,
@@ -51,18 +51,18 @@ export default function RoomsScreen({ route, navigation }: Props) {
   useEffect(() => {
     setIsRoomsLoading(true);
     getRoomsForUser()
-      .then((response) => {
-        return response.json() as Promise<Room[]>;
-      })
-      .then((rooms) => {
-        emitRooms(rooms);
-      })
-      .catch((err) => {
-        emitRooms([]);
-      })
-      .finally(() => {
-        setIsRoomsLoading(false);
-      });
+    .then((response) => {
+      return response.json() as Promise<Room[]>;
+    })
+    .then((rooms) => {
+      emitRooms(rooms);
+    })
+    .catch((err) => {
+      emitRooms([]);
+    })
+    .finally(() => {
+      setIsRoomsLoading(false);
+    });
 
     const userId = route.params.user.id;
     if (!userId) {
@@ -70,7 +70,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
     }
 
     establishRoomsConnection(userId);
-    const subscription = acceptedRoomObservable().subscribe((rooms) => {
+    const subscription = roomsObservable().subscribe((rooms) => {
       setRooms(rooms);
     });
 
