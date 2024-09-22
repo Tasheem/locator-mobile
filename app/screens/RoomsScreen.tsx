@@ -98,6 +98,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
         width={'95%'}
         key={room.id}
         onPress={onPress}
+        deleteDisabled={true}
       />
     );
   })

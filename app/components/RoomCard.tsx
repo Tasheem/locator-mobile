@@ -10,9 +10,10 @@ type Props = {
     width?: DimensionValue
     onPress: () => void
     onLongPress?: () => void
+    deleteDisabled?: boolean
 }
 
-export default function RoomCard({ room, width, onPress, onLongPress }: Props) {
+export default function RoomCard({ room, width, onPress, onLongPress, deleteDisabled }: Props) {
     const styles = StyleSheet.create({
         viewContainer: {
             flexDirection: 'row',
@@ -56,6 +57,7 @@ export default function RoomCard({ room, width, onPress, onLongPress }: Props) {
                         Participants: {room.members.length}
                     </Text>
                 </View>
+                
                 <TouchableOpacity
                     style={styles.trashcanContainer}
                     onPress={async () => {
@@ -64,12 +66,13 @@ export default function RoomCard({ room, width, onPress, onLongPress }: Props) {
                             deleteRoomAndEmit(room);
                         }
                     }}
+                    disabled={deleteDisabled}
                 >
                     <Ionicons
                         name='trash'
                         style={styles.trashcan}
                         size={30}
-                        color={BRAND_RED}
+                        color={deleteDisabled ? CARD_SECONDARY_COLOR : BRAND_RED}
                     />
                 </TouchableOpacity>
             </View>
