@@ -6,7 +6,7 @@ type Room = {
     members: User[]
 }
 
-type Chat = {
+type ChatMessage = {
     id: number,
     message: string
     createDate: string
@@ -23,4 +23,4 @@ type JoinRoom = {
     createDate: string
 }
 
-export { Room, Chat, JoinRoom }
+export { Room, ChatMessage, JoinRoom }
