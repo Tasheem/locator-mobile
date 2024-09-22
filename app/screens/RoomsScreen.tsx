@@ -9,6 +9,7 @@ import {
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import Logo from "../components/Logo";
 import {
@@ -31,6 +32,7 @@ import {
 import { NavigationProp, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import RoomCard from "../components/RoomCard";
 
 type Props = {
   route: RouteProp<RootStackParamList, "Rooms">;
@@ -78,6 +80,12 @@ export default function RoomsScreen({ route, navigation }: Props) {
     };
   }, []);
 
+  const roomCards = rooms.map(room => {
+    return (
+      <RoomCard room={room} user={route.params.user} navigation={navigation} key={room.id} />
+    );
+  })
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.buttonContainer}>
@@ -100,53 +108,9 @@ export default function RoomsScreen({ route, navigation }: Props) {
         />
       ) : null}
 
-      <FlatList
-        data={rooms}
-        keyExtractor={(item) => item.id + ""}
-        renderItem={(itemInfo) => (
-          <TouchableHighlight
-            onPress={() => {
-              navigation.navigate("RoomDetails", {
-                room: itemInfo.item,
-                user: route.params.user,
-              });
-            }}
-            style={styles.viewContainer}
-            underlayColor={BRAND_RED}
-          >
-            <View style={styles.roomContainer}>
-              <Logo height={50} width={50} />
-              <View style={styles.descriptionContainer}>
-                <Text style={styles.description}>{itemInfo.item.name}</Text>
-                <Text style={styles.description}>
-                  Participants: {itemInfo.item.members.length}
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={styles.trashcanContainer}
-                onPress={async () => {
-                  const response = await deleteRoom(itemInfo.item.id);
-                  if (response.ok) {
-                    const roomsListUpdated = rooms.filter((room) => {
-                      // Keep any room that isn't equal to the one that was just deleted.
-                      return room.id !== itemInfo.item.id;
-                    });
-
-                    emitRooms(roomsListUpdated);
-                  }
-                }}
-              >
-                <Ionicons
-                  name="trash"
-                  style={styles.trashcan}
-                  size={30}
-                  color={BRAND_RED}
-                />
-              </TouchableOpacity>
-            </View>
-          </TouchableHighlight>
-        )}
-      />
+      <ScrollView>
+        { roomCards }
+      </ScrollView>
 
       <Modal
         animationType="slide"
@@ -206,7 +170,8 @@ export default function RoomsScreen({ route, navigation }: Props) {
                         const response = await createRoom(newRoomName);
                         if (response.status === 201) {
                           const room = (await response.json()) as Room;
-                          setRooms([...rooms, room]);
+                          emitRooms([...rooms, room]);
+                          
                           setNewRoomName("");
                           setIsModalVisible(false);
                         } else {
@@ -233,35 +198,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
     marginTop: 15,
-  },
-  viewContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    borderRadius: 8,
-  },
-  roomContainer: {
-    flexDirection: "row",
-    borderWidth: 2,
-    borderColor: CARD_SECONDARY_COLOR,
-    backgroundColor: CARD_PRIMARY_COLOR,
-    borderRadius: 8,
-    width: "100%",
-    padding: 10,
-    alignItems: "center",
-  },
-  descriptionContainer: {
-    marginLeft: 10,
-    justifyContent: "space-between",
-    flex: 1,
-  },
-  description: {
-    fontSize: 18,
-  },
-  trashcanContainer: {},
-  trashcan: {},
+  }
 });
 
 const modalStyle = StyleSheet.create({

@@ -38,9 +38,9 @@ const participantsObservable = () => {
     return participantsSubject.asObservable();
 }
 
-const acceptedRoomSubject = new BehaviorSubject<Room[]>(rooms);
+const roomsSubject = new BehaviorSubject<Room[]>(rooms);
 const acceptedRoomObservable = () => {
-    return acceptedRoomSubject.asObservable();
+    return roomsSubject.asObservable();
 }
 
 const notificationSubject = new BehaviorSubject<JoinRoom[]>(joinRequests);
@@ -60,7 +60,24 @@ const emitParticipants = (updatedParticipants: User[]) => {
 
 const emitRooms = (updatedRooms: Room[]) => {
     rooms = updatedRooms;
-    acceptedRoomSubject.next(rooms);
+    roomsSubject.next(rooms);
+}
+
+const deleteRoomAndEmit = (target: Room) => {
+    rooms.forEach(room => {
+        console.log('Room: ' + room.name);
+    });
+
+    rooms = rooms.filter(room => {
+        return room.id !== target.id;
+    });
+
+    console.log('');
+    rooms.forEach(room => {
+        console.log('Room: ' + room.name);
+    });
+
+    roomsSubject.next(rooms);
 }
 
 const emitJoinRequests = (requests: JoinRoom[]) => {
@@ -223,7 +240,7 @@ const establishRoomsConnection = (userId: number) => {
                 const addedRoom = JSON.parse(message.body) as Room;
                 rooms = [...rooms, addedRoom];
 
-                acceptedRoomSubject.next(rooms);
+                roomsSubject.next(rooms);
             });
         };
         
@@ -293,5 +310,6 @@ export {
     emitChats,
     emitParticipants,
     emitRooms,
-    emitJoinRequests
+    emitJoinRequests,
+    deleteRoomAndEmit
 }
