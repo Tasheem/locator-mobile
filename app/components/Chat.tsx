@@ -1,8 +1,8 @@
-import { View, Text, Image, StyleSheet } from "react-native"
-import { ChatMessage } from "../models/room"
-import { User } from "../models/user"
-import { CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors"
-import moment from "moment"
+import { View, Text, Image, StyleSheet } from 'react-native'
+import { ChatMessage } from '../models/room'
+import { User } from '../models/user'
+import { CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors'
+import moment from 'moment'
 
 type Props = {
     chatMessage: ChatMessage

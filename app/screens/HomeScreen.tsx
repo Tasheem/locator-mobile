@@ -1,26 +1,26 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../App";
-import { RouteProp } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import RoomsScreen from "./RoomsScreen";
-import NotificationScreen from "./NotificationScreen";
-import { BRAND_RED } from "../constants/colors";
-import LocatorButton from "../components/LocatorButton";
-import { logout } from "../services/auth-service";
-import RoomDetailsScreen from "./RoomDetailsScreen";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { useEffect, useState } from "react";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
+import { RouteProp } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import RoomsScreen from './RoomsScreen';
+import NotificationScreen from './NotificationScreen';
+import { BRAND_RED } from '../constants/colors';
+import LocatorButton from '../components/LocatorButton';
+import { logout } from '../services/auth-service';
+import RoomDetailsScreen from './RoomDetailsScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useEffect, useState } from 'react';
 import {
   disconnectNotificationSocket,
   emitJoinRequests,
   establishNotificationsConnection,
   getJoinRoomRequests,
   notificationObservable,
-} from "../services/room-service";
-import { JoinRoom } from "../models/room";
+} from '../services/room-service';
+import { JoinRoom } from '../models/room';
 
 type Props = {
-  route: RouteProp<RootStackParamList, "Home">;
+  route: RouteProp<RootStackParamList, 'Home'>;
 };
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
@@ -60,32 +60,32 @@ export default function HomeScreen({ route }: Props) {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
-          if (route.name === "RoomsStack") {
-            iconName = focused ? "home" : "home-outline";
+          if (route.name === 'RoomsStack') {
+            iconName = focused ? 'home' : 'home-outline';
           } else {
-            iconName = focused ? "notifications" : "notifications-outline";
+            iconName = focused ? 'notifications' : 'notifications-outline';
           }
 
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: BRAND_RED,
-        tabBarInactiveTintColor: "gray",
+        tabBarInactiveTintColor: 'gray',
       })}
     >
       <Tab.Screen
-        name="RoomsStack"
+        name='RoomsStack'
         component={RoomsStack}
         initialParams={{
           user: user,
         }}
         options={{
           headerShown: false,
-          title: "Rooms",
+          title: 'Rooms',
         }}
       />
       <Tab.Screen
-        name="Notifications"
+        name='Notifications'
         component={NotificationScreen}
         initialParams={{
           user: user,
@@ -100,13 +100,13 @@ export default function HomeScreen({ route }: Props) {
 }
 
 type RoomStackProp = {
-  route: RouteProp<RootStackParamList, "RoomsStack">;
+  route: RouteProp<RootStackParamList, 'RoomsStack'>;
 };
 
 const RoomsStack = ({ route }: RoomStackProp) => {
   return (
     <Stack.Navigator
-      initialRouteName="Rooms"
+      initialRouteName='Rooms'
       screenOptions={{
         headerTitleStyle: {
           color: BRAND_RED,
@@ -114,7 +114,7 @@ const RoomsStack = ({ route }: RoomStackProp) => {
       }}
     >
       <Stack.Screen
-        name="Rooms"
+        name='Rooms'
         component={RoomsScreen}
         initialParams={{
           user: route.params.user,
@@ -124,8 +124,8 @@ const RoomsStack = ({ route }: RoomStackProp) => {
           headerRight: () => {
             return (
               <LocatorButton
-                type="Secondary"
-                textValue="Log Out"
+                type='Secondary'
+                textValue='Log Out'
                 handler={() => {
                   logout();
                 }}
@@ -136,7 +136,7 @@ const RoomsStack = ({ route }: RoomStackProp) => {
       />
 
       <Stack.Screen
-        name="RoomDetails"
+        name='RoomDetails'
         component={RoomDetailsScreen}
         options={(options) => ({
           title: options.route.params.room.name,

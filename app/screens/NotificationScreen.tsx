@@ -1,25 +1,25 @@
-import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { StyleSheet, View, Text, FlatList, Image } from "react-native";
-import { RootStackParamList } from "../../App";
-import { useEffect, useState } from "react";
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
+import { RootStackParamList } from '../../App';
+import { useEffect, useState } from 'react';
 import {
   emitJoinRequests,
   getJoinRoomRequests,
   notificationObservable,
   sendJoinRoomResponse,
-} from "../services/room-service";
-import { JoinRoom } from "../models/room";
+} from '../services/room-service';
+import { JoinRoom } from '../models/room';
 import {
   BRAND_RED,
   CARD_PRIMARY_COLOR,
   CARD_RED_PRIMARY_COLOR,
-} from "../constants/colors";
-import LocatorButton from "../components/LocatorButton";
-import { Alert } from "react-native";
+} from '../constants/colors';
+import LocatorButton from '../components/LocatorButton';
+import { Alert } from 'react-native';
 
 type Props = {
-  route: RouteProp<RootStackParamList, "Notifications">;
-  navigation: NavigationProp<RootStackParamList, "Notifications">;
+  route: RouteProp<RootStackParamList, 'Notifications'>;
+  navigation: NavigationProp<RootStackParamList, 'Notifications'>;
 };
 
 export default function NotificationScreen({ route, navigation }: Props) {
@@ -43,23 +43,23 @@ export default function NotificationScreen({ route, navigation }: Props) {
   return (
     <View style={style.rootContainer}>
       <Text style={style.header}>
-        {requests.length} {requests.length === 1 ? "Request" : "Requests"}
+        {requests.length} {requests.length === 1 ? 'Request' : 'Requests'}
       </Text>
 
       <FlatList
         data={requests}
-        keyExtractor={(item) => Math.floor(Math.random() * 100) + ""}
+        keyExtractor={(item) => Math.floor(Math.random() * 100) + ''}
         renderItem={({ item }) => {
           return (
             <View style={style.itemContainer}>
               <View style={style.imageContainer}>
                 <Image
-                  source={require("../assets/no-profile-pic.png")}
+                  source={require('../assets/no-profile-pic.png')}
                   style={{
                     width: 50,
                     height: 50,
                     borderRadius: 40,
-                    borderColor: "black",
+                    borderColor: 'black',
                     borderWidth: 2,
                   }}
                 />
@@ -68,7 +68,7 @@ export default function NotificationScreen({ route, navigation }: Props) {
               <View style={style.contentContainer}>
                 <View style={style.sentByContainer}>
                   <Text style={style.contentText}>
-                    Sent By: {item.sourceUser.username}{" "}
+                    Sent By: {item.sourceUser.username}{' '}
                   </Text>
                 </View>
                 <View style={style.roomNameContainer}>
@@ -79,12 +79,12 @@ export default function NotificationScreen({ route, navigation }: Props) {
               </View>
               <View style={style.btnContainer}>
                 <LocatorButton
-                  type="Secondary"
-                  textValue="Decline"
+                  type='Secondary'
+                  textValue='Decline'
                   handler={() => {
-                    const errorTitle = "Error";
+                    const errorTitle = 'Error';
                     const errorMessage =
-                      "Sorry. The action could not be completed.";
+                      'Sorry. The action could not be completed.';
 
                     sendJoinRoomResponse(item.id, false)
                       .then((response) => {
@@ -106,12 +106,12 @@ export default function NotificationScreen({ route, navigation }: Props) {
                   }}
                 />
                 <LocatorButton
-                  type="Primary"
-                  textValue="Accept"
+                  type='Primary'
+                  textValue='Accept'
                   handler={() => {
-                    const errorTitle = "Error";
+                    const errorTitle = 'Error';
                     const errorMessage =
-                      "Sorry. The action could not be completed.";
+                      'Sorry. The action could not be completed.';
 
                     sendJoinRoomResponse(item.id, true)
                       .then((response) => {
@@ -143,7 +143,7 @@ export default function NotificationScreen({ route, navigation }: Props) {
 
 const style = StyleSheet.create({
   rootContainer: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   header: {
     color: BRAND_RED,
@@ -156,8 +156,8 @@ const style = StyleSheet.create({
     borderColor: CARD_RED_PRIMARY_COLOR,
     borderWidth: 2,
     borderRadius: 40,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingLeft: 10,
     paddingRight: 10,
     gap: 15,
@@ -169,24 +169,24 @@ const style = StyleSheet.create({
     borderRightWidth: 2,
     borderRightColor: BRAND_RED,
     paddingRight: 10,
-    height: "100%",
-    justifyContent: "center",
+    height: '100%',
+    justifyContent: 'center',
     paddingTop: 10,
     paddingBottom: 10,
   },
   contentContainer: {
-    height: "100%",
+    height: '100%',
     paddingTop: 10,
     paddingBottom: 10,
-    justifyContent: "center",
+    justifyContent: 'center',
     gap: 10,
   },
   btnContainer: {
     borderLeftWidth: 2,
     borderLeftColor: BRAND_RED,
     paddingLeft: 10,
-    justifyContent: "space-between",
-    height: "100%",
+    justifyContent: 'space-between',
+    height: '100%',
     paddingTop: 10,
     paddingBottom: 10,
   },

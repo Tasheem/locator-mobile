@@ -104,7 +104,7 @@ const createRoom = async (roomName: string) => {
 
 const deleteRoom = async (roomId: number) => {
     const options = {
-        method: "DELETE"
+        method: 'DELETE'
     }
 
     return sendRequest(`${serverPrefix}/id/${roomId}`, options);

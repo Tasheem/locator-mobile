@@ -1,9 +1,9 @@
-import { ActivityIndicator, FlatList, StyleSheet, View, Text, ScrollView } from "react-native";
-import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from "../constants/colors";
-import { PlaceType } from "../models/places";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { useEffect, useState } from "react";
-import { fetchPlaceTypes } from "../services/places-service";
+import { ActivityIndicator, FlatList, StyleSheet, View, Text, ScrollView } from 'react-native';
+import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from '../constants/colors';
+import { PlaceType } from '../models/places';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { useEffect, useState } from 'react';
+import { fetchPlaceTypes } from '../services/places-service';
 
 type Props = {
     placeTypes: PlaceType[]
@@ -30,7 +30,7 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, s
                 <BouncyCheckbox
                     size={25}
                     fillColor={BRAND_RED}
-                    unfillColor="#FFFFFF"
+                    unfillColor='#FFFFFF'
                     iconStyle={{ borderColor: BRAND_RED }}
                     innerIconStyle={{ borderWidth: 2 }}
                     isChecked={selectedPlaceTypes.has(item.id)}
@@ -58,7 +58,7 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, s
 
 const style = StyleSheet.create({
     preferencesContainer: {
-        alignItems: "center"
+        alignItems: 'center'
     },
     itemScroll: {
         flexDirection: 'row',
@@ -73,8 +73,8 @@ const style = StyleSheet.create({
         marginTop: 15
     },
     itemContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         borderColor: BRAND_RED,
         borderWidth: 2,
         height: 50,
@@ -82,7 +82,7 @@ const style = StyleSheet.create({
         paddingLeft: 15
     },
     itemTextContainer: {
-        flexDirection: "row",
-        width: "70%"
+        flexDirection: 'row',
+        width: '70%'
     }
 })

@@ -10,16 +10,16 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
-} from "react-native";
-import Logo from "../components/Logo";
+} from 'react-native';
+import Logo from '../components/Logo';
 import {
   BRAND_RED,
   CARD_PRIMARY_COLOR,
   CARD_SECONDARY_COLOR,
-} from "../constants/colors";
-import { useEffect, useState } from "react";
-import { Room } from "../models/room";
-import LocatorButton from "../components/LocatorButton";
+} from '../constants/colors';
+import { useEffect, useState } from 'react';
+import { Room } from '../models/room';
+import LocatorButton from '../components/LocatorButton';
 import {
   roomsObservable,
   createRoom,
@@ -28,22 +28,22 @@ import {
   emitRooms,
   establishRoomsConnection,
   getRoomsForUser,
-} from "../services/room-service";
-import { NavigationProp, RouteProp } from "@react-navigation/native";
-import { RootStackParamList } from "../../App";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import RoomCard from "../components/RoomCard";
+} from '../services/room-service';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../App';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import RoomCard from '../components/RoomCard';
 
 type Props = {
-  route: RouteProp<RootStackParamList, "Rooms">;
-  navigation: NavigationProp<RootStackParamList, "Rooms">;
+  route: RouteProp<RootStackParamList, 'Rooms'>;
+  navigation: NavigationProp<RootStackParamList, 'Rooms'>;
 };
 
 export default function RoomsScreen({ route, navigation }: Props) {
   // const [user, setUser] = useState<User | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newRoomName, setNewRoomName] = useState("");
+  const [newRoomName, setNewRoomName] = useState('');
   const [isRoomsLoading, setIsRoomsLoading] = useState(false);
   const [isModalButtonLoading, setIsModalButtonLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -90,8 +90,8 @@ export default function RoomsScreen({ route, navigation }: Props) {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.buttonContainer}>
         <LocatorButton
-          type="Secondary"
-          textValue="New Room"
+          type='Secondary'
+          textValue='New Room'
           handler={() => {
             setIsModalVisible(true);
           }}
@@ -113,7 +113,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
       </ScrollView>
 
       <Modal
-        animationType="slide"
+        animationType='slide'
         visible={isModalVisible}
         onRequestClose={() => {
           setIsModalVisible(false);
@@ -121,8 +121,8 @@ export default function RoomsScreen({ route, navigation }: Props) {
       >
         <SafeAreaView>
           <LocatorButton
-            type="Secondary"
-            textValue="Close"
+            type='Secondary'
+            textValue='Close'
             handler={() => {
               setIsModalVisible(false);
             }}
@@ -131,7 +131,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
           <View style={modalStyle.rootContainer}>
             <View
               style={{
-                alignItems: "center",
+                alignItems: 'center',
               }}
             >
               <Logo width={100} height={100} />
@@ -146,7 +146,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
 
               <View style={modalStyle.formContainer}>
                 <TextInput
-                  placeholder="Room Name"
+                  placeholder='Room Name'
                   value={newRoomName}
                   onChangeText={setNewRoomName}
                   style={modalStyle.textInput}
@@ -161,8 +161,8 @@ export default function RoomsScreen({ route, navigation }: Props) {
                   </View>
                 ) : (
                   <LocatorButton
-                    type="Primary"
-                    textValue="Submit"
+                    type='Primary'
+                    textValue='Submit'
                     handler={async () => {
                       setIsModalButtonLoading(true);
 
@@ -172,7 +172,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
                           const room = (await response.json()) as Room;
                           emitRooms([...rooms, room]);
 
-                          setNewRoomName("");
+                          setNewRoomName('');
                           setIsModalVisible(false);
                         } else {
                           setIsError(true);
@@ -196,7 +196,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 15,
   },
   roomsList: {
@@ -208,11 +208,11 @@ const styles = StyleSheet.create({
 
 const modalStyle = StyleSheet.create({
   rootContainer: {
-    justifyContent: "center",
-    height: "80%",
+    justifyContent: 'center',
+    height: '80%',
   },
   formContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 15,
   },
   title: {
@@ -223,7 +223,7 @@ const modalStyle = StyleSheet.create({
   },
   textInput: {
     borderColor: BRAND_RED,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 2,
     borderRadius: 10,
     width: 150,
@@ -234,10 +234,10 @@ const modalStyle = StyleSheet.create({
   loaderContainer: {
     width: 80,
     height: 40,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   errorText: {
-    color: "red",
+    color: 'red',
     marginBottom: 10,
   },
 });
