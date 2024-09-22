@@ -52,13 +52,7 @@ const register = async (payload: User) => {
         body: JSON.stringify(payload)
     }
 
-    const response = await sendRequest(serverPrefix + '/register', options);
-    if(response.status !== 200 && response.status !== 201) {
-        // Error registering a user.
-        throw Error(response.status + '');
-    }
-    
-    return response;
+    return sendRequest(serverPrefix + '/register', options);
 }
 
 export { login, logout, register };

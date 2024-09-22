@@ -96,17 +96,30 @@ export default function RegisterScreen({ navigation }: PageProps) {
     };
 
     try {
-      await register(payload);
+      const response = await register(payload);
+      if(response.status === 201) {
+        setDisplayingSuccess(true);
+        setTimeout(() => {
+          setDisplayingSuccess(false);
+          navigation.goBack();
+        }, 3500);
+      } else if(response.status === 409) {
+        Alert.alert(
+          'Error',
+          `Either the username "${username}" is already taken or the email ${email} is taken. Please log in if you have an account linked to that email or choose another username.`
+        )
+      } else if(response.status === 400) {
+        Alert.alert(
+          'Error',
+          'An error occurred when creating your account. Please try again later.'
+        )
+      }
 
-      setDisplayingSuccess(true);
-      setTimeout(() => {
-        setDisplayingSuccess(false);
-        navigation.goBack();
-      }, 3500);
     } catch (error: any) {
+      console.log(error);
       Alert.alert(
-        "Error",
-        "An error occurred when creating your account. Please try again later."
+        'Error',
+        'An error occurred when creating your account. Please try again later.'
       );
     }
   };
