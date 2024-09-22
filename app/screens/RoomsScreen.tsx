@@ -82,7 +82,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
 
   const roomCards = rooms.map(room => {
     return (
-      <RoomCard room={room} user={route.params.user} navigation={navigation} key={room.id} />
+      <RoomCard room={room} user={route.params.user} navigation={navigation} width={'95%'} key={room.id} />
     );
   })
 
@@ -108,7 +108,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
         />
       ) : null}
 
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.roomsList}>
         { roomCards }
       </ScrollView>
 
@@ -171,7 +171,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
                         if (response.status === 201) {
                           const room = (await response.json()) as Room;
                           emitRooms([...rooms, room]);
-                          
+
                           setNewRoomName("");
                           setIsModalVisible(false);
                         } else {
@@ -198,6 +198,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     alignItems: "center",
     marginTop: 15,
+  },
+  roomsList: {
+    alignItems: 'center',
+    rowGap: 15,
+    marginTop: 15
   }
 });
 

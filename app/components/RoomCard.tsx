@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableHighlight, TouchableOpacity, View, Text, ScrollView } from "react-native";
+import { StyleSheet, TouchableHighlight, TouchableOpacity, View, Text, DimensionValue } from "react-native";
 import Logo from "./Logo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { deleteRoom, deleteRoomAndEmit, emitRooms } from "../services/room-service";
@@ -11,10 +11,39 @@ import { User } from "../models/user";
 type Props = {
     room: Room
     user: User
-    navigation: NavigationProp<RootStackParamList, "Rooms">;
+    navigation: NavigationProp<RootStackParamList, "Rooms">
+    width?: DimensionValue
 }
 
-export default function RoomCard({ room, user, navigation }: Props) {
+export default function RoomCard({ room, user, navigation, width }: Props) {
+    const styles = StyleSheet.create({
+        viewContainer: {
+            flexDirection: "row",
+            justifyContent: "center",
+            borderRadius: 8,
+        },
+        roomContainer: {
+            flexDirection: "row",
+            borderWidth: 2,
+            borderColor: CARD_SECONDARY_COLOR,
+            backgroundColor: CARD_PRIMARY_COLOR,
+            borderRadius: 8,
+            width: width,
+            padding: 10,
+            alignItems: "center",
+        },
+        descriptionContainer: {
+            marginLeft: 10,
+            justifyContent: "space-between",
+            flex: 1,
+        },
+        description: {
+            fontSize: 18,
+        },
+        trashcanContainer: {},
+        trashcan: {}
+    });
+
     return (
         <TouchableHighlight
             onPress={() => {
@@ -54,34 +83,3 @@ export default function RoomCard({ room, user, navigation }: Props) {
         </TouchableHighlight>
     )
 }
-
-const styles = StyleSheet.create({
-    viewContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10,
-        borderRadius: 8,
-    },
-    roomContainer: {
-        flexDirection: "row",
-        borderWidth: 2,
-        borderColor: CARD_SECONDARY_COLOR,
-        backgroundColor: CARD_PRIMARY_COLOR,
-        borderRadius: 8,
-        width: "100%",
-        padding: 10,
-        alignItems: "center",
-    },
-    descriptionContainer: {
-        marginLeft: 10,
-        justifyContent: "space-between",
-        flex: 1,
-    },
-    description: {
-        fontSize: 18,
-    },
-    trashcanContainer: {},
-    trashcan: {}
-});
