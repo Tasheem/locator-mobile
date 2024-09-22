@@ -143,6 +143,11 @@ export default function ParticipantsScreen({ route }: Props) {
                             "Success",
                             "The request has been sent successfully."
                           );
+                        } else if (response.status === 409) {
+                          Alert.alert(
+                            "Error",
+                            `${username} is already a member of the room or they've already received a request.`
+                          )
                         } else {
                           Alert.alert(
                             "Error",
