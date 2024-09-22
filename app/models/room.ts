@@ -3,6 +3,7 @@ import { User } from './user'
 type Room = {
     id: number
     name: string
+    creator: User
     members: User[]
 }
 

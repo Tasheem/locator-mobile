@@ -63,18 +63,29 @@ const emitRooms = (updatedRooms: Room[]) => {
     roomsSubject.next(rooms);
 }
 
-const deleteRoomAndEmit = (target: Room) => {
-    rooms.forEach(room => {
-        console.log('Room: ' + room.name);
-    });
+const addRoomAndEmit = (room: Room) => {
+    rooms = [...rooms, room];
+    roomsSubject.next(rooms);
+}
 
+const updateRoomAndEmit = (updatedRoom: Room) => {
+    let updatedList = [];
+    for(let i = 0; i < rooms.length; i++) {
+        if(rooms[i].id === updatedRoom.id) {
+            updatedList.push(updatedRoom);
+            continue;
+        }
+
+        updatedList.push(rooms[i]);
+    }
+
+    rooms = updatedList;
+    roomsSubject.next(rooms);
+}
+
+const deleteRoomAndEmit = (target: Room) => {
     rooms = rooms.filter(room => {
         return room.id !== target.id;
-    });
-
-    console.log('');
-    rooms.forEach(room => {
-        console.log('Room: ' + room.name);
     });
 
     roomsSubject.next(rooms);
@@ -100,6 +111,20 @@ const createRoom = async (roomName: string) => {
     };
 
     return sendRequest(serverPrefix, options);
+}
+
+const updateRoom = async (roomId: number, roomName: string) => {
+    const options = {
+        method: 'PUT',
+        body: JSON.stringify({
+            'name': roomName
+        }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    };
+
+    return sendRequest(`${serverPrefix}/id/${roomId}`, options);
 }
 
 const deleteRoom = async (roomId: number) => {
@@ -288,6 +313,7 @@ const disconnectNotificationSocket = () => {
 
 export { 
     createRoom,
+    updateRoom,
     deleteRoom,
     establishChatConnection, 
     disconnectChat, 
@@ -311,5 +337,7 @@ export {
     emitParticipants,
     emitRooms,
     emitJoinRequests,
+    addRoomAndEmit,
+    updateRoomAndEmit,
     deleteRoomAndEmit
 }

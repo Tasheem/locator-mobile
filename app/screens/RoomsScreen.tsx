@@ -2,28 +2,18 @@ import {
   SafeAreaView,
   View,
   StyleSheet,
-  Text,
-  TouchableHighlight,
-  FlatList,
   Modal,
-  TextInput,
   ActivityIndicator,
-  TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import Logo from '../components/Logo';
 import {
   BRAND_RED,
-  CARD_PRIMARY_COLOR,
-  CARD_SECONDARY_COLOR,
 } from '../constants/colors';
 import { useEffect, useState } from 'react';
 import { Room } from '../models/room';
 import LocatorButton from '../components/LocatorButton';
 import {
   roomsObservable,
-  createRoom,
-  deleteRoom,
   disconnectRoomsConnection,
   emitRooms,
   establishRoomsConnection,
@@ -31,8 +21,8 @@ import {
 } from '../services/room-service';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import RoomCard from '../components/RoomCard';
+import SaveRoom from '../components/SaveRoom';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Rooms'>;
@@ -40,13 +30,11 @@ type Props = {
 };
 
 export default function RoomsScreen({ route, navigation }: Props) {
-  // const [user, setUser] = useState<User | null>(null);
+  const user = route.params.user;
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newRoomName, setNewRoomName] = useState('');
   const [isRoomsLoading, setIsRoomsLoading] = useState(false);
-  const [isModalButtonLoading, setIsModalButtonLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [roomInFocus, setRoomInFocus] = useState<Room | null>(null);
 
   useEffect(() => {
     setIsRoomsLoading(true);
@@ -64,7 +52,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
       setIsRoomsLoading(false);
     });
 
-    const userId = route.params.user.id;
+    const userId = user.id;
     if (!userId) {
       return;
     }
@@ -81,8 +69,36 @@ export default function RoomsScreen({ route, navigation }: Props) {
   }, []);
 
   const roomCards = rooms.map(room => {
+    const onPress = () => {
+        navigation.navigate('RoomDetails', {
+            room: room,
+            user: user
+        });
+    };
+
+    const userCreatedThisRoom = user.id && room.creator.id == user.id;
+    if(userCreatedThisRoom) {
+      return (
+        <RoomCard 
+          room={room}
+          width={'95%'}
+          key={room.id}
+          onPress={onPress}
+          onLongPress={() => {
+            setRoomInFocus(room);
+            setIsModalVisible(true);
+          }}
+        />
+      );
+    }
+
     return (
-      <RoomCard room={room} user={route.params.user} navigation={navigation} width={'95%'} key={room.id} />
+      <RoomCard 
+        room={room}
+        width={'95%'}
+        key={room.id}
+        onPress={onPress}
+      />
     );
   })
 
@@ -93,6 +109,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
           type='Secondary'
           textValue='New Room'
           handler={() => {
+            setRoomInFocus(null);
             setIsModalVisible(true);
           }}
         />
@@ -120,74 +137,13 @@ export default function RoomsScreen({ route, navigation }: Props) {
         }}
       >
         <SafeAreaView>
-          <LocatorButton
-            type='Secondary'
-            textValue='Close'
-            handler={() => {
-              setIsModalVisible(false);
-            }}
-          />
-
-          <View style={modalStyle.rootContainer}>
-            <View
-              style={{
-                alignItems: 'center',
-              }}
-            >
-              <Logo width={100} height={100} />
-
-              <Text style={modalStyle.title}>Create a Room</Text>
-
-              {isError && !isModalButtonLoading ? (
-                <Text style={modalStyle.errorText}>
-                  An error occurred while creating a new room.
-                </Text>
-              ) : null}
-
-              <View style={modalStyle.formContainer}>
-                <TextInput
-                  placeholder='Room Name'
-                  value={newRoomName}
-                  onChangeText={setNewRoomName}
-                  style={modalStyle.textInput}
-                />
-
-                {isModalButtonLoading ? (
-                  <View style={modalStyle.loaderContainer}>
-                    <ActivityIndicator
-                      animating={isModalButtonLoading}
-                      color={BRAND_RED}
-                    />
-                  </View>
-                ) : (
-                  <LocatorButton
-                    type='Primary'
-                    textValue='Submit'
-                    handler={async () => {
-                      setIsModalButtonLoading(true);
-
-                      try {
-                        const response = await createRoom(newRoomName);
-                        if (response.status === 201) {
-                          const room = (await response.json()) as Room;
-                          emitRooms([...rooms, room]);
-
-                          setNewRoomName('');
-                          setIsModalVisible(false);
-                        } else {
-                          setIsError(true);
-                        }
-                      } catch (err: any) {
-                        setIsError(true);
-                      } finally {
-                        setIsModalButtonLoading(false);
-                      }
-                    }}
-                  />
-                )}
-              </View>
-            </View>
-          </View>
+          {
+            roomInFocus ? (
+              <SaveRoom setIsModalVisible={setIsModalVisible} room={roomInFocus} />
+            ) : (
+              <SaveRoom setIsModalVisible={setIsModalVisible} />
+            )
+          }
         </SafeAreaView>
       </Modal>
     </SafeAreaView>
@@ -204,40 +160,4 @@ const styles = StyleSheet.create({
     rowGap: 15,
     marginTop: 15
   }
-});
-
-const modalStyle = StyleSheet.create({
-  rootContainer: {
-    justifyContent: 'center',
-    height: '80%',
-  },
-  formContainer: {
-    flexDirection: 'row',
-    gap: 15,
-  },
-  title: {
-    color: BRAND_RED,
-    fontSize: 28,
-    marginTop: 50,
-    marginBottom: 30,
-  },
-  textInput: {
-    borderColor: BRAND_RED,
-    borderStyle: 'solid',
-    borderWidth: 2,
-    borderRadius: 10,
-    width: 150,
-    paddingLeft: 5,
-    paddingTop: 10,
-    paddingBottom: 10,
-  },
-  loaderContainer: {
-    width: 80,
-    height: 40,
-    justifyContent: 'center',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-  },
 });

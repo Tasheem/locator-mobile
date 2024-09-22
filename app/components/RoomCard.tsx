@@ -4,18 +4,15 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteRoom, deleteRoomAndEmit, emitRooms } from '../services/room-service';
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors';
 import { Room } from '../models/room';
-import { NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../App';
-import { User } from '../models/user';
 
 type Props = {
     room: Room
-    user: User
-    navigation: NavigationProp<RootStackParamList, 'Rooms'>
     width?: DimensionValue
+    onPress: () => void
+    onLongPress?: () => void
 }
 
-export default function RoomCard({ room, user, navigation, width }: Props) {
+export default function RoomCard({ room, width, onPress, onLongPress }: Props) {
     const styles = StyleSheet.create({
         viewContainer: {
             flexDirection: 'row',
@@ -46,12 +43,8 @@ export default function RoomCard({ room, user, navigation, width }: Props) {
 
     return (
         <TouchableHighlight
-            onPress={() => {
-                navigation.navigate('RoomDetails', {
-                    room: room,
-                    user: user
-                });
-            }}
+            onPress={onPress}
+            onLongPress={onLongPress}
             style={styles.viewContainer}
             underlayColor={BRAND_RED}
         >
