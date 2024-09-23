@@ -9,12 +9,14 @@ import { Room } from './app/models/room';
 import * as encoding from 'text-encoding' // Needed for stompjs library
 import { userObservable } from './app/utils/requestUtil';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
-import HomeScreen from './app/screens/HomeScreen';
 import * as Location from 'expo-location';
 import { Alert } from 'react-native';
+import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
+import HomeDrawer from './app/screens/HomeDrawer';
 
 global.TextEncoder = encoding.TextEncoder
 
+const Drawer = createDrawerNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
@@ -37,14 +39,19 @@ export default function App() {
 			<NavigationContainer>
 				{
 					user ? (
-						<Stack.Navigator>
-							<Stack.Screen name='Home' component={HomeScreen} initialParams={{
-								user: user
-							}}
-							options={{
-								headerShown: false
-							}} />
-						</Stack.Navigator>
+						<Drawer.Navigator initialRouteName='Home'>
+							<Drawer.Screen name='HomeDrawer' 
+								component={HomeDrawer} 
+								initialParams={{
+									user: user
+								}}
+								options={{
+									headerShown: false,
+									drawerLabel: 'Home',
+									headerTitle: 'Home'
+								}}
+							/>
+						</Drawer.Navigator>
 					) : (
 						<Stack.Navigator initialRouteName='Login'>
 							<Stack.Screen name='Login' component={LoginComponent} />
@@ -73,6 +80,9 @@ const checkLocationPermissions = async () => {
 }
 
 type RootStackParamList = {
+	HomeDrawer: {
+		user: User
+	},
 	Home: {
 		user: User
 	}

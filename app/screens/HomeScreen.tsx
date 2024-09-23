@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
-import { RouteProp } from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RoomsScreen from './RoomsScreen';
 import NotificationScreen from './NotificationScreen';
@@ -9,7 +9,7 @@ import LocatorButton from '../components/LocatorButton';
 import { logout } from '../services/auth-service';
 import RoomDetailsScreen from './RoomDetailsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   disconnectNotificationSocket,
   emitJoinRequests,
@@ -18,14 +18,16 @@ import {
   notificationObservable,
 } from '../services/room-service';
 import { JoinRoom } from '../models/room';
+import { DrawerContext } from './HomeDrawer';
 
 type Props = {
-  route: RouteProp<RootStackParamList, 'Home'>;
+  route: RouteProp<RootStackParamList, 'Home'>
+  navigation: NavigationProp<RootStackParamList, 'Home'>
 };
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
-export default function HomeScreen({ route }: Props) {
+export default function HomeScreen({ route, navigation }: Props) {
   const user = route.params.user;
   const [notificationCount, setNotificationCount] = useState(0);
 
@@ -77,11 +79,11 @@ export default function HomeScreen({ route }: Props) {
         name='RoomsStack'
         component={RoomsStack}
         initialParams={{
-          user: user,
+          user: user
         }}
         options={{
           headerShown: false,
-          title: 'Rooms',
+          title: 'Rooms'
         }}
       />
       <Tab.Screen
@@ -100,10 +102,14 @@ export default function HomeScreen({ route }: Props) {
 }
 
 type RoomStackProp = {
-  route: RouteProp<RootStackParamList, 'RoomsStack'>;
+  route: RouteProp<RootStackParamList, 'RoomsStack'>
+  navigation: NavigationProp<RootStackParamList, 'RoomsStack'>
 };
 
-const RoomsStack = ({ route }: RoomStackProp) => {
+const RoomsStack = ({ route, navigation }: RoomStackProp) => {
+  const drawerNavigation = useContext(DrawerContext);
+  const user = route.params.user;
+
   return (
     <Stack.Navigator
       initialRouteName='Rooms'
@@ -117,10 +123,22 @@ const RoomsStack = ({ route }: RoomStackProp) => {
         name='Rooms'
         component={RoomsScreen}
         initialParams={{
-          user: route.params.user,
+          user: user
         }}
         options={{
           /* headerTitle: () => <Logo height={30} width={30} />, */
+          headerLeft: () => {
+            return (
+              <Ionicons
+                name='menu'
+                size={30}
+                color={BRAND_RED}
+                onPress={() => {
+                  drawerNavigation?.toggleDrawer();
+                }}
+              />
+            );
+          },
           headerRight: () => {
             return (
               <LocatorButton
