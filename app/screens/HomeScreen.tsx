@@ -18,7 +18,7 @@ import {
   notificationObservable,
 } from '../services/room-service';
 import { JoinRoom } from '../models/room';
-import { DrawerContext } from './HomeDrawer';
+import { DrawerContext } from '../utils/context';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Home'>
@@ -127,6 +127,7 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
         }}
         options={{
           /* headerTitle: () => <Logo height={30} width={30} />, */
+          headerTitleAlign: 'center',
           headerLeft: () => {
             return (
               <Ionicons

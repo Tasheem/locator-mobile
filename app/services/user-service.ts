@@ -15,6 +15,25 @@ const requestUser = async () => {
     return response;
 }
 
+const getUserPreferences = async () => {
+    return sendRequest(`${serverPrefix}/diet/preferences`);
+}
+
+const updateUserPreferences = async (placeTypeIds: number[]) => {
+    console.log('----------------------------- Saving Place Type Ids -----------------------------');
+    console.log(placeTypeIds);
+    
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(placeTypeIds)
+    } as RequestInit
+
+    return sendRequest(`${serverPrefix}/diet/preferences`, options);
+}
+
 const searchUsers = async (searchTerm: string) => {
     const options = {
         method: 'POST',
@@ -29,4 +48,4 @@ const searchUsers = async (searchTerm: string) => {
     return sendRequest(serverPrefix + '/search', options);
 }
 
-export { requestUser, searchUsers }
+export { requestUser, getUserPreferences, updateUserPreferences, searchUsers }

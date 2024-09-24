@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import LoginComponent from './app/screens/LoginScreen';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import RegisterScreen from './app/screens/RegisterScreen';
 import { User } from './app/models/user';
@@ -13,6 +13,7 @@ import * as Location from 'expo-location';
 import { Alert } from 'react-native';
 import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
 import HomeDrawer from './app/screens/HomeDrawer';
+import PreferencesScreen from './app/screens/PreferencesScreen';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -51,6 +52,14 @@ export default function App() {
 									headerTitle: 'Home'
 								}}
 							/>
+
+							<Drawer.Screen
+								name='Preferences'
+								component={PreferencesScreen}
+								initialParams={{
+									user: user
+								}}
+							/>
 						</Drawer.Navigator>
 					) : (
 						<Stack.Navigator initialRouteName='Login'>
@@ -84,6 +93,9 @@ type RootStackParamList = {
 		user: User
 	},
 	Home: {
+		user: User
+	}
+	Preferences: {
 		user: User
 	}
 	Login: undefined

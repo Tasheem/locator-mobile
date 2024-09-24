@@ -13,7 +13,7 @@ type Props = {
 
 export default function Preferences({ placeTypes, placeTypesLoading, selectedPlaceTypes }: Props) {
     return (
-        <View style={style.preferencesContainer}>
+        <View style={style.rootContainer}>
             <Text style={style.title}>Choose Preferences</Text>
             { renderPlaceTypes(placeTypes, placeTypesLoading, selectedPlaceTypes) }
         </View>
@@ -49,18 +49,18 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, s
     return (
       <View>
         <ActivityIndicator animating={placeTypesLoading} color={BRAND_RED} />
-        <ScrollView contentContainerStyle={style.itemScroll}>
+        <View style={style.listContainer}>
             { items }
-        </ScrollView>
+        </View>
       </View>
     );
 };
 
 const style = StyleSheet.create({
-    preferencesContainer: {
+    rootContainer: {
         alignItems: 'center'
     },
-    itemScroll: {
+    listContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         columnGap: 15,
