@@ -9,7 +9,7 @@ import {
 import {
   BRAND_RED,
 } from '../constants/colors';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Room } from '../models/room';
 import LocatorButton from '../components/LocatorButton';
 import {
@@ -23,6 +23,8 @@ import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
 import RoomCard from '../components/RoomCard';
 import SaveRoom from '../components/SaveRoom';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { DrawerContext } from '../utils/context';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Rooms'>;
@@ -30,6 +32,8 @@ type Props = {
 };
 
 export default function RoomsScreen({ route, navigation }: Props) {
+  const drawerNavigation = useContext(DrawerContext);
+
   const user = route.params.user;
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -37,6 +41,25 @@ export default function RoomsScreen({ route, navigation }: Props) {
   const [roomInFocus, setRoomInFocus] = useState<Room | null>(null);
 
   useEffect(() => {
+    // Workaround for react native bug on iOS: https://github.com/software-mansion/react-native-screens/issues/432
+    // Had to move this from the options prop on the Stack.Screen in HomeScreen.tsx
+    setTimeout(() => {
+      navigation.setOptions({
+        headerLeft: () => {
+          return (
+            <Ionicons
+              name='menu'
+              size={30}
+              color={BRAND_RED}
+              onPress={() => {
+                drawerNavigation?.toggleDrawer();
+              }}
+            />
+          );
+        }
+      });
+    }, 1500);
+
     setIsRoomsLoading(true);
     getRoomsForUser()
     .then((response) => {

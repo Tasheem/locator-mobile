@@ -90,7 +90,7 @@ export default function HomeScreen({ route, navigation }: Props) {
         name='Notifications'
         component={NotificationScreen}
         initialParams={{
-          user: user,
+          user: user
         }}
         options={{
           headerTintColor: BRAND_RED,
@@ -107,7 +107,6 @@ type RoomStackProp = {
 };
 
 const RoomsStack = ({ route, navigation }: RoomStackProp) => {
-  const drawerNavigation = useContext(DrawerContext);
   const user = route.params.user;
 
   return (
@@ -115,7 +114,7 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
       initialRouteName='Rooms'
       screenOptions={{
         headerTitleStyle: {
-          color: BRAND_RED,
+          color: BRAND_RED
         },
       }}
     >
@@ -128,18 +127,6 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
         options={{
           /* headerTitle: () => <Logo height={30} width={30} />, */
           headerTitleAlign: 'center',
-          headerLeft: () => {
-            return (
-              <Ionicons
-                name='menu'
-                size={30}
-                color={BRAND_RED}
-                onPress={() => {
-                  drawerNavigation?.toggleDrawer();
-                }}
-              />
-            );
-          },
           headerRight: () => {
             return (
               <LocatorButton
@@ -150,7 +137,7 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
                 }}
               />
             );
-          },
+          }
         }}
       />
 
