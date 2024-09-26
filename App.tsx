@@ -10,11 +10,13 @@ import * as encoding from 'text-encoding' // Needed for stompjs library
 import { userObservable } from './app/utils/requestUtil';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import * as Location from 'expo-location';
-import { Alert } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
 import HomeDrawer from './app/screens/HomeDrawer';
 import PreferencesScreen from './app/screens/PreferencesScreen';
 import { BRAND_RED } from './app/constants/colors';
+import LocatorButton from './app/components/LocatorButton';
+import { logout } from './app/services/auth-service';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -50,7 +52,22 @@ export default function App() {
 								options={{
 									drawerLabel: 'Home',
 									headerTitle: 'Home',
-									headerTintColor: BRAND_RED
+									headerTintColor: BRAND_RED,
+									headerRight: () => {
+										return (
+											<View
+												style={style.logoutBtnContainer}
+											>
+												<LocatorButton
+													type='Secondary'
+													textValue='Log Out'
+													handler={() => {
+													logout();
+													}}
+												/>
+											</View>
+										);
+									  }
 								}}
 							/>
 
@@ -61,7 +78,22 @@ export default function App() {
 									user: user
 								}}
 								options={{
-									headerTintColor: BRAND_RED
+									headerTintColor: BRAND_RED,
+									headerRight: () => {
+										return (
+											<View
+												style={style.logoutBtnContainer}
+											>
+												<LocatorButton
+													type='Secondary'
+													textValue='Log Out'
+													handler={() => {
+														logout();
+													}}
+												/>
+											</View>
+										)
+									}
 								}}
 							/>
 						</Drawer.Navigator>
@@ -121,5 +153,11 @@ type RootStackParamList = {
 	}
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+const style = StyleSheet.create({
+	logoutBtnContainer: {
+		marginRight: 10
+	}
+});
 
 export { RootStackParamList, LoginNavigationProps }

@@ -127,17 +127,6 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
         options={{
           /* headerTitle: () => <Logo height={30} width={30} />, */
           headerTitleAlign: 'center',
-          headerRight: () => {
-            return (
-              <LocatorButton
-                type='Secondary'
-                textValue='Log Out'
-                handler={() => {
-                  logout();
-                }}
-              />
-            );
-          },
           headerShown: false
         }}
       />
