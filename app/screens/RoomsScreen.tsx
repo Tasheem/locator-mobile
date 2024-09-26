@@ -81,28 +81,38 @@ export default function RoomsScreen({ route, navigation }: Props) {
     });
 
     const blurUnsubscribe = navigation?.addListener('blur', () => {
-      drawerNavigation?.setOptions({
-        headerLeft: () => {
-          return (
-            <TouchableOpacity 
-              style={{
-                width: 40,
-                flexDirection: 'row',
-                justifyContent: 'center'
-              }}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <Ionicons 
-                name='chevron-back'
-                size={30}
-                color={BRAND_RED}
-              />
-            </TouchableOpacity>
-          );
-        }
-      })
+      console.log(navigation.getState());
+
+      const currentNavigationState = navigation.getState();
+      /**
+       * The RoomsScreen is the first screen on the stack, so if navigating to other screens on the stack
+       * the index should be anything but 0. But if navigating to a screen that is unrelated to the stack,
+       * this will still be zero.
+       */
+      if(currentNavigationState.index > 0) {
+        drawerNavigation?.setOptions({
+          headerLeft: () => {
+            return (
+              <TouchableOpacity 
+                style={{
+                  width: 40,
+                  flexDirection: 'row',
+                  justifyContent: 'center'
+                }}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+              >
+                <Ionicons 
+                  name='chevron-back'
+                  size={30}
+                  color={BRAND_RED}
+                />
+              </TouchableOpacity>
+            );
+          }
+        })
+      }
     });
 
     return () => {
