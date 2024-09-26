@@ -25,6 +25,7 @@ import RoomCard from '../components/RoomCard';
 import SaveRoom from '../components/SaveRoom';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { DrawerContext } from '../utils/context';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Rooms'>;
@@ -41,25 +42,6 @@ export default function RoomsScreen({ route, navigation }: Props) {
   const [roomInFocus, setRoomInFocus] = useState<Room | null>(null);
 
   useEffect(() => {
-    // Workaround for react native bug on iOS: https://github.com/software-mansion/react-native-screens/issues/432
-    // Had to move this from the options prop on the Stack.Screen in HomeScreen.tsx
-    setTimeout(() => {
-      navigation.setOptions({
-        headerLeft: () => {
-          return (
-            <Ionicons
-              name='menu'
-              size={30}
-              color={BRAND_RED}
-              onPress={() => {
-                drawerNavigation?.toggleDrawer();
-              }}
-            />
-          );
-        }
-      });
-    }, 1500);
-
     setIsRoomsLoading(true);
     getRoomsForUser()
     .then((response) => {
@@ -90,6 +72,49 @@ export default function RoomsScreen({ route, navigation }: Props) {
       disconnectRoomsConnection();
     };
   }, []);
+
+  useEffect(() => {
+    const focusUnsubscribe = navigation?.addListener('focus', () => {
+      drawerNavigation?.setOptions({
+        headerLeft: undefined
+      })
+    });
+
+    const blurUnsubscribe = navigation?.addListener('blur', () => {
+      drawerNavigation?.setOptions({
+        headerLeft: () => {
+          return (
+            <TouchableOpacity 
+              style={{
+                width: 40,
+                flexDirection: 'row',
+                justifyContent: 'center'
+              }}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              <Ionicons 
+                name='chevron-back'
+                size={30}
+                color={BRAND_RED}
+              />
+            </TouchableOpacity>
+          );
+        }
+      })
+    });
+
+    return () => {
+      if(focusUnsubscribe) {
+        focusUnsubscribe();
+      }
+
+      if(blurUnsubscribe) {
+        blurUnsubscribe();
+      }
+    }
+  }, [navigation]);
 
   const roomCards = rooms.map(room => {
     const onPress = () => {

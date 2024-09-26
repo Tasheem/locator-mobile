@@ -14,6 +14,7 @@ import { Alert } from 'react-native';
 import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
 import HomeDrawer from './app/screens/HomeDrawer';
 import PreferencesScreen from './app/screens/PreferencesScreen';
+import { BRAND_RED } from './app/constants/colors';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -47,9 +48,9 @@ export default function App() {
 									user: user
 								}}
 								options={{
-									headerShown: false,
 									drawerLabel: 'Home',
-									headerTitle: 'Home'
+									headerTitle: 'Home',
+									headerTintColor: BRAND_RED
 								}}
 							/>
 
@@ -58,6 +59,9 @@ export default function App() {
 								component={PreferencesScreen}
 								initialParams={{
 									user: user
+								}}
+								options={{
+									headerTintColor: BRAND_RED
 								}}
 							/>
 						</Drawer.Navigator>

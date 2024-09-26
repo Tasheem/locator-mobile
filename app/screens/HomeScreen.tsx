@@ -9,7 +9,7 @@ import LocatorButton from '../components/LocatorButton';
 import { logout } from '../services/auth-service';
 import RoomDetailsScreen from './RoomDetailsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   disconnectNotificationSocket,
   emitJoinRequests,
@@ -18,7 +18,6 @@ import {
   notificationObservable,
 } from '../services/room-service';
 import { JoinRoom } from '../models/room';
-import { DrawerContext } from '../utils/context';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Home'>
@@ -137,7 +136,8 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
                 }}
               />
             );
-          }
+          },
+          headerShown: false
         }}
       />
 
@@ -147,6 +147,7 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
         options={(options) => ({
           title: options.route.params.room.name,
           headerTintColor: BRAND_RED,
+          headerShown: false
         })}
       />
     </Stack.Navigator>
