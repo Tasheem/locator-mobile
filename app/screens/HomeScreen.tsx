@@ -94,6 +94,7 @@ export default function HomeScreen({ route, navigation }: Props) {
         options={{
           headerTintColor: BRAND_RED,
           tabBarBadge: notificationCount > 0 ? notificationCount : undefined,
+          headerShown: false
         }}
       />
     </Tab.Navigator>
