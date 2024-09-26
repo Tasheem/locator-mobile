@@ -77,12 +77,10 @@ export default function RoomsScreen({ route, navigation }: Props) {
     const focusUnsubscribe = navigation?.addListener('focus', () => {
       drawerNavigation?.setOptions({
         headerLeft: undefined
-      })
+      });
     });
 
     const blurUnsubscribe = navigation?.addListener('blur', () => {
-      console.log(navigation.getState());
-
       const currentNavigationState = navigation.getState();
       /**
        * The RoomsScreen is the first screen on the stack, so if navigating to other screens on the stack

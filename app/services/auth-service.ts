@@ -22,7 +22,7 @@ const login = async (username: string, password: string) => {
     const response = await sendRequest(serverPrefix + '/login', options);
     /* console.log('STATUS:', response.status);
     console.log('Headers:', response.headers); */
-    if(response.status === 200) {
+    if(response.ok) {
         const token = response.headers.get('authorization');
         // console.log('Token:', token);
 
@@ -31,11 +31,9 @@ const login = async (username: string, password: string) => {
 
         emitUser(user);
         emitToken(token);
-
-        return;
     }
 
-    throw new Error();
+    return response;
 }
 
 const logout = () => {

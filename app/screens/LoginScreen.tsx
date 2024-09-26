@@ -19,43 +19,46 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   return (
     <View style={styles.formContainer}>
       <Logo height={100} width={100} />
 
-      {error && !isLoggingIn ? (
-        <View>
-          <Text
-            style={{
-              color: 'red',
-            }}
-          >
-            Incorrect username/password.
-          </Text>
-        </View>
-      ) : null}
       <ActivityIndicator
         animating={isLoggingIn}
         color={brandColor}
         style={{
           height: isLoggingIn ? 'auto' : 0,
         }}
-      />
+        />
 
-      <TextInput
-        placeholder='Username'
-        style={[styles.inputField, styles.usernameInput]}
-        onChangeText={setUsername}
-        value={username}
-      />
-      <TextInput
-        secureTextEntry
-        placeholder='Password'
-        style={[styles.inputField, styles.passwordInput]}
-        onChangeText={setPassword}
-        value={password}
-      />
+      <View style={styles.inputContainer}>
+        {error && !isLoggingIn ? (
+          <View style={styles.errorContainer}>
+            <Text
+              style={{
+                color: 'red'
+              }}
+            >
+              { errorMessage }
+            </Text>
+          </View>
+        ) : null}
+        <TextInput
+          placeholder='Username'
+          style={[styles.inputField, styles.usernameInput]}
+          onChangeText={setUsername}
+          value={username}
+        />
+        <TextInput
+          secureTextEntry
+          placeholder='Password'
+          style={[styles.inputField, styles.passwordInput]}
+          onChangeText={setPassword}
+          value={password}
+        />
+      </View>
 
       <LocatorButton
         handler={async () => {
@@ -64,8 +67,14 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
           console.log('password:', password);
 
           try {
-            await login(username, password);
+            const response = await login(username, password);
+
+            if(!response.ok) {
+              setErrorMessage('Incorrect username/password.');
+              setError(true);
+            }
           } catch (error: any) {
+            setErrorMessage('The server is down for maintainence. Please try again later.')
             setError(true);
             console.log(error);
           } finally {
@@ -93,13 +102,19 @@ const brandColor = '#c96b6b';
 const styles = StyleSheet.create({
   logo: {
     width: 50,
-    height: 50,
+    height: 50
+  },
+  errorContainer: {
+    width: Dimensions.get('window').width - 80
   },
   formContainer: {
     height: '95%',
     justifyContent: 'center',
     alignItems: 'center',
-    rowGap: 25,
+    rowGap: 25
+  },
+  inputContainer: {
+    rowGap: 25
   },
   inputField: {
     borderColor: brandColor,
@@ -107,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 40,
     width: Dimensions.get('window').width - 80,
-    paddingLeft: 5,
+    paddingLeft: 5
   },
   usernameInput: {},
   passwordInput: {},
