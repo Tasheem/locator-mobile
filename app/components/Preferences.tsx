@@ -12,16 +12,20 @@ type Props = {
 }
 
 export default function Preferences({ placeTypes, placeTypesLoading, selectedPlaceTypes }: Props) {
+    const [selected, setSelected] = useState(selectedPlaceTypes);
+
     return (
         <View style={style.rootContainer}>
             <Text style={style.title}>Choose Preferences</Text>
-            { renderPlaceTypes(placeTypes, placeTypesLoading, selectedPlaceTypes) }
+            { renderPlaceTypes(placeTypes, placeTypesLoading, selected) }
         </View>
     );
 }
 
 const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, selectedPlaceTypes: Set<number>) => {
+    console.log('-------------------------------- renderPlaceTypes() --------------------------------');
     const items = placeTypes.map(item => {
+        console.log('selected has:', selectedPlaceTypes.has(item.id));
         return (
             <View style={style.itemContainer} key={item.id}>
                 <View style={style.itemTextContainer}>
@@ -35,11 +39,11 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, s
                     innerIconStyle={{ borderWidth: 2 }}
                     isChecked={selectedPlaceTypes.has(item.id)}
                     onPress={(isChecked) => {
-                    if (isChecked) {
-                        selectedPlaceTypes.add(item.id);
-                    } else {
-                        selectedPlaceTypes.delete(item.id);
-                    }
+                        if (isChecked) {
+                            selectedPlaceTypes.add(item.id);
+                        } else {
+                            selectedPlaceTypes.delete(item.id);
+                        }
                     }}
                 />
             </View>
