@@ -23,9 +23,7 @@ export default function Preferences({ placeTypes, placeTypesLoading, selectedPla
 }
 
 const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, selectedPlaceTypes: Set<number>) => {
-    console.log('-------------------------------- renderPlaceTypes() --------------------------------');
     const items = placeTypes.map(item => {
-        console.log('selected has:', selectedPlaceTypes.has(item.id));
         return (
             <View style={style.itemContainer} key={item.id}>
                 <View style={style.itemTextContainer}>
