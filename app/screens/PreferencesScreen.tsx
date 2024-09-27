@@ -2,16 +2,17 @@ import { Alert, SafeAreaView, ScrollView, StyleSheet, View } from "react-native"
 import Preferences from "../components/Preferences"
 import { RootStackParamList } from "../../App"
 import { DrawerScreenProps } from "@react-navigation/drawer"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PlaceType } from "../models/places";
 import { fetchPlaceTypes } from "../services/places-service";
 import { getUserPreferences, updateUserPreferences } from "../services/user-service";
 import LocatorButton from "../components/LocatorButton";
+import { UserContext } from "../utils/context";
 
 const selectedPlaceTypes = new Set<number>();
 
 export default function PreferencesScreen({ route, navigation }: DrawerScreenProps<RootStackParamList, 'Preferences'>) {
-    const user = route.params.user;
+    const user = useContext(UserContext);
     const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
     const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
 
