@@ -47,12 +47,19 @@ export default function RegisterScreen({ navigation }: PageProps) {
     setPlaceTypesLoading(true);
 
     fetchPlaceTypes()
-      .then((types) => {
-        setPlaceTypes(types);
-      })
-      .finally(() => {
-        setPlaceTypesLoading(false);
-      });
+    .then((response) => {
+      if(!response.ok) {
+        return [];
+      }
+
+      return response.json() as Promise<PlaceType[]>;
+    })
+    .then((types) => {
+      setPlaceTypes(types);
+    })
+    .finally(() => {
+      setPlaceTypesLoading(false);
+    });
   }, []);
 
   const isFormValid: () => boolean = () => {

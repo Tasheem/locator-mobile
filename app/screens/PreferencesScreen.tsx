@@ -23,6 +23,13 @@ export default function PreferencesScreen({ route, navigation }: DrawerScreenPro
         setPlaceTypesLoading(true);
     
         fetchPlaceTypes()
+        .then((response) => {
+            if(!response.ok) {
+                return [];
+            }
+        
+            return response.json() as Promise<PlaceType[]>;
+        })
         .then((types) => {
             setPlaceTypes(types);
         })
