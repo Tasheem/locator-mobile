@@ -38,7 +38,6 @@ const emitUser = (user: User | null) => {
 }
 
 const emitToken = (token: string | null) => {
-    console.log('Emit Token:', token);
     if(token) {
         AsyncStorage.setItem('bearerToken', token);
     } else {

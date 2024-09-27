@@ -113,8 +113,6 @@ export default function ParticipantsScreen({ route }: Props) {
           onSelectItem={(item) => {
             // Open modal to ask to send join request to user.
             const userId = item?.id;
-            console.log('logging item');
-            console.log(item);
 
             if (item == null) {
               return;
@@ -129,8 +127,7 @@ export default function ParticipantsScreen({ route }: Props) {
               [
                 {
                   text: 'No',
-                  onPress: () => console.log('Cancel Pressed'),
-                  style: 'cancel',
+                  style: 'cancel'
                 },
                 {
                   text: 'Yes',

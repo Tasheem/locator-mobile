@@ -35,8 +35,6 @@ export default function PreferencesScreen({ route, navigation }: DrawerScreenPro
             return response.json();
         })
         .then((preferences: PlaceType[]) => {
-            console.log('Logging preferences!!!');
-            console.log(preferences);
             for(let preference of preferences) {
                 selectedPlaceTypes.add(preference.id);
             }

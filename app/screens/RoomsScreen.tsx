@@ -62,8 +62,6 @@ export default function RoomsScreen({ route, navigation }: Props) {
       return;
     }
 
-    console.log('------------------------------- User -------------------------------');
-    console.log(user);
     establishRoomsConnection(userId);
     const subscription = roomsObservable().subscribe((rooms) => {
       setRooms(rooms);

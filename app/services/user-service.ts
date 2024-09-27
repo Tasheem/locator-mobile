@@ -20,9 +20,6 @@ const getUserPreferences = async () => {
 }
 
 const updateUserPreferences = async (placeTypeIds: number[]) => {
-    console.log('----------------------------- Saving Place Type Ids -----------------------------');
-    console.log(placeTypeIds);
-    
     const options = {
         method: 'PUT',
         headers: {

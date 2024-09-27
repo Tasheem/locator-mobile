@@ -52,11 +52,6 @@ export default function RecommendationScreen({ route }: Props) {
             }
         })();
     }, []);
-    
-    useEffect(() => {
-        console.log(`Number of places: ${places.length}`);
-        // console.log(places);
-    }, [places]);
 
     return (
         <SafeAreaView>

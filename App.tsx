@@ -29,7 +29,6 @@ export default function App() {
 	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
-			console.log('User emitted:', nextValue);
 			setUser(nextValue);
 		});
 
@@ -110,11 +109,9 @@ export default function App() {
 
 const checkLocationPermissions = async () => {
 	const { status } = await Location.getForegroundPermissionsAsync();
-	console.log('Saved status: ' + status);
 
 	if(status !== 'granted') {
 		const permissionResponse = await Location.requestForegroundPermissionsAsync();
-		console.log('Status after request: ' + permissionResponse.status);
 		if(permissionResponse.status !== 'granted') {
 			Alert.alert('Location', 'The recommendation feature of this app will not operate correctly without location permissions.');
 		}

@@ -18,25 +18,20 @@ const login = async (username: string, password: string) => {
     };
 
     const response = await sendRequest(serverPrefix + '/login', options);
-    /* console.log('STATUS:', response.status);
-    console.log('Headers:', response.headers); */
     if(response.ok) {
         const token = response.headers.get('authorization');
-        // console.log('Token:', token);
-
         const user = await response.json() as User;
-        // console.log('User:', user);
 
-        emitUser(user);
         emitToken(token);
+        emitUser(user);
     }
 
     return response;
 }
 
 const logout = () => {
-    emitUser(null);
     emitToken(null);
+    emitUser(null);
 }
 
 const register = async (payload: User) => {
