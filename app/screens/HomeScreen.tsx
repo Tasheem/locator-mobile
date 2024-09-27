@@ -9,7 +9,7 @@ import LocatorButton from '../components/LocatorButton';
 import { logout } from '../services/auth-service';
 import RoomDetailsScreen from './RoomDetailsScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   disconnectNotificationSocket,
   emitJoinRequests,
@@ -18,6 +18,7 @@ import {
   notificationObservable,
 } from '../services/room-service';
 import { JoinRoom } from '../models/room';
+import { UserContext } from '../utils/context';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Home'>
@@ -27,11 +28,11 @@ type Props = {
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function HomeScreen({ route, navigation }: Props) {
-  const user = route.params.user;
+  const user = useContext(UserContext);
   const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
-    if (!user.id) {
+    if (!user || !user.id) {
       return;
     }
 
@@ -77,9 +78,6 @@ export default function HomeScreen({ route, navigation }: Props) {
       <Tab.Screen
         name='RoomsStack'
         component={RoomsStack}
-        initialParams={{
-          user: user
-        }}
         options={{
           headerShown: false,
           title: 'Rooms'
@@ -88,9 +86,6 @@ export default function HomeScreen({ route, navigation }: Props) {
       <Tab.Screen
         name='Notifications'
         component={NotificationScreen}
-        initialParams={{
-          user: user
-        }}
         options={{
           headerTintColor: BRAND_RED,
           tabBarBadge: notificationCount > 0 ? notificationCount : undefined,
@@ -107,8 +102,6 @@ type RoomStackProp = {
 };
 
 const RoomsStack = ({ route, navigation }: RoomStackProp) => {
-  const user = route.params.user;
-
   return (
     <Stack.Navigator
       initialRouteName='Rooms'
@@ -121,9 +114,6 @@ const RoomsStack = ({ route, navigation }: RoomStackProp) => {
       <Stack.Screen
         name='Rooms'
         component={RoomsScreen}
-        initialParams={{
-          user: user
-        }}
         options={{
           /* headerTitle: () => <Logo height={30} width={30} />, */
           headerTitleAlign: 'center',

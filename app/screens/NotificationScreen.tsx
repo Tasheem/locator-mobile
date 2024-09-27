@@ -1,7 +1,7 @@
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
 import { RootStackParamList } from '../../App';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   emitJoinRequests,
   getJoinRoomRequests,
@@ -16,6 +16,7 @@ import {
 } from '../constants/colors';
 import LocatorButton from '../components/LocatorButton';
 import { Alert } from 'react-native';
+import { UserContext } from '../utils/context';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Notifications'>;
@@ -23,11 +24,11 @@ type Props = {
 };
 
 export default function NotificationScreen({ route, navigation }: Props) {
-  const user = route.params.user;
+  const user = useContext(UserContext);
   const [requests, setRequests] = useState<JoinRoom[]>([]);
 
   useEffect(() => {
-    if (!user.id) {
+    if (!user || !user.id) {
       return;
     }
 

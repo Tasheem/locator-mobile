@@ -17,8 +17,6 @@ const login = async (username: string, password: string) => {
         body: JSON.stringify(payload)
     };
 
-    console.log(payload);
-
     const response = await sendRequest(serverPrefix + '/login', options);
     /* console.log('STATUS:', response.status);
     console.log('Headers:', response.headers); */

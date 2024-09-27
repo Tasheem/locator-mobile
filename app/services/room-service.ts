@@ -211,7 +211,6 @@ const establishChatConnection = (roomId: number) => {
 }
 
 const disconnectChat = () => {
-    // console.log('Deactivating Chat...');
     subscriptionHolder.chat?.unsubscribe();
     clientHolder.chatClient?.deactivate();
 }
@@ -294,9 +293,7 @@ const establishNotificationsConnection = (userId: number) => {
         clientHolder.notificationsClient.onConnect = (frame) => {
             subscriptionHolder.notifications = clientHolder.notificationsClient?.subscribe(`/topic/room/join/${userId}`, (message) => {
                 const newRequest = JSON.parse(message.body) as JoinRoom;
-                console.log('Current joinRequests:', joinRequests);
                 joinRequests = [...joinRequests, newRequest];
-                console.log('Updated joinRequests:', joinRequests);
                 
                 notificationSubject.next(joinRequests);
             });

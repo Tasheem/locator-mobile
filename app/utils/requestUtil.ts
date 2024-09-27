@@ -78,7 +78,6 @@ const sendRequest = async (url: string, options?: RequestInit) => {
             headers: headers
         } as RequestInit
     } else {
-        let headers;
         if(token) {
             requestInit = {
                 headers: {
@@ -88,10 +87,7 @@ const sendRequest = async (url: string, options?: RequestInit) => {
         }
     }
 
-    console.log('request options:', requestInit); 
     const response = await fetch(url, requestInit);
-    console.log(url);
-    console.log(response.status)
     if(response.status === 401 && url.includes(serverUrl)) {
         // Token expired. Need to log in again.
         await AsyncStorage.removeItem('bearerToken');

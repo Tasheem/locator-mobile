@@ -7,6 +7,8 @@ import { Room } from '../models/room';
 import { User } from '../models/user';
 import ParticipantsScreen from './ParticipantsScreen';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
+import { useContext } from 'react';
+import { UserContext } from '../utils/context';
 
 type Props = {
     route: RouteProp<RootStackParamList, 'RoomDetails'>,
@@ -15,12 +17,10 @@ type Props = {
 
 export type RoomDetailsParamList = {
     Participants: {
-        room: Room,
-        user: User
+        room: Room
     },
     Chat: {
-        room: Room,
-        user: User
+        room: Room
     }
     Recommended: {
         room: Room
@@ -29,8 +29,8 @@ export type RoomDetailsParamList = {
 const Tab = createMaterialTopTabNavigator<RoomDetailsParamList>();
 
 export default function RoomDetailsScreen({ route }: Props) {
+    const user = useContext(UserContext);
     const room = route.params.room;
-    const user = route.params.user;
 
     return (
         <Tab.Navigator
@@ -43,12 +43,10 @@ export default function RoomDetailsScreen({ route }: Props) {
             }
         }} >
             <Tab.Screen name='Participants' component={ ParticipantsScreen } initialParams={{
-                room: room,
-                user: user
+                room: room
             }} />
             <Tab.Screen name='Chat' component={ ChatScreen } initialParams={{
-                room: room,
-                user: user
+                room: room
             }} />
             <Tab.Screen name='Recommended' component={ RecommendationScreen } initialParams={{
                 room: room

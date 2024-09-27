@@ -6,7 +6,7 @@ import moment from 'moment'
 
 type Props = {
     chatMessage: ChatMessage
-    user: User
+    user: User | null
     timezone?: string
 }
 

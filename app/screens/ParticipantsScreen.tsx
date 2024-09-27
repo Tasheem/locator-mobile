@@ -17,7 +17,7 @@ import {
   CARD_RED_SECONDARY_COLOR,
   CARD_SECONDARY_COLOR,
 } from '../constants/colors';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import {
   AutocompleteDropdown,
   AutocompleteDropdownItem,
@@ -35,6 +35,7 @@ import {
   sendJoinRoomRequest,
 } from '../services/room-service';
 import { Room } from '../models/room';
+import { UserContext } from '../utils/context';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -47,12 +48,10 @@ type Props = {
 
 export default function ParticipantsScreen({ route }: Props) {
   const dropdownController = useRef<IAutocompleteDropdownRef | null>(null);
+  const currentUser = useContext(UserContext);
 
   const room = route.params.room;
-  const currentUser = route.params.user;
-  const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>(
-    []
-  );
+  const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [members, setMembers] = useState<User[]>([]);
 
@@ -216,7 +215,7 @@ export default function ParticipantsScreen({ route }: Props) {
         renderItem={({ item }) => (
           <View
             style={
-              item.id === currentUser.id
+              item.id === currentUser?.id
                 ? [style.itemContainer, style.itemContainerUser]
                 : style.itemContainer
             }
@@ -233,7 +232,7 @@ export default function ParticipantsScreen({ route }: Props) {
             />
             <Text
               style={
-                item.id === currentUser.id
+                item.id === currentUser?.id
                   ? [style.username, style.mainUser]
                   : style.username
               }

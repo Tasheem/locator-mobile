@@ -17,6 +17,7 @@ import PreferencesScreen from './app/screens/PreferencesScreen';
 import { BRAND_RED } from './app/constants/colors';
 import LocatorButton from './app/components/LocatorButton';
 import { logout } from './app/services/auth-service';
+import { UserContext } from './app/utils/context';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -28,7 +29,7 @@ export default function App() {
 	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
-			// console.log('User emitted:', nextValue);
+			console.log('User emitted:', nextValue);
 			setUser(nextValue);
 		});
 
@@ -43,60 +44,56 @@ export default function App() {
 			<NavigationContainer>
 				{
 					user ? (
-						<Drawer.Navigator initialRouteName='Home'>
-							<Drawer.Screen name='HomeDrawer' 
-								component={HomeDrawer} 
-								initialParams={{
-									user: user
-								}}
-								options={{
-									drawerLabel: 'Home',
-									headerTitle: 'Home',
-									headerTintColor: BRAND_RED,
-									headerRight: () => {
-										return (
-											<View
-												style={style.logoutBtnContainer}
-											>
-												<LocatorButton
-													type='Secondary'
-													textValue='Log Out'
-													handler={() => {
-													logout();
-													}}
-												/>
-											</View>
-										);
-									  }
-								}}
-							/>
+						<UserContext.Provider value={user}>
+							<Drawer.Navigator initialRouteName='Home'>
+								<Drawer.Screen name='HomeDrawer' 
+									component={HomeDrawer}
+									options={{
+										drawerLabel: 'Home',
+										headerTitle: 'Home',
+										headerTintColor: BRAND_RED,
+										headerRight: () => {
+											return (
+												<View
+													style={style.logoutBtnContainer}
+												>
+													<LocatorButton
+														type='Secondary'
+														textValue='Log Out'
+														handler={() => {
+															logout();
+														}}
+													/>
+												</View>
+											);
+										}
+									}}
+								/>
 
-							<Drawer.Screen
-								name='Preferences'
-								component={PreferencesScreen}
-								initialParams={{
-									user: user
-								}}
-								options={{
-									headerTintColor: BRAND_RED,
-									headerRight: () => {
-										return (
-											<View
-												style={style.logoutBtnContainer}
-											>
-												<LocatorButton
-													type='Secondary'
-													textValue='Log Out'
-													handler={() => {
-														logout();
-													}}
-												/>
-											</View>
-										)
-									}
-								}}
-							/>
-						</Drawer.Navigator>
+								<Drawer.Screen
+									name='Preferences'
+									component={PreferencesScreen}
+									options={{
+										headerTintColor: BRAND_RED,
+										headerRight: () => {
+											return (
+												<View
+													style={style.logoutBtnContainer}
+												>
+													<LocatorButton
+														type='Secondary'
+														textValue='Log Out'
+														handler={() => {
+															logout();
+														}}
+													/>
+												</View>
+											)
+										}
+									}}
+								/>
+							</Drawer.Navigator>
+						</UserContext.Provider>
 					) : (
 						<Stack.Navigator initialRouteName='Login'>
 							<Stack.Screen name='Login' component={LoginComponent} />
@@ -125,31 +122,19 @@ const checkLocationPermissions = async () => {
 }
 
 type RootStackParamList = {
-	HomeDrawer: {
-		user: User
-	},
-	Home: {
-		user: User
-	}
-	Preferences: {
-		user: User
-	}
+	HomeDrawer: undefined
+	Home: undefined
+	Preferences: undefined
 	Login: undefined
 	Search: undefined
 	Register: undefined
 	RoomsStack: {
-        user: User
         room: Room
     }
-    Notifications: {
-        user: User
-    }
-    Rooms: {
-        user: User
-    }
+    Notifications: undefined
+    Rooms: undefined
     RoomDetails: {
-		room: Room,
-		user: User
+		room: Room
 	}
 };
 type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, 'Login'>;

@@ -63,8 +63,6 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
       <LocatorButton
         handler={async () => {
           setIsLoggingIn(true);
-          console.log('username:', username);
-          console.log('password:', password);
 
           try {
             const response = await login(username, password);

@@ -1,6 +1,6 @@
 import { View, StyleSheet, ScrollView, TextInput, ActivityIndicator } from 'react-native';
 import { BRAND_RED } from '../constants/colors';
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../models/room';
 import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from '../services/room-service';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,6 +8,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { getCalendars } from 'expo-localization';
 import Chat from '../components/Chat';
+import { UserContext } from '../utils/context';
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Chat', undefined>
@@ -16,9 +17,9 @@ type Props = {
 
 export default function ChatScreen({ route }: Props) {
     const scrollViewRef = useRef<ScrollView>(null);
+    const user = useContext(UserContext);
 
     const room = route.params.room;
-    const user = route.params.user;
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [userMessage, setUserMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);

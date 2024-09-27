@@ -24,7 +24,7 @@ import { RootStackParamList } from '../../App';
 import RoomCard from '../components/RoomCard';
 import SaveRoom from '../components/SaveRoom';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { DrawerContext } from '../utils/context';
+import { DrawerContext, UserContext } from '../utils/context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = {
@@ -34,8 +34,8 @@ type Props = {
 
 export default function RoomsScreen({ route, navigation }: Props) {
   const drawerNavigation = useContext(DrawerContext);
+  const user = useContext(UserContext);
 
-  const user = route.params.user;
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isRoomsLoading, setIsRoomsLoading] = useState(false);
@@ -57,11 +57,13 @@ export default function RoomsScreen({ route, navigation }: Props) {
       setIsRoomsLoading(false);
     });
 
-    const userId = user.id;
+    const userId = user?.id;
     if (!userId) {
       return;
     }
 
+    console.log('------------------------------- User -------------------------------');
+    console.log(user);
     establishRoomsConnection(userId);
     const subscription = roomsObservable().subscribe((rooms) => {
       setRooms(rooms);
@@ -127,12 +129,11 @@ export default function RoomsScreen({ route, navigation }: Props) {
   const roomCards = rooms.map(room => {
     const onPress = () => {
         navigation.navigate('RoomDetails', {
-            room: room,
-            user: user
+            room: room
         });
     };
 
-    const userCreatedThisRoom = user.id && room.creator.id == user.id;
+    const userCreatedThisRoom = user?.id && room.creator.id == user.id;
     if(userCreatedThisRoom) {
       return (
         <RoomCard 
