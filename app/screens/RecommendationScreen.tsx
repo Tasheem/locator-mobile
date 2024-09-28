@@ -2,7 +2,6 @@ import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet, Aler
 import renderImage from '../utils/renderImage';
 import { useEffect, useState } from 'react';
 import { Place } from '../models/places';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { BRAND_RED } from '../constants/colors';
 import { fetchRecommendedPlaces } from '../services/recommendation-service';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -109,14 +108,10 @@ const renderResultsList = (places: Place[]) => {
 								match
 							</Text>
 						</View>
-						<BouncyCheckbox
-							size={25}
-							fillColor={BRAND_RED}
-							unfillColor='#FFFFFF'
-							iconStyle={{ borderColor: BRAND_RED }}
-							innerIconStyle={{ borderWidth: 2 }}
+						{/* <Checkbox
+							color={BRAND_RED}
 							style={resultsStyle.checkbox}
-						/>
+						/> */}
 					</View>
 				</View>
 			)}

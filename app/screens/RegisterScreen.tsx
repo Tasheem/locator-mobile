@@ -19,9 +19,6 @@ import { RootStackParamList } from '../../App';
 import Preferences from '../components/Preferences';
 import { fetchPlaceTypes } from '../services/places-service';
 
-// This set contains the ids of the preferences the user has selected.
-const preferenceIds = new Set<number>();
-
 type PageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
 };
@@ -37,13 +34,9 @@ export default function RegisterScreen({ navigation }: PageProps) {
   const [displayingSuccess, setDisplayingSuccess] = useState(false);
   const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
   const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
+  const [selectedPreferences, setSelectedPreferences] = useState(new Set<number>());
 
   useEffect(() => {
-    // Making sure that the selected preferences go away when navigating back to the home screen
-    // then coming back to the register screen.
-    if (preferenceIds.size > 0) {
-      preferenceIds.clear();
-    }
     setPlaceTypesLoading(true);
 
     fetchPlaceTypes()
@@ -76,13 +69,18 @@ export default function RegisterScreen({ navigation }: PageProps) {
       return false;
     }
 
-    if (preferenceIds.size === 0) {
+    if (selectedPreferences.size === 0) {
       Alert.alert('Invalid', 'At least 1 preference is needed.');
       return false;
     }
 
     return true;
   };
+
+  useEffect(() => {
+    console.log('-------------------------- useEffect() --------------------------------');
+    console.log(selectedPreferences);
+  }, [selectedPreferences])
 
   const submitData = async () => {
     if (!isFormValid()) {
@@ -95,7 +93,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
       firstname: firstName,
       lastname: lastName,
       email: email,
-      preferences: Array.from(preferenceIds).map((preferenceId) => {
+      preferences: Array.from(selectedPreferences).map((preferenceId) => {
         return {
           id: preferenceId,
         } as PlaceType;
@@ -114,14 +112,13 @@ export default function RegisterScreen({ navigation }: PageProps) {
         Alert.alert(
           'Error',
           `Either the username "${username}" is already taken or the email "${email}" is taken. Please log in if you have an account linked to that email or choose another username.`
-        )
+        );
       } else if(response.status === 400) {
         Alert.alert(
           'Error',
           'An error occurred when creating your account. Please try again later.'
-        )
+        );
       }
-
     } catch (error: any) {
       console.log(error);
       Alert.alert(
@@ -222,7 +219,12 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 }}
               />
 
-              <Preferences placeTypes={placeTypes} placeTypesLoading={placeTypesLoading} selectedPlaceTypes={preferenceIds} />
+              <Preferences 
+                placeTypes={placeTypes}
+                placeTypesLoading={placeTypesLoading}
+                selectedPlaceTypes={selectedPreferences}
+                setSelectedPreferences={setSelectedPreferences}
+              />
             </ScrollView>
           </SafeAreaView>
         </Modal>

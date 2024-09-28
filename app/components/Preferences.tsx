@@ -1,46 +1,41 @@
-import { ActivityIndicator, FlatList, StyleSheet, View, Text, ScrollView } from 'react-native';
+import { ActivityIndicator, StyleSheet, View, Text } from 'react-native';
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from '../constants/colors';
 import { PlaceType } from '../models/places';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { useEffect, useState } from 'react';
-import { fetchPlaceTypes } from '../services/places-service';
+import Checkbox from 'expo-checkbox';
+
 
 type Props = {
     placeTypes: PlaceType[]
     placeTypesLoading: boolean
     selectedPlaceTypes: Set<number>
+    setSelectedPreferences: React.Dispatch<React.SetStateAction<Set<number>>>
 }
 
-export default function Preferences({ placeTypes, placeTypesLoading, selectedPlaceTypes }: Props) {
-    const [selected, setSelected] = useState(selectedPlaceTypes);
-
+export default function Preferences({ placeTypes, placeTypesLoading, selectedPlaceTypes, setSelectedPreferences }: Props) {
     return (
         <View style={style.rootContainer}>
             <Text style={style.title}>Choose Preferences</Text>
-            { renderPlaceTypes(placeTypes, placeTypesLoading, selected) }
+            { renderPlaceTypes(placeTypes, placeTypesLoading, selectedPlaceTypes, setSelectedPreferences) }
         </View>
     );
 }
 
-const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, selectedPlaceTypes: Set<number>) => {
+const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, selectedPlaceTypes: Set<number>, setSelectedPreferences: React.Dispatch<React.SetStateAction<Set<number>>>) => {
     const items = placeTypes.map(item => {
         return (
             <View style={style.itemContainer} key={item.id}>
                 <View style={style.itemTextContainer}>
                     <Text>{item.displayName}</Text>
                 </View>
-                <BouncyCheckbox
-                    size={25}
-                    fillColor={BRAND_RED}
-                    unfillColor='#FFFFFF'
-                    iconStyle={{ borderColor: BRAND_RED }}
-                    innerIconStyle={{ borderWidth: 2 }}
-                    isChecked={selectedPlaceTypes.has(item.id)}
-                    onPress={(isChecked) => {
+                <Checkbox
+                    color={BRAND_RED}
+                    value={selectedPlaceTypes.has(item.id)}
+                    style={style.checkbox}
+                    onValueChange={(isChecked) => {
                         if (isChecked) {
-                            selectedPlaceTypes.add(item.id);
+                            addPreference(item.id, selectedPlaceTypes, setSelectedPreferences);
                         } else {
-                            selectedPlaceTypes.delete(item.id);
+                            removePreference(item.id, selectedPlaceTypes, setSelectedPreferences);
                         }
                     }}
                 />
@@ -57,6 +52,18 @@ const renderPlaceTypes = (placeTypes: PlaceType[], placeTypesLoading: boolean, s
       </View>
     );
 };
+
+function addPreference(preferenceId: number, selectedPreferences: Set<number>, setSelectedPreferences: React.Dispatch<React.SetStateAction<Set<number>>>) {
+    const updatedSet = new Set([...selectedPreferences]);
+    updatedSet.add(preferenceId);
+    setSelectedPreferences(updatedSet);
+}
+
+function removePreference(preferenceId: number, selectedPreferences: Set<number>, setSelectedPreferences: React.Dispatch<React.SetStateAction<Set<number>>>) {
+    const updatedSet = new Set(selectedPreferences);
+    updatedSet.delete(preferenceId);
+    setSelectedPreferences(updatedSet);
+}
 
 const style = StyleSheet.create({
     rootContainer: {
@@ -86,5 +93,9 @@ const style = StyleSheet.create({
     itemTextContainer: {
         flexDirection: 'row',
         width: '70%'
+    },
+    checkbox: {
+        borderRadius: 15,
+        padding: 10
     }
 })
