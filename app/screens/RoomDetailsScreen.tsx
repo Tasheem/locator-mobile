@@ -50,6 +50,8 @@ export default function RoomDetailsScreen({ route }: Props) {
             }} />
             <Tab.Screen name='Recommended' component={ RecommendationScreen } initialParams={{
                 room: room
+            }} options={{
+                tabBarLabel: 'Food'
             }} />
         </Tab.Navigator>
     );
