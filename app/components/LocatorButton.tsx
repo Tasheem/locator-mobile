@@ -10,14 +10,15 @@ import Logo from './Logo';
 import { useState } from 'react';
 
 type LocatorButtonProps = {
-  handler: () => void;
-  type: 'Primary' | 'Secondary';
-  useLogo?: boolean;
-  fontSize?: number;
-  padding?: 'wide' | 'normal';
-  textValue: string;
-  width?: DimensionValue;
-  height?: DimensionValue;
+  handler: () => void
+  type: 'Primary' | 'Secondary'
+  useLogo?: boolean
+  fontSize?: number
+  padding?: 'wide' | 'normal'
+  textValue: string
+  width?: DimensionValue
+  height?: DimensionValue
+  disabled?: boolean
 };
 
 export default function LocatorButton(props: LocatorButtonProps) {
@@ -37,8 +38,8 @@ export default function LocatorButton(props: LocatorButtonProps) {
       justifyContent: 'center',
       alignItems: 'center',
       borderWidth: 2,
-      borderColor: BRAND_RED,
-      backgroundColor: props.type === 'Primary' ? BRAND_RED : '#f2f0f0',
+      borderColor: props.disabled ? 'rgb(235, 235, 228)' : BRAND_RED,
+      backgroundColor: props.disabled ? 'rgb(235, 235, 228)' : (props.type === 'Primary' ? BRAND_RED : '#f2f0f0'),
       paddingLeft: props.padding
         ? props.padding === 'normal'
           ? '4%'
@@ -63,7 +64,7 @@ export default function LocatorButton(props: LocatorButtonProps) {
     },
     btnText: {
       fontSize: props.fontSize ? props.fontSize : 16,
-      color: textColorStyling(),
+      color: props.disabled ? BRAND_RED : textColorStyling(),
     },
     btnImage: {
       width: props.fontSize ? props.fontSize + 3 : 19,
@@ -82,6 +83,7 @@ export default function LocatorButton(props: LocatorButtonProps) {
       onPress={props.handler}
       underlayColor={props.type === 'Primary' ? '#965050' : BRAND_RED}
       style={styles.btn}
+      disabled={props.disabled}
     >
       <View style={styles.contentContainer}>
         <Text style={styles.btnText}>{props.textValue}</Text>

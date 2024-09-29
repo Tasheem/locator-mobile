@@ -32,7 +32,6 @@ export default function App() {
 			setUser(nextValue);
 		});
 
-		checkLocationPermissions();
 		return () => {
 			userSubscription.unsubscribe();
 		};
@@ -105,17 +104,6 @@ export default function App() {
 			</NavigationContainer>
 		</AutocompleteDropdownContextProvider>
 	);
-}
-
-const checkLocationPermissions = async () => {
-	const { status } = await Location.getForegroundPermissionsAsync();
-
-	if(status !== 'granted') {
-		const permissionResponse = await Location.requestForegroundPermissionsAsync();
-		if(permissionResponse.status !== 'granted') {
-			Alert.alert('Location', 'The recommendation feature of this app will not operate correctly without location permissions.');
-		}
-	}
 }
 
 type RootStackParamList = {
