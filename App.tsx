@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import LoginComponent from './app/screens/LoginScreen';
-import { NavigationContainer, NavigationProp, ParamListBase, RouteProp } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { NativeStackScreenProps, createNativeStackNavigator } from '@react-navigation/native-stack';
 import RegisterScreen from './app/screens/RegisterScreen';
 import { User } from './app/models/user';
@@ -9,8 +9,7 @@ import { Room } from './app/models/room';
 import * as encoding from 'text-encoding' // Needed for stompjs library
 import { userObservable } from './app/utils/requestUtil';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
-import * as Location from 'expo-location';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
 import HomeDrawer from './app/screens/HomeDrawer';
 import PreferencesScreen from './app/screens/PreferencesScreen';
@@ -18,6 +17,7 @@ import { BRAND_RED } from './app/constants/colors';
 import LocatorButton from './app/components/LocatorButton';
 import { logout } from './app/services/auth-service';
 import { UserContext } from './app/utils/context';
+import PhotosScreen from './app/screens/PhotosScreen';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -44,27 +44,13 @@ export default function App() {
 					user ? (
 						<UserContext.Provider value={user}>
 							<Drawer.Navigator initialRouteName='Home'>
-								<Drawer.Screen name='HomeDrawer' 
+								<Drawer.Screen name='HomeDrawer'
 									component={HomeDrawer}
 									options={{
 										drawerLabel: 'Home',
 										headerTitle: 'Home',
 										headerTintColor: BRAND_RED,
-										headerRight: () => {
-											return (
-												<View
-													style={style.logoutBtnContainer}
-												>
-													<LocatorButton
-														type='Secondary'
-														textValue='Log Out'
-														handler={() => {
-															logout();
-														}}
-													/>
-												</View>
-											);
-										}
+										headerRight: headerRightView
 									}}
 								/>
 
@@ -73,21 +59,16 @@ export default function App() {
 									component={PreferencesScreen}
 									options={{
 										headerTintColor: BRAND_RED,
-										headerRight: () => {
-											return (
-												<View
-													style={style.logoutBtnContainer}
-												>
-													<LocatorButton
-														type='Secondary'
-														textValue='Log Out'
-														handler={() => {
-															logout();
-														}}
-													/>
-												</View>
-											)
-										}
+										headerRight: headerRightView
+									}}
+								/>
+
+								<Drawer.Screen
+									name='Photos'
+									component={PhotosScreen}
+									options={{
+										headerTintColor: BRAND_RED,
+										headerRight: headerRightView
 									}}
 								/>
 							</Drawer.Navigator>
@@ -110,6 +91,7 @@ type RootStackParamList = {
 	HomeDrawer: undefined
 	Home: undefined
 	Preferences: undefined
+	Photos: undefined
 	Login: undefined
 	Search: undefined
 	Register: undefined
@@ -129,5 +111,21 @@ const style = StyleSheet.create({
 		marginRight: 10
 	}
 });
+
+const headerRightView = () => {
+	return (
+		<View
+			style={style.logoutBtnContainer}
+		>
+			<LocatorButton
+				type='Secondary'
+				textValue='Log Out'
+				handler={() => {
+					logout();
+				}}
+			/>
+		</View>
+	)
+};
 
 export { RootStackParamList, LoginNavigationProps }
