@@ -4,7 +4,7 @@ import { RootStackParamList } from "../../App";
 import { SafeAreaView, Image, StyleSheet, View, Dimensions, Modal } from "react-native";
 import { useEffect, useState } from "react";
 import { fetchUserImages } from "../services/media-service";
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 type Props = {
     navigation: NativeStackNavigationProp<
@@ -39,23 +39,21 @@ export default function PhotosScreen({}: Props) {
         const endItem = index % 4 === 3;
 
         return (
-            <View style={style.imageContainer}>
-                <TouchableOpacity
-                    key={imageData.publicUrl}
-                    onPress={() => {
-                        setPhotoInFocus(imageData);
-                        setEnlargedPhotoVisible(true);
-                    }}
-                >
-                    <Image
-                        source={{ uri: imageData.publicUrl }}
-                        style={[style.image, {
-                            marginLeft: startItem ? 0 : 1,
-                            marginRight: endItem ? 0 : 1
-                        }]}
-                    />
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+                key={imageData.publicUrl}
+                onPress={() => {
+                    setPhotoInFocus(imageData);
+                    setEnlargedPhotoVisible(true);
+                }}
+            >
+                <Image
+                    source={{ uri: imageData.publicUrl }}
+                    style={[style.image, {
+                        marginLeft: startItem ? 0 : 1,
+                        marginRight: endItem ? 0 : 1
+                    }]}
+                />
+            </TouchableOpacity>
         );
     });
 
@@ -63,9 +61,9 @@ export default function PhotosScreen({}: Props) {
         <SafeAreaView style={{
             height: '100%'
         }}>
-            <View style={style.listContainer}>
+            <ScrollView contentContainerStyle={style.listContainer}>
                 { renderedPhotos }
-            </View>
+            </ScrollView>
 
             <Modal
                 animationType='fade'
@@ -108,8 +106,6 @@ const style = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         rowGap: 2
-    },
-    imageContainer: {
     },
     image: {
         width: (Dimensions.get('window').width / 4) - 1.5,
