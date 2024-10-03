@@ -9,8 +9,8 @@ import { Room } from './app/models/room';
 import * as encoding from 'text-encoding' // Needed for stompjs library
 import { userObservable } from './app/utils/requestUtil';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
-import { StyleSheet, View } from 'react-native';
-import { createDrawerNavigator, DrawerNavigationProp } from '@react-navigation/drawer';
+import { Image, StyleSheet, View } from 'react-native';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeDrawer from './app/screens/HomeDrawer';
 import PreferencesScreen from './app/screens/PreferencesScreen';
 import { BRAND_RED } from './app/constants/colors';
@@ -18,6 +18,7 @@ import LocatorButton from './app/components/LocatorButton';
 import { logout } from './app/services/auth-service';
 import { UserContext } from './app/utils/context';
 import PhotosScreen from './app/screens/PhotosScreen';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -26,6 +27,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
 	const [user, setUser] = useState<User | null>(null);
+	const [displayingLogout, setDisplayingLogout] = useState(false);
 	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
@@ -36,6 +38,44 @@ export default function App() {
 			userSubscription.unsubscribe();
 		};
 	}, []);
+
+	const headerRightView = () => {
+		return (
+			<View
+				style={style.logoutBtnContainer}
+			>
+				<TouchableOpacity
+					onPress={() => {
+						setDisplayingLogout(!displayingLogout);
+					}}
+				>
+					<Image
+						source={user?.profilePictureUrl ? { uri: user.profilePictureUrl } : require('./app/assets/no-profile-pic.png')}
+						style={{
+							width: 30,
+							height: 30,
+							borderRadius: 40,
+							borderWidth: 2,
+							borderColor: 'black',
+							marginRight: displayingLogout ? 0 : 25
+						}}
+					/>
+				</TouchableOpacity>
+				{
+					displayingLogout ? (
+						<LocatorButton
+							type='Secondary'
+							textValue='Log Out'
+							handler={() => {
+								setDisplayingLogout(false);
+								logout();
+							}}
+						/>
+					) : null
+				}
+			</View>
+		)
+	};
 
 	return (
 		<AutocompleteDropdownContextProvider>
@@ -108,24 +148,11 @@ type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const style = StyleSheet.create({
 	logoutBtnContainer: {
-		marginRight: 10
+		marginRight: 10,
+		flexDirection: 'row',
+		alignItems: 'center',
+		gap: 10
 	}
 });
-
-const headerRightView = () => {
-	return (
-		<View
-			style={style.logoutBtnContainer}
-		>
-			<LocatorButton
-				type='Secondary'
-				textValue='Log Out'
-				handler={() => {
-					logout();
-				}}
-			/>
-		</View>
-	)
-};
 
 export { RootStackParamList, LoginNavigationProps }
