@@ -1,11 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
-import { SafeAreaView, Image, StyleSheet, Dimensions, Modal, Alert, View, ActivityIndicator } from "react-native";
+import { SafeAreaView, Image, StyleSheet, Dimensions, Alert, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
-import { deleteImage, fetchUserImages, uploadImages } from "../services/media-service";
-import { ScrollView, TouchableOpacity, TouchableWithoutFeedback, GestureDetector, Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { deleteImage, fetchUserImages, setProfilePicture, uploadImages } from "../services/media-service";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BRAND_RED } from "../constants/colors";
 import { launchImageLibraryAsync, MediaTypeOptions, useMediaLibraryPermissions } from "expo-image-picker";
@@ -56,29 +55,57 @@ export default function PhotosScreen({}: Props) {
                 }}
                 onLongPress={() => {
                     Alert.alert(
-                        'Delete Image',
-                        'Are you sure you want to delete this image?',
+                        'Image Operations',
+                        'What would you like to do with this image?',
                         [
                             {
                                 text: 'Cancel',
                                 style: 'cancel'
                             },
                             {
+                                text: 'Set Profile Pic',
+                                style: 'default',
+                                onPress: async () => {
+                                    const response = await setProfilePicture(imageData);
+                                    if(response.ok) {
+                                        Alert.alert('Success', 'Your profile picture has been set.');
+                                    } else {
+                                        Alert.alert('Error', 'An error occurred while setting your profile picture. Please try again later.');
+                                    }
+                                }
+                            },
+                            {
                                 text: 'Delete',
                                 style: 'destructive',
                                 onPress: async () => {
-                                    setPerformingImageOperation(true);
-                                    await deleteImage(imageData);
-
-                                    try {
-                                        const response = await fetchUserImages();
-                                        if(response.ok) {
-                                            const photos = await response.json() as LocatorImageData[];
-                                            setPhotos(photos);
-                                        }
-                                    } finally {
-                                        setPerformingImageOperation(false);
-                                    }
+                                    Alert.alert(
+                                        'Delete Image',
+                                        'Are you sure you want to delete this image?',
+                                        [
+                                            {
+                                                text: 'Cancel',
+                                                style: 'cancel'
+                                            },
+                                            {
+                                                text: 'Delete',
+                                                style: 'destructive',
+                                                onPress: async () => {
+                                                    setPerformingImageOperation(true);
+                                                    await deleteImage(imageData);
+                
+                                                    try {
+                                                        const response = await fetchUserImages();
+                                                        if(response.ok) {
+                                                            const photos = await response.json() as LocatorImageData[];
+                                                            setPhotos(photos);
+                                                        }
+                                                    } finally {
+                                                        setPerformingImageOperation(false);
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    )
                                 }
                             }
                         ]
