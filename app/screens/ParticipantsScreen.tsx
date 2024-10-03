@@ -36,6 +36,9 @@ import {
 import { Room } from '../models/room';
 import { UserContext } from '../utils/context';
 import { searchUsers } from '../services/search-service';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import PhotoModal from '../components/PhotoModal';
+import { LocatorImageData } from '../models/locator-media';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -54,6 +57,8 @@ export default function ParticipantsScreen({ route }: Props) {
   const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [members, setMembers] = useState<User[]>([]);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
 
   useEffect(() => {
     // Set initial list of members/participants with initial emit to the participants subject.
@@ -218,21 +223,35 @@ export default function ParticipantsScreen({ route }: Props) {
                 : style.itemContainer
             }
           >
-            <Image
-              source={
-                  item.profilePictureUrl ? 
-                  {
-                    uri: item.profilePictureUrl
-                  } : require('../assets/no-profile-pic.png')
-              }
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 40,
-                borderColor: 'black',
-                borderWidth: 2,
+            <TouchableOpacity
+              onPress={() => {
+                if(item.profilePictureUrl) {
+                  setImageInFocus({
+                    publicUrl: item.profilePictureUrl,
+                    imageType: '',
+                    createDate: ''
+                  });
+
+                  setImageModalVisible(true);
+                }
               }}
-            />
+            >
+              <Image
+                source={
+                    item.profilePictureUrl ? 
+                    {
+                      uri: item.profilePictureUrl
+                    } : require('../assets/no-profile-pic.png')
+                }
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 40,
+                  borderColor: 'black',
+                  borderWidth: 2
+                }}
+              />
+            </TouchableOpacity>
             <Text
               style={
                 item.id === currentUser?.id
@@ -244,6 +263,15 @@ export default function ParticipantsScreen({ route }: Props) {
             </Text>
           </View>
         )}
+      />
+
+      <PhotoModal
+        modalVisible={imageModalVisible}
+        photo={imageInFocus}
+        onClose={() => {
+          setImageModalVisible(false);
+          setImageInFocus(null);
+        }}
       />
     </View>
   );
