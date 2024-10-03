@@ -3,7 +3,7 @@ import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { SafeAreaView, Image, StyleSheet, Dimensions, Modal, Alert, View, ActivityIndicator } from "react-native";
 import { useEffect, useState } from "react";
-import { fetchUserImages, uploadImages } from "../services/media-service";
+import { deleteImage, fetchUserImages, uploadImages } from "../services/media-service";
 import { ScrollView, TouchableOpacity, TouchableWithoutFeedback, GestureDetector, Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -93,6 +93,36 @@ export default function PhotosScreen({}: Props) {
                 onPress={() => {
                     setPhotoInFocus(imageData);
                     setEnlargedPhotoVisible(true);
+                }}
+                onLongPress={() => {
+                    Alert.alert(
+                        'Delete Image',
+                        'Are you sure you want to delete this image?',
+                        [
+                            {
+                                text: 'Cancel',
+                                style: 'cancel'
+                            },
+                            {
+                                text: 'Delete',
+                                style: 'destructive',
+                                onPress: async () => {
+                                    setPerformingImageOperation(true);
+                                    await deleteImage(imageData);
+
+                                    try {
+                                        const response = await fetchUserImages();
+                                        if(response.ok) {
+                                            const photos = await response.json() as LocatorImageData[];
+                                            setPhotos(photos);
+                                        }
+                                    } finally {
+                                        setPerformingImageOperation(false);
+                                    }
+                                }
+                            }
+                        ]
+                    );
                 }}
             >
                 <Image

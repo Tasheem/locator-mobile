@@ -2,6 +2,7 @@ import { ImagePickerAsset } from "expo-image-picker";
 import { appConfig } from "../utils/config";
 import { sendRequest } from "../utils/requestUtil";
 import { Platform } from "react-native";
+import { LocatorImageData } from "../models/locator-media";
 
 const serverPrefix = `${appConfig.serverURL}/media`;
 const fetchUserImages = () => {
@@ -43,4 +44,16 @@ const uploadImages = (assets: ImagePickerAsset[]) => {
     return sendRequest(url, options);
 }
 
-export { fetchUserImages, uploadImages }
+const deleteImage = (photo: LocatorImageData) => {
+    const options = {
+        method: 'DELETE',
+        body: JSON.stringify(photo),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    } as RequestInit
+
+    return sendRequest(`${serverPrefix}/image`, options);
+}
+
+export { fetchUserImages, uploadImages, deleteImage }

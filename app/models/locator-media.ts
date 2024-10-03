@@ -1,6 +1,7 @@
 type LocatorImageData = {
     publicUrl: string
     imageType: string
+    createDate: string
 }
 
 type ImageOperationResult = {
