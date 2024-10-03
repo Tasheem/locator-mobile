@@ -53,7 +53,7 @@ export default function ChatScreen({ route }: Props) {
 
     const renderedElements = messages.map((item) => {
         return (
-            <Chat key={item.id} chatMessage={item} user={user} timezone={timezone}  />
+            <Chat key={item.id} chatMessage={item} user={user} timezone={timezone} />
         );
     });
 

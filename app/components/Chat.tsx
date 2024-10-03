@@ -14,14 +14,16 @@ export default function Chat({ chatMessage, user, timezone = 'UTC' }: Props) {
     return (
         <View style={chatMessage.source.id === user?.id ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}>
             <View style={chatMessage.source.id === user?.id ? [style.imageContainer, style.redImageContainer] : style.imageContainer}>
-                <Image source={require('../assets/no-profile-pic.png')}
-                style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    borderColor: 'black',
-                    borderWidth: 2
-                }} />
+                <Image 
+                    source={chatMessage.source.profilePictureUrl ? { uri: chatMessage.source.profilePictureUrl } : require('../assets/no-profile-pic.png')}
+                    style={{
+                        width: 50,
+                        height: 50,
+                        borderRadius: 40,
+                        borderColor: 'black',
+                        borderWidth: 2
+                    }}
+                />
             </View>
             <View style={style.textContainer}>
                 <View style={chatMessage.source.id === user?.id ? [style.messageDetailsContainer, style.redDetailsContainer] : style.messageDetailsContainer}>
