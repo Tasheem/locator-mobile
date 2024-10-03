@@ -23,7 +23,6 @@ import {
   AutocompleteDropdownItem,
   IAutocompleteDropdownRef,
 } from 'react-native-autocomplete-dropdown';
-import { searchUsers } from '../services/user-service';
 import { User, UserSearchResult } from '../models/user';
 import {
   disconnectParticipantsSocket,
@@ -36,6 +35,7 @@ import {
 } from '../services/room-service';
 import { Room } from '../models/room';
 import { UserContext } from '../utils/context';
+import { searchUsers } from '../services/search-service';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -93,7 +93,7 @@ export default function ParticipantsScreen({ route }: Props) {
 
             try {
               const response = await searchUsers(text);
-              const result = (await response.json()) as UserSearchResult[];
+              const result = await response.json() as UserSearchResult[];
               const listItems = result.map((searchResult) => {
                 /* return {
                                     id: searchResult.id + '',
@@ -102,6 +102,7 @@ export default function ParticipantsScreen({ route }: Props) {
                 return {
                   id: searchResult.id + '',
                   title: `${searchResult.username} ${searchResult.firstname} ${searchResult.lastname}`,
+                  profilePicture: searchResult.profilePictureUrl
                 } as AutocompleteDropdownItem;
               });
 

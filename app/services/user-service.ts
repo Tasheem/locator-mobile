@@ -31,18 +31,4 @@ const updateUserPreferences = async (placeTypeIds: number[]) => {
     return sendRequest(`${serverPrefix}/diet/preferences`, options);
 }
 
-const searchUsers = async (searchTerm: string) => {
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            'searchTerm': searchTerm
-        })
-    } as RequestInit
-
-    return sendRequest(serverPrefix + '/search', options);
-}
-
-export { requestUser, getUserPreferences, updateUserPreferences, searchUsers }
+export { requestUser, getUserPreferences, updateUserPreferences }
