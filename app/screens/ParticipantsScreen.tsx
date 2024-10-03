@@ -219,7 +219,12 @@ export default function ParticipantsScreen({ route }: Props) {
             }
           >
             <Image
-              source={require('../assets/no-profile-pic.png')}
+              source={
+                  item.profilePictureUrl ? 
+                  {
+                    uri: item.profilePictureUrl
+                  } : require('../assets/no-profile-pic.png')
+              }
               style={{
                 width: 50,
                 height: 50,
@@ -247,10 +252,11 @@ export default function ParticipantsScreen({ route }: Props) {
 const style = StyleSheet.create({
   rootContainer: {
     alignItems: 'center',
-    marginTop: 10,
+    height: '100%'
   },
   formContainer: {
     flexDirection: 'row',
+    marginTop: 10
   },
   textInput: {
     marginRight: 10,

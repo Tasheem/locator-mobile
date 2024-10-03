@@ -56,4 +56,16 @@ const deleteImage = (photo: LocatorImageData) => {
     return sendRequest(`${serverPrefix}/image`, options);
 }
 
-export { fetchUserImages, uploadImages, deleteImage }
+const setProfilePicture = (photo: LocatorImageData) => {
+    const options = {
+        method: 'PUT',
+        body: JSON.stringify(photo),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    } as RequestInit
+
+    return sendRequest(`${serverPrefix}/image/user/profile/pic`, options);
+}
+
+export { fetchUserImages, uploadImages, deleteImage, setProfilePicture }

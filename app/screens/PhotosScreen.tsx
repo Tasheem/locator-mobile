@@ -10,6 +10,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { BRAND_RED } from "../constants/colors";
 import { launchImageLibraryAsync, MediaTypeOptions, useMediaLibraryPermissions } from "expo-image-picker";
 import { ImageOperationResult, LocatorImageData } from "../models/locator-media";
+import PhotoModal from "../components/PhotoModal";
 
 type Props = {
     navigation: NativeStackNavigationProp<
@@ -20,12 +21,6 @@ type Props = {
     route: RouteProp<RootStackParamList, 'Photos'>;
 };
 
-function clamp(val: number, min: number, max: number) {
-    return Math.min(Math.max(val, min), max);
-}
-
-const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
-
 export default function PhotosScreen({}: Props) {
     const [photos, setPhotos] = useState<LocatorImageData[]>([]);
     const [enlargedPhotoVisible, setEnlargedPhotoVisible] = useState(false);
@@ -33,41 +28,6 @@ export default function PhotosScreen({}: Props) {
     const [mediaPermissionStatus, requestMediaPermission] = useMediaLibraryPermissions();
     const [mediaLibraryLoading, setMediaLibraryLoading] = useState(false);
     const [performingImageOperating, setPerformingImageOperation] = useState(false);
-
-    const translationY = useSharedValue(0);
-    const prevTranslationY = useSharedValue(0);
-  
-    const animatedStyles = useAnimatedStyle(() => ({
-      transform: [
-        { translateY: translationY.value }
-      ],
-    }));
-
-    const pan = Gesture.Pan()
-    .minDistance(1)
-    .onStart(() => {
-      prevTranslationY.value = translationY.value;
-    })
-    .onUpdate((event) => {
-      const maxTranslateX = screenWidth / 2 - 50;
-      const maxTranslateY = screenHeight / 2 - 50;
-
-      translationY.value = clamp(
-        prevTranslationY.value + event.translationY,
-        -maxTranslateY,
-        maxTranslateY
-      );
-    })
-    .onEnd((event) => {
-        if(Math.abs(translationY.value) > 200) {
-            setPhotoInFocus(null);
-            setEnlargedPhotoVisible(false);
-        }
-
-        translationY.value = 0;
-        prevTranslationY.value = 0;
-    })
-    .runOnJS(true);
 
     useEffect(() => {
         fetchUserImages()
@@ -185,39 +145,14 @@ export default function PhotosScreen({}: Props) {
                 { renderedPhotos }
             </ScrollView>
 
-            <Modal
-                animationType='fade'
-                visible={enlargedPhotoVisible}
-                transparent={true}
-                onRequestClose={() => {
+            <PhotoModal
+                modalVisible={enlargedPhotoVisible}
+                photo={photoInFocus}
+                onClose={() => {
                     setEnlargedPhotoVisible(false);
+                    setPhotoInFocus(null);
                 }}
-            >
-                <SafeAreaView style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)'
-                }}>
-                    <GestureHandlerRootView>
-                        <GestureDetector gesture={pan}>
-                            <Animated.View style={animatedStyles}>
-                                <TouchableOpacity
-                                    style={modalStyle.rootContainer}
-                                    onPress={() => {
-                                        setEnlargedPhotoVisible(false);
-                                        setPhotoInFocus(null);
-                                    }}
-                                >
-                                    <TouchableWithoutFeedback>
-                                        <Image
-                                            source={{ uri: photoInFocus?.publicUrl }}
-                                            style={modalStyle.image}
-                                        />
-                                    </TouchableWithoutFeedback>
-                                </TouchableOpacity>
-                            </Animated.View>
-                        </GestureDetector>
-                    </GestureHandlerRootView>
-                </SafeAreaView>
-            </Modal>
+            />
         </SafeAreaView>
     );
 }
@@ -277,18 +212,5 @@ const style = StyleSheet.create({
         height: (Dimensions.get('window').width / 4) - 1.5,
         justifyContent: 'center',
         alignItems: 'center'
-    }
-});
-
-const modalStyle = StyleSheet.create({
-    rootContainer: {
-        height: '100%',
-        width: '100%',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    image: {
-        width: Dimensions.get('window').width - 50,
-        height: Dimensions.get('window').height - 300
     }
 });
