@@ -2,7 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
 import { SafeAreaView, Image, StyleSheet, Dimensions, Alert, ActivityIndicator } from "react-native";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { deleteImage, fetchUserImages, setProfilePicture, uploadImages } from "../services/media-service";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -10,6 +10,7 @@ import { BRAND_RED } from "../constants/colors";
 import { launchImageLibraryAsync, MediaTypeOptions, useMediaLibraryPermissions } from "expo-image-picker";
 import { ImageOperationResult, LocatorImageData } from "../models/locator-media";
 import PhotoModal from "../components/PhotoModal";
+import { UserContext } from "../utils/context";
 
 type Props = {
     navigation: NativeStackNavigationProp<
@@ -21,6 +22,8 @@ type Props = {
 };
 
 export default function PhotosScreen({}: Props) {
+    const [user, setUser] = useContext(UserContext);
+
     const [photos, setPhotos] = useState<LocatorImageData[]>([]);
     const [enlargedPhotoVisible, setEnlargedPhotoVisible] = useState(false);
     const [photoInFocus, setPhotoInFocus] = useState<LocatorImageData | null>(null);
@@ -68,7 +71,12 @@ export default function PhotosScreen({}: Props) {
                                 onPress: async () => {
                                     const response = await setProfilePicture(imageData);
                                     if(response.ok) {
-                                        Alert.alert('Success', 'Your profile picture has been set.');
+                                        if(user) {
+                                            const updatedUser = {...user};
+                                            updatedUser.profilePictureUrl = imageData.publicUrl;
+    
+                                            setUser(updatedUser);
+                                        }
                                     } else {
                                         Alert.alert('Error', 'An error occurred while setting your profile picture. Please try again later.');
                                     }

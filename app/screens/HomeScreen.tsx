@@ -28,7 +28,7 @@ type Props = {
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function HomeScreen({ route, navigation }: Props) {
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {

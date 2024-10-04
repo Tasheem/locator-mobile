@@ -10,7 +10,7 @@ export type User = {
     email: string
     preferences: PlaceType[]
     rooms?: Room[]
-    profilePictureUrl: string
+    profilePictureUrl?: string
 }
 
 export type UserSearchResult = {

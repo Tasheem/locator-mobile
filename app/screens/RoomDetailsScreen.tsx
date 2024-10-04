@@ -4,7 +4,6 @@ import RecommendationScreen from './RecommendationScreen';
 import { BRAND_RED } from '../constants/colors';
 import { RootStackParamList } from '../../App';
 import { Room } from '../models/room';
-import { User } from '../models/user';
 import ParticipantsScreen from './ParticipantsScreen';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
 import { useContext } from 'react';
@@ -29,7 +28,6 @@ export type RoomDetailsParamList = {
 const Tab = createMaterialTopTabNavigator<RoomDetailsParamList>();
 
 export default function RoomDetailsScreen({ route }: Props) {
-    const user = useContext(UserContext);
     const room = route.params.room;
 
     return (

@@ -34,7 +34,7 @@ type Props = {
 
 export default function RoomsScreen({ route, navigation }: Props) {
   const drawerNavigation = useContext(DrawerContext);
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);

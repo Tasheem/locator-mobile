@@ -17,7 +17,7 @@ type Props = {
 
 export default function ChatScreen({ route }: Props) {
     const scrollViewRef = useRef<ScrollView>(null);
-    const user = useContext(UserContext);
+    const [user, setUser] = useContext(UserContext);
 
     const room = route.params.room;
     const [messages, setMessages] = useState<ChatMessage[]>([]);

@@ -82,7 +82,7 @@ export default function App() {
 			<NavigationContainer>
 				{
 					user ? (
-						<UserContext.Provider value={user}>
+						<UserContext.Provider value={[user, setUser]}>
 							<Drawer.Navigator initialRouteName='Home'>
 								<Drawer.Screen name='HomeDrawer'
 									component={HomeDrawer}

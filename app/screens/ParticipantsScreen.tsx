@@ -51,7 +51,7 @@ type Props = {
 
 export default function ParticipantsScreen({ route }: Props) {
   const dropdownController = useRef<IAutocompleteDropdownRef | null>(null);
-  const currentUser = useContext(UserContext);
+  const [currentUser, setCurrentUser] = useContext(UserContext);
 
   const room = route.params.room;
   const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
@@ -83,6 +83,17 @@ export default function ParticipantsScreen({ route }: Props) {
       disconnectParticipantsSocket();
     };
   }, []);
+
+  useEffect(() => {
+    const updatedMembers = [...room.members];
+    for(let index in updatedMembers) {
+      if(updatedMembers[index].username && currentUser?.username && updatedMembers[index].username == currentUser.username) {
+        updatedMembers[index] = {...currentUser}
+      }
+    }
+
+    setMembers(updatedMembers);
+  }, [currentUser]);
 
   return (
     <View style={style.rootContainer}>

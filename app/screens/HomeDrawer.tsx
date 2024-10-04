@@ -14,7 +14,7 @@ type Props = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function HomeDrawer({ route, navigation }: Props) {
-    const user = useContext(UserContext);
+    const [user, setUser] = useContext(UserContext);
     
     return (
         <DrawerContext.Provider value={navigation}>

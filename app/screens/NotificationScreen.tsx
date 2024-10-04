@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function NotificationScreen({ route, navigation }: Props) {
-  const user = useContext(UserContext);
+  const [user, setUser] = useContext(UserContext);
   const [requests, setRequests] = useState<JoinRoom[]>([]);
 
   useEffect(() => {
