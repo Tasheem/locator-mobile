@@ -69,10 +69,15 @@ export default function SearchModal({ modalVisible, onClose, room }: Props) {
         }, debouceDuration);
     }
 
+    const closeModal = () => {
+        setSearchInFocus(false);
+        onClose();
+    }
+
     return (
         <Modal
             visible={modalVisible}
-            onRequestClose={onClose}
+            onRequestClose={closeModal}
         >
             <SafeAreaView style={{
                 height: '100%'
@@ -80,10 +85,7 @@ export default function SearchModal({ modalVisible, onClose, room }: Props) {
                 <View style={style.formContainer}>
                     <TouchableOpacity
                         style={style.exitContainer}
-                        onPress={() => {
-                            setSearchInFocus(false);
-                            onClose();
-                        }}
+                        onPress={closeModal}
                     >
                         <Ionicons
                             name='close-circle-outline'
