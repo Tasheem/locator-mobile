@@ -18,8 +18,8 @@ export type UserSearchResult = {
     username: string
     firstname: string
     lastname: string
-    profilePictureUrl: string
-    usernameHighlight: string
-    firstnameHighlight: string
-    lastnameHighlight: string
+    profilePictureUrl?: string
+    usernameHighlight?: string
+    firstnameHighlight?: string
+    lastnameHighlight?: string
 }

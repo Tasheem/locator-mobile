@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react';
 import { Room } from './app/models/room';
 import * as encoding from 'text-encoding' // Needed for stompjs library
 import { userObservable } from './app/utils/requestUtil';
-import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { Image, StyleSheet, View } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import HomeDrawer from './app/screens/HomeDrawer';
@@ -78,52 +77,50 @@ export default function App() {
 	};
 
 	return (
-		<AutocompleteDropdownContextProvider>
-			<NavigationContainer>
-				{
-					user ? (
-						<UserContext.Provider value={[user, setUser]}>
-							<Drawer.Navigator initialRouteName='Home'>
-								<Drawer.Screen name='HomeDrawer'
-									component={HomeDrawer}
-									options={{
-										drawerLabel: 'Home',
-										headerTitle: 'Home',
-										headerTintColor: BRAND_RED,
-										headerRight: headerRightView
-									}}
-								/>
+		<NavigationContainer>
+			{
+				user ? (
+					<UserContext.Provider value={[user, setUser]}>
+						<Drawer.Navigator initialRouteName='Home'>
+							<Drawer.Screen name='HomeDrawer'
+								component={HomeDrawer}
+								options={{
+									drawerLabel: 'Home',
+									headerTitle: 'Home',
+									headerTintColor: BRAND_RED,
+									headerRight: headerRightView
+								}}
+							/>
 
-								<Drawer.Screen
-									name='Preferences'
-									component={PreferencesScreen}
-									options={{
-										headerTintColor: BRAND_RED,
-										headerRight: headerRightView
-									}}
-								/>
+							<Drawer.Screen
+								name='Preferences'
+								component={PreferencesScreen}
+								options={{
+									headerTintColor: BRAND_RED,
+									headerRight: headerRightView
+								}}
+							/>
 
-								<Drawer.Screen
-									name='Photos'
-									component={PhotosScreen}
-									options={{
-										headerTintColor: BRAND_RED,
-										headerRight: headerRightView
-									}}
-								/>
-							</Drawer.Navigator>
-						</UserContext.Provider>
-					) : (
-						<Stack.Navigator initialRouteName='Login'>
-							<Stack.Screen name='Login' component={LoginComponent} />
-							<Stack.Screen name='Register' component={RegisterScreen} />
-						</Stack.Navigator>
-					)
-				}
-				
-				<StatusBar style='auto' />
-			</NavigationContainer>
-		</AutocompleteDropdownContextProvider>
+							<Drawer.Screen
+								name='Photos'
+								component={PhotosScreen}
+								options={{
+									headerTintColor: BRAND_RED,
+									headerRight: headerRightView
+								}}
+							/>
+						</Drawer.Navigator>
+					</UserContext.Provider>
+				) : (
+					<Stack.Navigator initialRouteName='Login'>
+						<Stack.Screen name='Login' component={LoginComponent} />
+						<Stack.Screen name='Register' component={RegisterScreen} />
+					</Stack.Navigator>
+				)
+			}
+			
+			<StatusBar style='auto' />
+		</NavigationContainer>
 	);
 }
 

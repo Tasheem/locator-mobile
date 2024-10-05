@@ -5,8 +5,7 @@ import {
   Image,
   Text,
   FlatList,
-  Dimensions,
-  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { RouteProp } from '@react-navigation/native';
@@ -17,28 +16,23 @@ import {
   CARD_RED_SECONDARY_COLOR,
   CARD_SECONDARY_COLOR,
 } from '../constants/colors';
-import { useContext, useEffect, useRef, useState } from 'react';
-import {
-  AutocompleteDropdown,
-  AutocompleteDropdownItem,
-  IAutocompleteDropdownRef,
-} from 'react-native-autocomplete-dropdown';
-import { User, UserSearchResult } from '../models/user';
+import { useContext, useEffect, useState } from 'react';
+import { User } from '../models/user';
 import {
   disconnectParticipantsSocket,
   emitParticipants,
   emitRooms,
   establishParticipantsConnection,
   getRoomsForUser,
-  participantsObservable,
-  sendJoinRoomRequest,
+  participantsObservable
 } from '../services/room-service';
 import { Room } from '../models/room';
 import { UserContext } from '../utils/context';
-import { searchUsers } from '../services/search-service';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PhotoModal from '../components/PhotoModal';
 import { LocatorImageData } from '../models/locator-media';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import SearchModal from '../components/SearchModal';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -50,15 +44,13 @@ type Props = {
 };
 
 export default function ParticipantsScreen({ route }: Props) {
-  const dropdownController = useRef<IAutocompleteDropdownRef | null>(null);
   const [currentUser, setCurrentUser] = useContext(UserContext);
 
   const room = route.params.room;
-  const [suggestions, setSuggestions] = useState<AutocompleteDropdownItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [members, setMembers] = useState<User[]>([]);
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   useEffect(() => {
     // Set initial list of members/participants with initial emit to the participants subject.
@@ -97,125 +89,22 @@ export default function ParticipantsScreen({ route }: Props) {
 
   return (
     <View style={style.rootContainer}>
-      <View style={style.formContainer}>
-        <AutocompleteDropdown
-          controller={(controller) => {
-            dropdownController.current = controller;
-          }}
-          dataSet={suggestions}
-          onChangeText={async (text) => {
-            // Fetch suggestions...
-            setIsLoading(true);
-
-            try {
-              const response = await searchUsers(text);
-              const result = await response.json() as UserSearchResult[];
-              const listItems = result.map((searchResult) => {
-                /* return {
-                                    id: searchResult.id + '',
-                                    title: `${searchResult.usernameHighlight ? searchResult.usernameHighlight : searchResult.username} ${searchResult.firstnameHighlight ? searchResult.firstnameHighlight : searchResult.firstname} ${searchResult.lastnameHighlight ? searchResult.lastnameHighlight : searchResult.lastname}`
-                                } as AutocompleteDropdownItem */
-                return {
-                  id: searchResult.id + '',
-                  title: `${searchResult.username} ${searchResult.firstname} ${searchResult.lastname}`,
-                  profilePicture: searchResult.profilePictureUrl
-                } as AutocompleteDropdownItem;
-              });
-
-              setSuggestions(listItems);
-            } finally {
-              setIsLoading(false);
-            }
-          }}
-          onSelectItem={(item) => {
-            // Open modal to ask to send join request to user.
-            const userId = item?.id;
-
-            if (item == null) {
-              return;
-            }
-
-            const username = item?.title?.split(' ')[0];
-            Alert.alert(
-              'Request',
-              `Are you sure you want to send a request to ${
-                username ? username : 'this user'
-              } to join this room?`,
-              [
-                {
-                  text: 'No',
-                  style: 'cancel'
-                },
-                {
-                  text: 'Yes',
-                  onPress: () => {
-                    sendJoinRoomRequest(room.id, Number(userId))
-                      .then((response) => {
-                        if (response.status === 201) {
-                          Alert.alert(
-                            'Success',
-                            'The request has been sent successfully.'
-                          );
-                        } else if (response.status === 409) {
-                          Alert.alert(
-                            'Error',
-                            `${username} is already a member of the room or they've already received a request.`
-                          )
-                        } else {
-                          Alert.alert(
-                            'Error',
-                            'An error occurred while sending the request.'
-                          );
-                        }
-                      })
-                      .catch(() => {
-                        Alert.alert(
-                          'Error',
-                          'An error occurred while sending the request.'
-                        );
-                      });
-                  },
-                },
-              ]
-            );
-          }}
-          onClear={() => {
-            setSuggestions([]);
-          }}
-          debounce={600}
-          suggestionsListMaxHeight={Dimensions.get('window').height * 0.4}
-          loading={isLoading}
-          textInputProps={{
-            placeholder: 'Search for people',
-            autoCorrect: false,
-            autoCapitalize: 'none',
-            style: {
-              borderRadius: 25,
-              backgroundColor: CARD_PRIMARY_COLOR,
-              color: 'black',
-              paddingLeft: 18,
-              width: 200,
-            },
-          }}
-          rightButtonsContainerStyle={{
-            right: 8,
-            height: 30,
-            alignSelf: 'center',
-          }}
-          inputContainerStyle={{
-            backgroundColor: CARD_PRIMARY_COLOR,
-            borderRadius: 25,
-            borderColor: BRAND_RED,
-            borderWidth: 2,
-          }}
-          suggestionsListContainerStyle={{
-            backgroundColor: 'rgba(256, 256, 256, 0.9)',
-          }}
-          renderItem={(item, text) => (
-            <Text style={{ color: 'black', padding: 15 }}>{item.title}</Text>
-          )}
-        />
-        {/* <LocatorButton type='Primary' textValue='+ Add' handler={() => {}} /> */}
+      <View style={style.addBtnContainer}>
+        {
+          <TouchableOpacity
+            style={style.addBtnTouchable}
+            key={'AddBtn'}
+            onPress={async () => {
+                setSearchModalVisible(true);
+            }}
+          >
+            <Ionicons
+                name='add-circle-outline'
+                size={40}
+                color={BRAND_RED}
+            />
+          </TouchableOpacity>
+        }
       </View>
 
       <FlatList
@@ -284,6 +173,14 @@ export default function ParticipantsScreen({ route }: Props) {
           setImageInFocus(null);
         }}
       />
+
+      <SearchModal
+        modalVisible={searchModalVisible}
+        onClose={() => {
+          setSearchModalVisible(false);
+        }}
+        room={room}
+      />
     </View>
   );
 }
@@ -293,7 +190,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     height: '100%'
   },
-  formContainer: {
+  addBtnContainer: {
     flexDirection: 'row',
     marginTop: 10
   },
@@ -314,7 +211,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
     minWidth: '45%',
     marginLeft: 10,
-    marginRight: 10,
+    marginRight: 10
   },
   itemContainerUser: {
     borderColor: CARD_RED_SECONDARY_COLOR,
@@ -326,4 +223,8 @@ const style = StyleSheet.create({
   mainUser: {
     color: 'white',
   },
+  addBtnTouchable: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.0.0",
+    "@react-native-segmented-control/segmented-control": "2.4.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/material-top-tabs": "^6.6.14",
@@ -24,22 +25,20 @@
     "@types/react-native-vector-icons": "^6.4.18",
     "expo": "~49.0.15",
     "expo-checkbox": "~2.4.0",
+    "expo-image-picker": "~14.3.2",
     "expo-localization": "~14.3.0",
     "expo-location": "^17.0.1",
     "expo-status-bar": "~1.6.0",
     "moment-timezone": "^0.5.45",
     "react": "18.2.0",
     "react-native": "0.72.10",
-    "react-native-autocomplete-dropdown": "^4.0.0-rc.5",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-pager-view": "6.2.0",
     "react-native-reanimated": "~3.3.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.1.0",
     "rxjs": "^7.8.1",
-    "text-encoding": "^0.7.0",
-    "@react-native-segmented-control/segmented-control": "2.4.1",
-    "expo-image-picker": "~14.3.2"
+    "text-encoding": "^0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
