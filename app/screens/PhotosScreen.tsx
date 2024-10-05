@@ -32,6 +32,8 @@ export default function PhotosScreen({}: Props) {
     const [performingImageOperating, setPerformingImageOperation] = useState(false);
 
     useEffect(() => {
+        setPerformingImageOperation(true);
+
         fetchUserImages()
         .then(response => {
             if(response.ok) {
@@ -42,6 +44,9 @@ export default function PhotosScreen({}: Props) {
         })
         .then((photos: LocatorImageData[]) => {
             setPhotos(photos);
+        })
+        .finally(() => {
+            setPerformingImageOperation(false);
         })
     }, []);
 
@@ -99,9 +104,9 @@ export default function PhotosScreen({}: Props) {
                                                 style: 'destructive',
                                                 onPress: async () => {
                                                     setPerformingImageOperation(true);
-                                                    await deleteImage(imageData);
-                
+                                                    
                                                     try {
+                                                        await deleteImage(imageData);
                                                         const response = await fetchUserImages();
                                                         if(response.ok) {
                                                             const photos = await response.json() as LocatorImageData[];
