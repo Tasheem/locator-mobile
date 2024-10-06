@@ -18,7 +18,7 @@ import {
   notificationObservable,
 } from '../services/room-service';
 import { JoinRoom } from '../models/room';
-import { UserContext } from '../utils/context';
+import { ScreenContext, UserContext } from '../utils/context';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Home'>
@@ -28,6 +28,7 @@ type Props = {
 const Tab = createBottomTabNavigator<RootStackParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function HomeScreen({ route, navigation }: Props) {
+  const { heightRatio, widthRatio } = useContext(ScreenContext);
   const [user, setUser] = useContext(UserContext);
   const [notificationCount, setNotificationCount] = useState(0);
 
@@ -68,11 +69,19 @@ export default function HomeScreen({ route, navigation }: Props) {
             iconName = focused ? 'notifications' : 'notifications-outline';
           }
 
-          // You can return any component that you like here!
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size * heightRatio} color={color} />;
         },
         tabBarActiveTintColor: BRAND_RED,
         tabBarInactiveTintColor: 'gray',
+        tabBarStyle: {
+          height: 50 * heightRatio
+        },
+        tabBarIconStyle: {
+          width: widthRatio > 1.5 ? (25 * widthRatio) : undefined
+        },
+        tabBarLabelStyle: {
+          fontSize: 10 * widthRatio
+        }
       })}
     >
       <Tab.Screen

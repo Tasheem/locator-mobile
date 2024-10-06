@@ -174,6 +174,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
             setRoomInFocus(null);
             setIsModalVisible(true);
           }}
+          fontSize={16 * widthRatio}
         />
       </View>
 
