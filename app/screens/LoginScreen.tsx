@@ -85,10 +85,10 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
         textValue='Login'
       />
 
-      <Button
-        title='Register'
-        color={BRAND_RED}
-        onPress={() => {
+      <LocatorButton
+        type='Secondary'
+        textValue='Register'
+        handler={() => {
           navigationProp.navigation.navigate('Register');
         }}
       />
