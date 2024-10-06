@@ -1,7 +1,9 @@
-import { Modal, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, Image, StyleSheet, Dimensions } from "react-native";
+import { Modal, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, Image, StyleSheet, Dimensions, ActivityIndicator, View } from "react-native";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { LocatorImageData } from "../models/locator-media";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { useState } from "react";
+import { BRAND_RED } from "../constants/colors";
 
 type Props = {
     modalVisible: boolean
@@ -16,6 +18,7 @@ function clamp(val: number, min: number, max: number) {
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 export default function PhotoModal({ modalVisible, photo, onClose }: Props) {
+    const [imageLoading, setImageLoading] = useState(false);
     const translationY = useSharedValue(0);
     const prevTranslationY = useSharedValue(0);
   
@@ -67,10 +70,26 @@ export default function PhotoModal({ modalVisible, photo, onClose }: Props) {
                                 onPress={onClose}
                             >
                                 <TouchableWithoutFeedback>
-                                    <Image
-                                        source={{ uri: photo?.publicUrl }}
-                                        style={modalStyle.image}
-                                    />
+                                    <View>
+                                        {
+                                            imageLoading ? (
+                                                <ActivityIndicator
+                                                    animating={imageLoading}
+                                                    color={BRAND_RED}
+                                                />
+                                            ) : null
+                                        }
+                                        <Image
+                                            source={{ uri: photo?.publicUrl }}
+                                            style={modalStyle.image}
+                                            onLoadStart={() => {
+                                                setImageLoading(true);
+                                            }}
+                                            onLoadEnd={() => {
+                                                setImageLoading(false);
+                                            }}
+                                        />
+                                    </View>
                                 </TouchableWithoutFeedback>
                             </TouchableOpacity>
                         </Animated.View>
