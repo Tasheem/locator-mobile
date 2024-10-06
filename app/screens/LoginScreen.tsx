@@ -4,15 +4,13 @@ import {
   TextInput,
   View,
   Dimensions,
-  ActivityIndicator,
-  Button,
+  ActivityIndicator
 } from 'react-native';
 import { LoginNavigationProps } from '../../App';
 import LocatorButton from '../components/LocatorButton';
 import Logo from '../components/Logo';
 import { useState } from 'react';
 import { login } from '../services/auth-service';
-import { BRAND_RED } from '../constants/colors';
 
 export default function LoginScreen(navigationProp: LoginNavigationProps) {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
