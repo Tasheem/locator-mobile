@@ -26,6 +26,7 @@ import SaveRoom from '../components/SaveRoom';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { DrawerContext, ScreenContext, UserContext } from '../utils/context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import HamburgerMenu from '../components/HamburgerMenu';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'Rooms'>;
@@ -77,7 +78,11 @@ export default function RoomsScreen({ route, navigation }: Props) {
   useEffect(() => {
     const focusUnsubscribe = navigation?.addListener('focus', () => {
       drawerNavigation?.setOptions({
-        headerLeft: undefined
+        headerLeft: () => {
+          return (
+            <HamburgerMenu />
+          )
+        }
       });
     });
 

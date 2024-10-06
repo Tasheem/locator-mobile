@@ -18,6 +18,8 @@ import { logout } from './app/services/auth-service';
 import { UserContext, ScreenContext } from './app/utils/context';
 import PhotosScreen from './app/screens/PhotosScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import HamburgerMenu from './app/components/HamburgerMenu';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -37,7 +39,6 @@ export default function App() {
 	const [user, setUser] = useState<User | null>(null);
 	const [displayingLogout, setDisplayingLogout] = useState(false);
 
-	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
 			setUser(nextValue);
@@ -61,8 +62,8 @@ export default function App() {
 					<Image
 						source={user?.profilePictureUrl ? { uri: user.profilePictureUrl } : require('./app/assets/no-profile-pic.png')}
 						style={{
-							width: 30,
-							height: 30,
+							width: 30 * widthRatio,
+							height: 30 * widthRatio,
 							borderRadius: 40,
 							borderWidth: 2,
 							borderColor: 'black',
@@ -79,6 +80,7 @@ export default function App() {
 								setDisplayingLogout(false);
 								logout();
 							}}
+							fontSize={16 * widthRatio}
 						/>
 					) : null
 				}
@@ -99,7 +101,26 @@ export default function App() {
 								widthRatio: widthRatio
 							}}
 						>
-							<Drawer.Navigator initialRouteName='Home'>
+							<Drawer.Navigator
+								initialRouteName='Home'
+								screenOptions={{
+									headerTitleStyle: {
+										fontSize: 16 * widthRatio
+									},
+									headerStyle: {
+										height: 100 * heightRatio
+									},
+									headerTitleAlign: 'center',
+									headerLeft: () => {
+										return (
+											<HamburgerMenu />
+										);
+									},
+									drawerLabelStyle: {
+										fontSize: 14 * widthRatio
+									}
+								}}
+							>
 								<Drawer.Screen name='HomeDrawer'
 									component={HomeDrawer}
 									options={{
@@ -139,23 +160,23 @@ export default function App() {
 							widthRatio: widthRatio
 						}}
 					>
-						<Stack.Navigator initialRouteName='Login'>
+						<Stack.Navigator
+							initialRouteName='Login'
+							screenOptions={{
+								headerTintColor: BRAND_RED,
+								headerTitleStyle: {
+									fontSize: 16 * widthRatio
+								},
+								headerTitleAlign: 'center'
+							}}
+						>
 							<Stack.Screen
 								name='Login'
 								component={LoginComponent}
-								options={{
-									headerTintColor: BRAND_RED,
-									headerTitleStyle: {
-										fontSize: 16 * widthRatio
-									}
-								}}
 							/>
 							<Stack.Screen
 								name='Register'
 								component={RegisterScreen}
-								options={{
-									headerTintColor: BRAND_RED
-								}}
 							/>
 						</Stack.Navigator>
 					</ScreenContext.Provider>
@@ -188,10 +209,10 @@ type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const style = StyleSheet.create({
 	logoutBtnContainer: {
-		marginRight: 10,
+		marginRight: 10 * widthRatio,
 		flexDirection: 'row',
 		alignItems: 'center',
-		gap: 10
+		gap: 10 * widthRatio
 	}
 });
 
