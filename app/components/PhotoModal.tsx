@@ -70,12 +70,15 @@ export default function PhotoModal({ modalVisible, photo, onClose }: Props) {
                                 onPress={onClose}
                             >
                                 <TouchableWithoutFeedback>
-                                    <View>
+                                    <View style={modalStyle.imageContainer}>
                                         {
                                             imageLoading ? (
                                                 <ActivityIndicator
                                                     animating={imageLoading}
                                                     color={BRAND_RED}
+                                                    style={{
+                                                        top: '45%'
+                                                    }}
                                                 />
                                             ) : null
                                         }
@@ -104,6 +107,10 @@ const modalStyle = StyleSheet.create({
     rootContainer: {
         height: '100%',
         width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    imageContainer: {
         justifyContent: 'center',
         alignItems: 'center'
     },
