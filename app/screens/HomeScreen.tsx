@@ -73,9 +73,6 @@ export default function HomeScreen({ route, navigation }: Props) {
         },
         tabBarActiveTintColor: BRAND_RED,
         tabBarInactiveTintColor: 'gray',
-        tabBarStyle: {
-          height: 50 * heightRatio
-        },
         tabBarIconStyle: {
           width: widthRatio > 1.5 ? (25 * widthRatio) : undefined
         },

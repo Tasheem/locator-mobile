@@ -4,6 +4,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { deleteRoom, deleteRoomAndEmit } from '../services/room-service';
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors';
 import { Room } from '../models/room';
+import { useContext } from 'react';
+import { ScreenContext } from '../utils/context';
 
 type Props = {
     room: Room
@@ -14,6 +16,8 @@ type Props = {
 }
 
 export default function RoomCard({ room, width, onPress, onLongPress, deleteDisabled }: Props) {
+    const { widthRatio } = useContext(ScreenContext);
+
     const styles = StyleSheet.create({
         viewContainer: {
             flexDirection: 'row',
@@ -36,7 +40,7 @@ export default function RoomCard({ room, width, onPress, onLongPress, deleteDisa
             flex: 1,
         },
         description: {
-            fontSize: 18,
+            fontSize: 18 * widthRatio,
         },
         trashcanContainer: {},
         trashcan: {}
@@ -50,7 +54,7 @@ export default function RoomCard({ room, width, onPress, onLongPress, deleteDisa
             underlayColor={BRAND_RED}
         >
             <View style={styles.roomContainer}>
-                <Logo height={50} width={50} />
+                <Logo height={50 * widthRatio} width={50 * widthRatio} />
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.description}>{room.name}</Text>
                     <Text style={styles.description}>
@@ -87,7 +91,7 @@ export default function RoomCard({ room, width, onPress, onLongPress, deleteDisa
                     <Ionicons
                         name='trash'
                         style={styles.trashcan}
-                        size={30}
+                        size={30 * widthRatio}
                         color={deleteDisabled ? CARD_SECONDARY_COLOR : BRAND_RED}
                     />
                 </TouchableOpacity>
