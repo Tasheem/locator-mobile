@@ -9,31 +9,38 @@ import {
 import { LoginNavigationProps } from '../../App';
 import LocatorButton from '../components/LocatorButton';
 import Logo from '../components/Logo';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { login } from '../services/auth-service';
+import { BRAND_RED } from '../constants/colors';
+import { ScreenContext } from '../utils/context';
 
 export default function LoginScreen(navigationProp: LoginNavigationProps) {
+  const { heightRatio, widthRatio } = useContext(ScreenContext);
+
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const style = getStyle(heightRatio, widthRatio);
 
   return (
-    <View style={styles.formContainer}>
-      <Logo height={100} width={100} />
+    <View style={style.formContainer}>
+      <Logo height={100 * widthRatio} width={100 * widthRatio} />
 
-      <ActivityIndicator
-        animating={isLoggingIn}
-        color={brandColor}
-        style={{
-          height: isLoggingIn ? 'auto' : 0,
-        }}
-      />
+      {
+        isLoggingIn ? (
+          <ActivityIndicator
+            animating={isLoggingIn}
+            color={BRAND_RED}
+            size={widthRatio > 1.5 ? 'large' : 'small'}
+          />
+        ) : null
+      }
 
-      <View style={styles.inputContainer}>
+      <View style={style.inputContainer}>
         {error && !isLoggingIn ? (
-          <View style={styles.errorContainer}>
+          <View style={style.errorContainer}>
             <Text
               style={{
                 color: 'red'
@@ -45,14 +52,14 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
         ) : null}
         <TextInput
           placeholder='Username'
-          style={[styles.inputField, styles.usernameInput]}
+          style={[style.inputField, style.usernameInput]}
           onChangeText={setUsername}
           value={username}
         />
         <TextInput
           secureTextEntry
           placeholder='Password'
-          style={[styles.inputField, styles.passwordInput]}
+          style={[style.inputField, style.passwordInput]}
           onChangeText={setPassword}
           value={password}
         />
@@ -78,7 +85,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
           }
         }}
         type='Primary'
-        fontSize={20}
+        fontSize={20 * widthRatio}
         padding='wide'
         textValue='Login'
       />
@@ -89,37 +96,43 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
         handler={() => {
           navigationProp.navigation.navigate('Register');
         }}
+        fontSize={14 * widthRatio}
       />
     </View>
   );
 }
 
-const brandColor = '#c96b6b';
-const styles = StyleSheet.create({
-  logo: {
-    width: 50,
-    height: 50
-  },
-  errorContainer: {
-    width: Dimensions.get('window').width - 80
-  },
-  formContainer: {
-    height: '95%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    rowGap: 25
-  },
-  inputContainer: {
-    rowGap: 25
-  },
-  inputField: {
-    borderColor: brandColor,
-    borderWidth: 1,
-    borderRadius: 8,
-    height: 40,
-    width: Dimensions.get('window').width - 80,
-    paddingLeft: 5
-  },
-  usernameInput: {},
-  passwordInput: {},
-});
+const getStyle = (heightRatio: number, widthRatio: number) => {
+  return StyleSheet.create({
+    logo: {
+      width: 50,
+      height: 50
+    },
+    errorContainer: {
+      width: Dimensions.get('window').width - 80
+    },
+    formContainer: {
+      height: '95%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      rowGap: 25 * heightRatio
+    },
+    inputContainer: {
+      rowGap: 25 * heightRatio
+    },
+    inputField: {
+      borderColor: BRAND_RED,
+      borderWidth: 2,
+      borderRadius: 8,
+      height: 40 * heightRatio,
+      width: Dimensions.get('window').width - 80,
+      paddingLeft: 8 * widthRatio
+    },
+    usernameInput: {
+      fontSize: 14 * widthRatio
+    },
+    passwordInput: {
+      fontSize: 14 * widthRatio
+    }
+  });
+}

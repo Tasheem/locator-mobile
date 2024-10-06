@@ -4,8 +4,7 @@ import {
   View,
   Image,
   Text,
-  FlatList,
-  ActivityIndicator
+  FlatList
 } from 'react-native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { RouteProp } from '@react-navigation/native';

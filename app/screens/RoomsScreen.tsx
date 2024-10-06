@@ -24,7 +24,7 @@ import { RootStackParamList } from '../../App';
 import RoomCard from '../components/RoomCard';
 import SaveRoom from '../components/SaveRoom';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { DrawerContext, UserContext } from '../utils/context';
+import { DrawerContext, ScreenContext, UserContext } from '../utils/context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type Props = {
@@ -35,6 +35,7 @@ type Props = {
 export default function RoomsScreen({ route, navigation }: Props) {
   const drawerNavigation = useContext(DrawerContext);
   const [user, setUser] = useContext(UserContext);
+  const { widthRatio } = useContext(ScreenContext);
 
   const [rooms, setRooms] = useState<Room[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -178,6 +179,7 @@ export default function RoomsScreen({ route, navigation }: Props) {
           style={{
             marginTop: 10,
           }}
+          size={widthRatio > 1.5 ? 'large' : 'small'}
         />
       ) : null}
 

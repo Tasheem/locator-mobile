@@ -1,7 +1,7 @@
 import { FlatList, Modal, SafeAreaView, StyleSheet, TextInput, TouchableOpacity, View, Image, Text, ActivityIndicator, Alert } from "react-native";
 import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_SECONDARY_COLOR } from "../constants/colors";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { UserSearchResult } from "../models/user";
 import { searchUsers } from "../services/search-service";
 import { LocatorImageData } from "../models/locator-media";
@@ -9,6 +9,7 @@ import PhotoModal from "./PhotoModal";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import { sendJoinRoomRequest } from "../services/room-service";
 import { Room } from "../models/room";
+import { ScreenContext } from "../utils/context";
 
 type Props = {
     modalVisible: boolean
@@ -20,6 +21,7 @@ let debouceDuration = 500;
 let timeoutId: NodeJS.Timeout | null = null;
 
 export default function SearchModal({ modalVisible, onClose, room }: Props) {
+    const { widthRatio } = useContext(ScreenContext);
     const [loading, setLoading] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [displayingPhotoModal, setDisplayingPhotoModal] = useState(false);
@@ -126,6 +128,7 @@ export default function SearchModal({ modalVisible, onClose, room }: Props) {
                             style={{
                                 paddingTop: 15
                             }}
+                            size={widthRatio > 1.5 ? 'large' : 'small'}
                         />
                     ) : null
                 }

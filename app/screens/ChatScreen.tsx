@@ -8,7 +8,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { getCalendars } from 'expo-localization';
 import Chat from '../components/Chat';
-import { UserContext } from '../utils/context';
+import { ScreenContext, UserContext } from '../utils/context';
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Chat', undefined>
@@ -16,6 +16,7 @@ type Props = {
 }
 
 export default function ChatScreen({ route }: Props) {
+    const { widthRatio } = useContext(ScreenContext);
     const scrollViewRef = useRef<ScrollView>(null);
     const [user, setUser] = useContext(UserContext);
 
@@ -62,6 +63,7 @@ export default function ChatScreen({ route }: Props) {
             <ActivityIndicator 
                 animating={isLoading}
                 color={BRAND_RED}
+                size={widthRatio > 1.5 ? 'large' : 'small'}
             />
             <ScrollView
                 ref={scrollViewRef}

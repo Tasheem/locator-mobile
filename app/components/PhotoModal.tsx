@@ -2,8 +2,9 @@ import { Modal, SafeAreaView, TouchableOpacity, TouchableWithoutFeedback, Image,
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import { LocatorImageData } from "../models/locator-media";
 import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BRAND_RED } from "../constants/colors";
+import { ScreenContext } from "../utils/context";
 
 type Props = {
     modalVisible: boolean
@@ -15,9 +16,9 @@ function clamp(val: number, min: number, max: number) {
     return Math.min(Math.max(val, min), max);
 }
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
-
 export default function PhotoModal({ modalVisible, photo, onClose }: Props) {
+    const screenContext = useContext(ScreenContext);
+
     const [imageLoading, setImageLoading] = useState(false);
     const translationY = useSharedValue(0);
     const prevTranslationY = useSharedValue(0);
@@ -34,7 +35,7 @@ export default function PhotoModal({ modalVisible, photo, onClose }: Props) {
       prevTranslationY.value = translationY.value;
     })
     .onUpdate((event) => {
-      const maxTranslateY = screenHeight / 2 - 50;
+      const maxTranslateY = screenContext.height / 2 - 50;
 
       translationY.value = clamp(
         prevTranslationY.value + event.translationY,
@@ -79,6 +80,7 @@ export default function PhotoModal({ modalVisible, photo, onClose }: Props) {
                                                     style={{
                                                         top: '45%'
                                                     }}
+                                                    size={screenContext.widthRatio > 1.5 ? 'large' : 'small'}
                                                 />
                                             ) : null
                                         }

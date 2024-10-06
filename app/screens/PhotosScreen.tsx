@@ -10,7 +10,7 @@ import { BRAND_RED } from "../constants/colors";
 import { launchImageLibraryAsync, MediaTypeOptions, useMediaLibraryPermissions } from "expo-image-picker";
 import { ImageOperationResult, LocatorImageData } from "../models/locator-media";
 import PhotoModal from "../components/PhotoModal";
-import { UserContext } from "../utils/context";
+import { ScreenContext, UserContext } from "../utils/context";
 
 type Props = {
     navigation: NativeStackNavigationProp<
@@ -23,6 +23,7 @@ type Props = {
 
 export default function PhotosScreen({}: Props) {
     const [user, setUser] = useContext(UserContext);
+    const { widthRatio } = useContext(ScreenContext);
 
     const [photos, setPhotos] = useState<LocatorImageData[]>([]);
     const [enlargedPhotoVisible, setEnlargedPhotoVisible] = useState(false);
@@ -164,6 +165,7 @@ export default function PhotosScreen({}: Props) {
                     <ActivityIndicator
                         animating={mediaLibraryLoading || performingImageOperating}
                         color={BRAND_RED}
+                        size={widthRatio > 1.5 ? 'large' : 'small'}
                     />
                 ) : (
                     <Ionicons

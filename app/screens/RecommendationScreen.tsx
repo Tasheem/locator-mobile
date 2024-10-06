@@ -1,6 +1,6 @@
 import { FlatList, SafeAreaView, View, Text, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import renderImage from '../utils/renderImage';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Place } from '../models/places';
 import { BRAND_RED } from '../constants/colors';
 import { fetchRecommendedPlaces } from '../services/recommendation-service';
@@ -15,6 +15,7 @@ import LocatorButton from '../components/LocatorButton';
 import { geocode } from '../services/geocode-service';
 import { GeocodeAPIResponse } from '../models/geocode-response';
 import { Room } from '../models/room';
+import { ScreenContext } from '../utils/context';
 
 const apiKey = process.env.EXPO_PUBLIC_PLACES_API_KEY;
 
@@ -24,6 +25,7 @@ type Props = {
 }
 
 export default function RecommendationScreen({ route }: Props) {
+	const { widthRatio } = useContext(ScreenContext);
     const room = route.params.room;
 	const searchOptions = ['My Location', 'Custom'];
 
@@ -107,6 +109,7 @@ export default function RecommendationScreen({ route }: Props) {
 					marginTop: isLoading ? 10 : 0,
 					marginBottom: isLoading ? 10 : 0
                 }}
+				size={widthRatio > 1.5 ? 'large' : 'small'}
             />
             { places.length > 0 ? renderResultsList(places) : <Text></Text> }
         </SafeAreaView>

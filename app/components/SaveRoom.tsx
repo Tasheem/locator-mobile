@@ -3,8 +3,9 @@ import Logo from "./Logo";
 import LocatorButton from "./LocatorButton";
 import { addRoomAndEmit, createRoom, updateRoom, updateRoomAndEmit } from "../services/room-service";
 import { Room } from "../models/room";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BRAND_RED } from "../constants/colors";
+import { ScreenContext } from "../utils/context";
 
 type Props = {
     setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>>
@@ -12,6 +13,8 @@ type Props = {
 }
 
 export default function SaveRoom({ setIsModalVisible, room }: Props) {
+    const { widthRatio } = useContext(ScreenContext);
+
     const [newRoomName, setNewRoomName] = useState('');
     const [isModalButtonLoading, setIsModalButtonLoading] = useState(false);
     const [isError, setIsError] = useState(false);
@@ -56,6 +59,7 @@ export default function SaveRoom({ setIsModalVisible, room }: Props) {
                                 <ActivityIndicator
                                     animating={isModalButtonLoading}
                                     color={BRAND_RED}
+                                    size={widthRatio > 1.5 ? 'large' : 'small'}
                                 />
                             </View>
                         ) : (
