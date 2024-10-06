@@ -31,7 +31,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
         style={{
           height: isLoggingIn ? 'auto' : 0,
         }}
-        />
+      />
 
       <View style={styles.inputContainer}>
         {error && !isLoggingIn ? (

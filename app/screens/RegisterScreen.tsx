@@ -77,10 +77,10 @@ export default function RegisterScreen({ navigation }: PageProps) {
     return true;
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log('-------------------------- useEffect() --------------------------------');
     console.log(selectedPreferences);
-  }, [selectedPreferences])
+  }, [selectedPreferences]); */
 
   const submitData = async () => {
     if (!isFormValid()) {

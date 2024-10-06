@@ -113,8 +113,20 @@ export default function App() {
 					</UserContext.Provider>
 				) : (
 					<Stack.Navigator initialRouteName='Login'>
-						<Stack.Screen name='Login' component={LoginComponent} />
-						<Stack.Screen name='Register' component={RegisterScreen} />
+						<Stack.Screen
+							name='Login'
+							component={LoginComponent}
+							options={{
+								headerTintColor: BRAND_RED
+							}}
+						/>
+						<Stack.Screen
+							name='Register'
+							component={RegisterScreen}
+							options={{
+								headerTintColor: BRAND_RED
+							}}
+						/>
 					</Stack.Navigator>
 				)
 			}
