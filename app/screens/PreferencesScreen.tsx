@@ -68,8 +68,6 @@ export default function PreferencesScreen({ route, navigation }: DrawerScreenPro
 
     useEffect(() => {
         const blurUnsubscribe = navigation.addListener('blur', () => {
-            console.log('Resetting preferences');
-            console.log(originalPreferences);
             setSelectedPreferences(new Set([...originalPreferences]));
         });
 
