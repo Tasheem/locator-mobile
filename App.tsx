@@ -66,7 +66,7 @@ export default function App() {
 							borderRadius: 40,
 							borderWidth: 2,
 							borderColor: 'black',
-							marginRight: displayingLogout ? 0 : 25
+							marginRight: displayingLogout ? 0 : 5
 						}}
 					/>
 				</TouchableOpacity>
