@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,12 +18,14 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import Preferences from '../components/Preferences';
 import { fetchPlaceTypes } from '../services/places-service';
+import { ScreenContext } from '../utils/context';
 
 type PageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
 };
 
 export default function RegisterScreen({ navigation }: PageProps) {
+  const { widthRatio } = useContext(ScreenContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -128,6 +130,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
     }
   };
 
+  const style = getStyle(widthRatio);
   return (
     <SafeAreaView>
       <View style={style.rootContainer}>
@@ -239,59 +242,66 @@ export default function RegisterScreen({ navigation }: PageProps) {
   );
 }
 
-const style = StyleSheet.create({
-  successMessage: {
-    color: 'green',
-    fontSize: 20,
-  },
-  rootContainer: {
-    height: '90%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  formContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-  },
-  leftContainer: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 35,
-  },
-  rightContainer: {
-    flex: 1,
-    alignItems: 'center',
-    gap: 35,
-  },
-  textBox: {
-    width: 160,
-    height: 40,
-    borderColor: BRAND_RED,
-    borderWidth: 2,
-    borderRadius: 25,
-    paddingLeft: 10,
-  },
-  btnContainer: {
-    marginTop: 40,
-    flexDirection: 'row',
-    width: '80%',
-    justifyContent: 'space-between',
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: BRAND_RED,
-    borderWidth: 2,
-    height: 50,
-    width: 160,
-    marginBottom: 20,
-    paddingLeft: 15,
-  },
-  title: {
-    fontSize: 20,
-    color: CARD_RED_SECONDARY_COLOR,
-    marginTop: 15,
-    marginBottom: 15
-  },
-});
+const getStyle = (widthRatio: number) => {
+  const style = StyleSheet.create({
+    successMessage: {
+      color: 'green',
+      fontSize: 20,
+    },
+    rootContainer: {
+      height: '90%',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    formContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      gap: widthRatio > 1.8 ? 40 : 10,
+      padding: 10
+    },
+    leftContainer: {
+      flex: 1,
+      alignItems: 'center',
+      gap: 35,
+    },
+    rightContainer: {
+      flex: 1,
+      alignItems: 'center',
+      gap: 35,
+    },
+    textBox: {
+      width: '100%',
+      height: 40,
+      borderColor: BRAND_RED,
+      borderWidth: 2,
+      borderRadius: 25,
+      paddingLeft: 10,
+    },
+    btnContainer: {
+      marginTop: 40,
+      flexDirection: 'row',
+      width: '80%',
+      justifyContent: 'space-between',
+    },
+    itemContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderColor: BRAND_RED,
+      borderWidth: 2,
+      height: 50,
+      width: 160,
+      marginBottom: 20,
+      paddingLeft: 15,
+    },
+    title: {
+      fontSize: 20,
+      color: CARD_RED_SECONDARY_COLOR,
+      marginTop: 15,
+      marginBottom: 15
+    },
+  })
+  
+  return style;
+}
+
