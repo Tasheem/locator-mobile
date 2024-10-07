@@ -26,7 +26,8 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
 
   return (
     <View style={style.formContainer}>
-      <Logo height={100 * widthRatio} width={100 * widthRatio} />
+      {/* <Logo height={100 * widthRatio} width={100 * widthRatio} /> */}
+      <Logo height={100} width={100} />
 
       {
         isLoggingIn ? (
@@ -87,7 +88,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
           }
         }}
         type='Primary'
-        fontSize={20 * widthRatio}
+        // fontSize={20 * widthRatio}
         padding='wide'
         textValue='Login'
       />
@@ -98,7 +99,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
         handler={() => {
           navigationProp.navigation.navigate('Register');
         }}
-        fontSize={14 * widthRatio}
+        // fontSize={14 * widthRatio}
       />
     </View>
   );
@@ -117,24 +118,28 @@ const getStyle = (heightRatio: number, widthRatio: number) => {
       height: '95%',
       justifyContent: 'center',
       alignItems: 'center',
-      rowGap: 25 * heightRatio
+      // rowGap: 25 * heightRatio
+      rowGap: 25
     },
     inputContainer: {
-      rowGap: 25 * heightRatio
+      // rowGap: 25 * heightRatio
+      rowGap: 25
     },
     inputField: {
       borderColor: BRAND_RED,
       borderWidth: 2,
       borderRadius: 8,
-      height: 40 * heightRatio,
+      // height: 40 * heightRatio,
+      height: 40,
       width: Dimensions.get('window').width - 80,
-      paddingLeft: 8 * widthRatio
+      // paddingLeft: 8 * widthRatio
+      paddingLeft: 8
     },
     usernameInput: {
-      fontSize: 14 * widthRatio
+      // fontSize: 14 * widthRatio
     },
     passwordInput: {
-      fontSize: 14 * widthRatio
+      // fontSize: 14 * widthRatio
     }
   });
 }

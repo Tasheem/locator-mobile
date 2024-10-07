@@ -146,7 +146,7 @@ export default function App() {
 								options={{
 									headerTintColor: BRAND_RED,
 									headerTitleStyle: {
-										fontSize: 16 * widthRatio
+										// fontSize: 16 * widthRatio
 									}
 								}}
 							/>
