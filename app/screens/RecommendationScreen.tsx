@@ -47,6 +47,7 @@ export default function RecommendationScreen({ route }: Props) {
 								style={style.locationInput}
 								value={customLocation}
 								onChangeText={setCustomLocation}
+								autoCapitalize='none'
 							/>
 						) : null
 					}

@@ -107,6 +107,7 @@ export default function SearchModal({ modalVisible, onClose, room }: Props) {
                             onBlur={() => {
                                 setSearchInFocus(false);
                             }}
+                            autoCapitalize='none'
                         />
                         {
                             searchInFocus ? (

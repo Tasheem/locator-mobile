@@ -52,6 +52,7 @@ export default function SaveRoom({ setIsModalVisible, room }: Props) {
                             value={newRoomName}
                             onChangeText={setNewRoomName}
                             style={modalStyle.textInput}
+                            autoCapitalize='none'
                         />
 
                         {isModalButtonLoading ? (

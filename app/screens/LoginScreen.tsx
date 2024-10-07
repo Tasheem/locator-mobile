@@ -55,6 +55,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
           style={[style.inputField, style.usernameInput]}
           onChangeText={setUsername}
           value={username}
+          autoCapitalize='none'
         />
         <TextInput
           secureTextEntry
@@ -62,6 +63,7 @@ export default function LoginScreen(navigationProp: LoginNavigationProps) {
           style={[style.inputField, style.passwordInput]}
           onChangeText={setPassword}
           value={password}
+          autoCapitalize='none'
         />
       </View>
 

@@ -96,6 +96,7 @@ export default function ChatScreen({ route }: Props) {
                         });
                     }}
                     value={userMessage}
+                    autoCapitalize='none'
                 />
             </View>
         </View>

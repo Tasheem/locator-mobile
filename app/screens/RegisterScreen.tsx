@@ -145,12 +145,14 @@ export default function RegisterScreen({ navigation }: PageProps) {
               onChangeText={setUsername}
               value={username}
               style={style.textBox}
+              autoCapitalize='none'
             />
             <TextInput
               placeholder='Password'
               onChangeText={setPassword}
               value={password}
               style={style.textBox}
+              autoCapitalize='none'
               secureTextEntry
             />
             <TextInput
@@ -158,6 +160,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
               onChangeText={setFirstName}
               value={firstName}
               style={style.textBox}
+              autoCapitalize='none'
             />
           </View>
 
@@ -167,12 +170,14 @@ export default function RegisterScreen({ navigation }: PageProps) {
               onChangeText={setEmail}
               value={email}
               style={style.textBox}
+              autoCapitalize='none'
             />
             <TextInput
               placeholder='Confirm Password'
               onChangeText={setConfirmPassword}
               value={confirmPassword}
               style={style.textBox}
+              autoCapitalize='none'
               secureTextEntry
             />
             <TextInput
@@ -180,6 +185,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
               onChangeText={setLastName}
               value={lastName}
               style={style.textBox}
+              autoCapitalize='none'
             />
           </View>
         </View>
