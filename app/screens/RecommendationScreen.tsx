@@ -59,7 +59,7 @@ export default function RecommendationScreen({ route }: Props) {
 						handler={() => {
 							setPlaces([]);
 							setIsLoading(true);
-							console.log('search hit!!!!!!!!!!!!!!!!!!!!!!');
+							
 							if(selectedOptionIndex === 0) {
 								searchByGPSLocation(room)
 								.then((places) => {
