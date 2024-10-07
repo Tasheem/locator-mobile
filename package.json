@@ -6,6 +6,7 @@
     "start": "NODE_ENV=test expo start",
     "test": "NODE_ENV=test expo start",
     "dev": "NODE_ENV=development expo start",
+    "prod": "NODE_ENV=production expo start",
     "test:android": "NODE_ENV=test expo start --android",
     "dev:android": "NODE_ENV=development expo start --android",
     "test:ios": "NODE_ENV=test expo start --ios",
