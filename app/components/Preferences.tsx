@@ -94,8 +94,9 @@ const style = StyleSheet.create({
         borderColor: BRAND_RED,
         borderWidth: 2,
         height: 50,
-        width: 160,
-        paddingLeft: 15
+        width: '45%',
+        paddingLeft: 15,
+        gap: 10
     },
     itemTextContainer: {
         flexDirection: 'row',
