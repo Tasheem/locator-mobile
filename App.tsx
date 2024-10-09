@@ -184,7 +184,6 @@ type RootStackParamList = {
 		room: Room
 	}
 };
-type LoginNavigationProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const style = StyleSheet.create({
 	logoutBtnContainer: {
@@ -195,4 +194,4 @@ const style = StyleSheet.create({
 	}
 });
 
-export { RootStackParamList, LoginNavigationProps }
+export { RootStackParamList }

@@ -6,15 +6,16 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import { LoginNavigationProps } from '../../App';
 import LocatorButton from '../components/LocatorButton';
 import Logo from '../components/Logo';
 import { useContext, useState } from 'react';
 import { login } from '../services/auth-service';
 import { BRAND_RED } from '../constants/colors';
 import { ScreenContext } from '../utils/context';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../App';
 
-export default function LoginScreen(navigationProp: LoginNavigationProps) {
+export default function LoginScreen(navigationProp: NativeStackScreenProps<RootStackParamList, 'Login'>) {
   const { heightRatio, widthRatio } = useContext(ScreenContext);
 
   const [isLoggingIn, setIsLoggingIn] = useState(false);
