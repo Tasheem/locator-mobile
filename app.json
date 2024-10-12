@@ -15,14 +15,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.locator.Locator"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "app/assets/locator_center_solid.png",
         "backgroundColor": "#292524"
       },
-      "supportsTablet": false
+      "supportsTablet": false,
+      "package": "com.locator.Locator"
     },
     "web": {
       "favicon": "app/assets/locator_center_solid.png"
