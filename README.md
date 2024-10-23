@@ -36,3 +36,17 @@ npm run start:development
 # Recommendation Screen
 - This shows all the food options in your area and ranks them based on the percentage of people in your room who's meal preferences are satisfied by the given food options.
   - The list only contains venues that are open at the time, based on their opening/closing hours.
+
+# Publishing to Apple App Store
+
+Generate the production build:
+```bash
+npm run prebuild
+```
+Run this to test production build on iOS simulator:
+```bash
+npm run ios
+```
+
+### Note:
+There maybe a prompt to install TypeScript, and sometimes it leads to an infinite loop, installing TypeScript over and over again when you select yes. If this happens, select no. The npm script will stop running and throw an error. After this, run the command again and it should succeed the second time.
