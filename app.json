@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.locator.Locator"
+      "bundleIdentifier": "com.locator.locator"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +24,7 @@
         "backgroundColor": "#292524"
       },
       "supportsTablet": false,
-      "package": "com.locator.Locator"
+      "package": "com.locator.locator"
     },
     "web": {
       "favicon": "app/assets/locator_center_solid.png"
