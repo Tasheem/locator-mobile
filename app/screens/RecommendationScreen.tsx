@@ -173,6 +173,7 @@ const renderResultsList = (places: Place[]) => {
 const searchByCustomLocation = async (location: string, room: Room) => {
 	if(location.trim().length === 0) {
 		Alert.alert('Invalid', 'A location is needed to activate search.');
+		return;
 	}
 
 	let coordinates = null;
