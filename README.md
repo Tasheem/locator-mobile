@@ -19,7 +19,7 @@ npm start
 - This will run the mobile app connected to the Locator server hosted in the Cloud.
 - If you want to run the app connected to the localhost backend, boot the app like this:
 ```bash
-npm run start:development
+npm run dev
 ```
 
 - The Expo CLI will come and prompt you with options to run the app on Android emulator, iOS Simulator, and more.
@@ -48,5 +48,43 @@ Run this to test production build on iOS simulator:
 npm run ios
 ```
 
-### Note:
+## Note
 There maybe a prompt to install TypeScript, and sometimes it leads to an infinite loop, installing TypeScript over and over again when you select yes. If this happens, select no. The npm script will stop running and throw an error. After this, run the command again and it should succeed the second time.
+
+## .env files
+Somehow, .env.development is used when running in Debug mode in XCode and .env.production is used when running in Release mode in XCode. This is regardless of the NODE_ENV set when running expo prebuild. I am not sure how XCode knows which .env files to pull when running the app.
+
+Many times, a terminal window will open for expo-development-client. This can open in either Debug or Release mode. The terminal will say that the .env.development file is loaded, even in Release mode, but requests are still made to prod URLs regardless.
+
+## Building the ipa for the App Store
+- Make sure you're signed in with a paid Apple Developer Account.
+  - Can enroll through the "Apple Developer Program".
+- Click on the project name "Locator" and under **Signing & Capabilities**
+  - In the team dropdown, choose the team/individual associated with the project.
+- Click on the **General** tab and edit fields under the Identity section
+  - Set Display Name to Locator.
+  - Increment Version one above the latest version in the App Store.
+  - Increment Build one above the latest Build sent to the App Store.
+- Add icons for app from https://www.appicon.co
+  - Go to Locator > Locator > Images > AppIcon in XCode and drag the images (should be around 11 or 12 images) to the XCode screen that comes up.
+- Build the app
+  - Go to **Product** at the toolbar above the XCode Window.
+  - In Product, select the **Build** option from the dropdown.
+- Archive the app to create the ipa
+  - After it finishes building, go to the device options at the top of XCode, and select the option **Any iOS Device**
+- Go back to **Product** in the toolbar, and select the **Archive** option.
+  - When it finishes, a window should pop up showing archives.
+  - If it doesn't pop up, go to the **Window** option in the toolbar above XCode, then select the **Organizer** option.
+- Distrubute app
+  - In the pop up window, select your build you just ran/created, then click the **Distribute App** button on the right.
+  - Check the **App Store Connect** option, then click **Next**.
+  - Check the **Upload** option, then click **Next** again.
+  - For the distribution options, keep the default values checked (Should be all of them). Hit **Next**.
+  - Select the **Automatically manage signing** option and hit **Next**.
+  - Click the **Upload** button
+- TestFlight
+  - The build should appear in App Store Connect, under the TestFlight tab, around 10 minutes after you upload it.
+- App Store Connect
+  - Select build in **App Store Connect** under the main section (where it says **Prepare for Submission**).
+  - Save it, then click **Add for Review**
+  - Submit to App Review.

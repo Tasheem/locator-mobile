@@ -4,6 +4,7 @@ import { emitToken, emitUser, sendRequest } from '../utils/requestUtil';
 
 const serverPrefix = `${appConfig.serverURL}/auth`;
 const login = async (username: string, password: string) => {
+    // console.log(`Server URL: ${appConfig.serverURL}`);
     const payload = {
         'username': username,
         'password': password,
