@@ -72,6 +72,7 @@ Many times, a terminal window will open for expo-development-client. This can op
   - Set Display Name to Locator.
   - Increment Version one above the latest version in the App Store.
   - Increment Build one above the latest Build sent to the App Store.
+  - Remove any supported destinations that aren't iPhone.
 - Add icons for app from https://www.appicon.co
   - Go to Locator > Locator > Images > AppIcon in XCode and drag the images (should be around 11 or 12 images) to the XCode screen that comes up.
 - Build the app
@@ -79,9 +80,9 @@ Many times, a terminal window will open for expo-development-client. This can op
   - In Product, select the **Build** option from the dropdown.
 - Archive the app to create the ipa
   - After it finishes building, go to the device options at the top of XCode, and select the option **Any iOS Device**
-- Go back to **Product** in the toolbar, and select the **Archive** option.
-  - When it finishes, a window should pop up showing archives.
-  - If it doesn't pop up, go to the **Window** option in the toolbar above XCode, then select the **Organizer** option.
+  - Go back to **Product** in the toolbar, and select the **Archive** option.
+    - When it finishes, a window should pop up showing archives.
+    - If it doesn't pop up, go to the **Window** option in the toolbar above XCode, then select the **Organizer** option.
 - Distrubute app
   - In the pop up window, select your build you just ran/created, then click the **Distribute App** button on the right.
   - Check the **App Store Connect** option, then click **Next**.
