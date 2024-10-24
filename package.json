@@ -15,7 +15,8 @@
     "dev:web": "NODE_ENV=development expo start --web",
     "android": "NODE_ENV=production expo run:android",
     "ios": "NODE_ENV=production expo run:ios",
-    "prebuild": "NODE_ENV=production npx expo prebuild --clean --skip-dependency-update react-native,react"
+    "ios:device": "NODE_ENV=production expo run:ios --device --configuration=Release",
+    "prebuild": "NODE_ENV=production expo prebuild --clean --skip-dependency-update react-native,react"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.0.0",
