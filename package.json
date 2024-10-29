@@ -14,6 +14,7 @@
     "test:web": "NODE_ENV=test expo start --web",
     "dev:web": "NODE_ENV=development expo start --web",
     "android": "NODE_ENV=production expo run:android",
+    "android:device": "NODE_ENV=production expo run:android --device --variant release",
     "ios": "NODE_ENV=production expo run:ios",
     "ios:device": "NODE_ENV=production expo run:ios --device --configuration=Release",
     "prebuild": "expo prebuild --clean --skip-dependency-update react-native,react"

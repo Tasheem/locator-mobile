@@ -96,3 +96,90 @@ Many times, a terminal window will open for expo-development-client. This can op
   - Select build in **App Store Connect** under the main section (where it says **Prepare for Submission**).
   - Save it, then click **Add for Review**
   - Submit to App Review.
+
+# Publishing to the Google Play Store
+
+Generate the production build if you haven't already:
+```bash
+npm run prebuild
+```
+If you get an error when it tries to clean the directories, just manually remove them:
+```bash
+rm -rf ios
+rm -rf android
+```
+Run this to test production build on iOS simulator:
+```bash
+npm run android
+```
+
+## Generate the keystore
+This step maybe able to be skipped if the same keystore is being used to sign the app for future releases.
+
+- Generate the keystore:
+  - Navigate to your java_home
+  - You can find it using either of these commands:
+
+```bash
+/usr/libexec/java_home
+```
+
+```bash
+where $JAVA_HOME
+```
+- Run the command to generate the keystore:
+```bash
+sudo keytool -genkey -v -keystore my-upload-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
+```
+- Copy the keystore that was generated to the android/app directory. For example:
+```bash
+cp my-upload-key.keystore ~/React-Native/locator-mobile/android/app
+```
+
+## Set up signing settings for the app
+- Add this to the **android/grade.properties** file.
+  - The password should be the one used to generate the keystore.
+
+```properties
+MYAPP_UPLOAD_STORE_FILE=my-upload-key.keystore
+MYAPP_UPLOAD_KEY_ALIAS=my-key-alias
+MYAPP_UPLOAD_STORE_PASSWORD=****
+MYAPP_UPLOAD_KEY_PASSWORD=****
+```
+
+- Add this to the **android/app/build.gradle** file, in the android {} portion.
+  - In singingConfigs:
+
+```groovy
+release {
+    if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+        storeFile file(MYAPP_UPLOAD_STORE_FILE)
+        storePassword MYAPP_UPLOAD_STORE_PASSWORD
+        keyAlias MYAPP_UPLOAD_KEY_ALIAS
+        keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+    }
+}
+```
+- In **buildTypes -> release**, replace the debug signing setting with release:
+```groovy
+signingConfig signingConfigs.release
+```
+
+## Generating Assets
+- Generate different sizes of the logo via this website: https://www.appicon.co
+- Open the android directory in Android Studio.
+- Right click on the **app** directory.
+  - Select **New -> Image Asset**
+  - Asset Studio should pop up.
+- Add logo/image by selecting the folder in the **Path** text field.
+- Resize the image if necessary.
+- Navigate to the **Background Layer** tab and change the color to **CDCDCD** to get a gray background.
+- This will likely only affect the **Full Bleed Layers** image, depending on how you resized the image.
+
+## Building the aab/apk for the Google Play Store
+- Navigate to the android folder in your terminal
+- Execute this command:
+```bash
+./gradlew bundleRelease
+```
+- The aab should have been placed in the **android/app/build/outputs/bundle/release** directory.
