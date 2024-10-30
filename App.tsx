@@ -18,6 +18,7 @@ import { logout } from './app/services/auth-service';
 import { UserContext, ScreenContext } from './app/utils/context';
 import PhotosScreen from './app/screens/PhotosScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import AccountScreen from './app/screens/AccountScreen';
 
 global.TextEncoder = encoding.TextEncoder
 
@@ -36,7 +37,6 @@ const widthRatio = screenWidth / standardWidth;
 export default function App() {
 	const [user, setUser] = useState<User | null>(null);
 	const [displayingLogout, setDisplayingLogout] = useState(false);
-
 	
 	useEffect(() => {
 		const userSubscription = userObservable().subscribe((nextValue) => {
@@ -127,6 +127,15 @@ export default function App() {
 										headerRight: headerRightView
 									}}
 								/>
+
+								<Drawer.Screen
+									name='Account'
+									component={AccountScreen}
+									options={{
+										headerTintColor: BRAND_RED,
+										headerRight: headerRightView
+									}}
+								/>
 							</Drawer.Navigator>
 						</ScreenContext.Provider>
 					</UserContext.Provider>
@@ -172,6 +181,7 @@ type RootStackParamList = {
 	Home: undefined
 	Preferences: undefined
 	Photos: undefined
+	Account: undefined
 	Login: undefined
 	Search: undefined
 	Register: undefined
