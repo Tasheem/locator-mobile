@@ -7,7 +7,8 @@ import {
   Text,
   Modal,
   Alert,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native';
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from '../constants/colors';
 import { PlaceType } from '../models/places';
@@ -19,6 +20,7 @@ import { RootStackParamList } from '../../App';
 import Preferences from '../components/Preferences';
 import { fetchPlaceTypes } from '../services/places-service';
 import { ScreenContext } from '../utils/context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type PageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
@@ -33,6 +35,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [creatingUser, setCreatingUser] = useState(false);
   const [displayingSuccess, setDisplayingSuccess] = useState(false);
   const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
   const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
@@ -102,8 +105,11 @@ export default function RegisterScreen({ navigation }: PageProps) {
       }),
     };
 
+    setCreatingUser(true);
     try {
       const response = await register(payload);
+      setCreatingUser(false);
+
       if(response.status === 201) {
         setDisplayingSuccess(true);
         setTimeout(() => {
@@ -122,6 +128,8 @@ export default function RegisterScreen({ navigation }: PageProps) {
         );
       }
     } catch (error: any) {
+      setCreatingUser(false);
+
       console.log(error);
       Alert.alert(
         'Error',
@@ -202,13 +210,38 @@ export default function RegisterScreen({ navigation }: PageProps) {
             }}
           />
 
-          {displayingSuccess ? null : (
+          {displayingSuccess || creatingUser ? null : (
             <LocatorButton
               type='Primary'
               textValue='Submit'
               handler={submitData}
             />
           )}
+
+          {
+            creatingUser ? (
+              <ActivityIndicator
+                animating={true}
+                color={BRAND_RED}
+                style={{
+                  marginRight: 25
+                }}
+              />
+            ) : null
+          }
+
+          {
+            displayingSuccess ? (
+              <Ionicons
+                name='checkmark'
+                size={30}
+                color={'green'}
+                style={{
+                  marginRight: 25
+                }}
+              />
+            ) : null
+          }
         </View>
 
         <Modal
@@ -246,12 +279,12 @@ const getStyle = (widthRatio: number) => {
   const style = StyleSheet.create({
     successMessage: {
       color: 'green',
-      fontSize: 20,
+      fontSize: 20
     },
     rootContainer: {
       height: '90%',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     formContainer: {
       flexDirection: 'row',
@@ -263,12 +296,12 @@ const getStyle = (widthRatio: number) => {
     leftContainer: {
       flex: 1,
       alignItems: 'center',
-      gap: 35,
+      gap: 35
     },
     rightContainer: {
       flex: 1,
       alignItems: 'center',
-      gap: 35,
+      gap: 35
     },
     textBox: {
       width: '100%',
@@ -276,13 +309,13 @@ const getStyle = (widthRatio: number) => {
       borderColor: BRAND_RED,
       borderWidth: 2,
       borderRadius: 25,
-      paddingLeft: 10,
+      paddingLeft: 10
     },
     btnContainer: {
       marginTop: 40,
       flexDirection: 'row',
       width: '80%',
-      justifyContent: 'space-between',
+      justifyContent: 'space-between'
     },
     itemContainer: {
       flexDirection: 'row',
@@ -292,7 +325,7 @@ const getStyle = (widthRatio: number) => {
       height: 50,
       width: 160,
       marginBottom: 20,
-      paddingLeft: 15,
+      paddingLeft: 15
     },
     title: {
       fontSize: 20,
