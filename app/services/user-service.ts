@@ -31,4 +31,12 @@ const updateUserPreferences = async (placeTypeIds: number[]) => {
     return sendRequest(`${serverPrefix}/diet/preferences`, options);
 }
 
-export { requestUser, getUserPreferences, updateUserPreferences }
+const deleteUser = async () => {
+    const options = {
+        method: 'DELETE',
+    } as RequestInit
+
+    return sendRequest(serverPrefix, options);
+}
+
+export { requestUser, getUserPreferences, updateUserPreferences, deleteUser }
