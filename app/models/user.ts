@@ -11,6 +11,8 @@ export type User = {
     preferences: PlaceType[]
     rooms?: Room[]
     profilePictureUrl?: string
+    createdAt?: string
+    lastLogin?: string
 }
 
 export type UserSearchResult = {
