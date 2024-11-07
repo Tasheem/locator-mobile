@@ -8,7 +8,8 @@ import {
   Modal,
   Alert,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  TouchableOpacity
 } from 'react-native';
 import { BRAND_RED, CARD_RED_SECONDARY_COLOR } from '../constants/colors';
 import { PlaceType } from '../models/places';
@@ -214,7 +215,19 @@ export default function RegisterScreen({ navigation }: PageProps) {
             }}
           />
 
-          <Text>I agree to the terms of the Locator User Agreement. Along with some other text.</Text>
+          <View style={style.termsTextContainer}>
+            <Text style={{paddingRight: 4}}>
+              I agree to the terms of the
+            </Text>
+            <TouchableOpacity
+              onPress={() => {}}
+            >
+              <Text style={{color: BRAND_RED}}>
+                Locator User Agreement
+              </Text>
+            </TouchableOpacity>
+            <Text>.</Text>
+          </View>
         </View>
 
         <View style={style.btnContainer}>
@@ -334,6 +347,9 @@ const getStyle = (widthRatio: number) => {
       padding: 20
     },
     checkbox: {
+    },
+    termsTextContainer: {
+      flexDirection: 'row'
     },
     btnContainer: {
       marginTop: 10,
