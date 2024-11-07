@@ -21,6 +21,7 @@ import Preferences from '../components/Preferences';
 import { fetchPlaceTypes } from '../services/places-service';
 import { ScreenContext } from '../utils/context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Checkbox from 'expo-checkbox';
 
 type PageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
@@ -40,6 +41,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
   const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
   const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
   const [selectedPreferences, setSelectedPreferences] = useState(new Set<number>());
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   useEffect(() => {
     setPlaceTypesLoading(true);
@@ -201,6 +203,20 @@ export default function RegisterScreen({ navigation }: PageProps) {
           </View>
         </View>
 
+        <View style={style.termsContainer}>
+          <Checkbox
+            color={BRAND_RED}
+            value={agreedToTerms}
+            style={style.checkbox}
+            onValueChange={(isChecked) => {
+              console.log('isChecked:', isChecked);
+              setAgreedToTerms(isChecked);
+            }}
+          />
+
+          <Text>I agree to the terms of the Locator User Agreement. Along with some other text.</Text>
+        </View>
+
         <View style={style.btnContainer}>
           <LocatorButton
             type='Secondary'
@@ -282,7 +298,7 @@ const getStyle = (widthRatio: number) => {
       fontSize: 20
     },
     rootContainer: {
-      height: '90%',
+      height: '100%',
       justifyContent: 'center',
       alignItems: 'center'
     },
@@ -311,8 +327,16 @@ const getStyle = (widthRatio: number) => {
       borderRadius: 25,
       paddingLeft: 10
     },
+    termsContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: widthRatio > 1.8 ? 40 : 10,
+      padding: 20
+    },
+    checkbox: {
+    },
     btnContainer: {
-      marginTop: 40,
+      marginTop: 10,
       flexDirection: 'row',
       width: '80%',
       justifyContent: 'space-between'
