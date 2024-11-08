@@ -82,6 +82,11 @@ export default function RegisterScreen({ navigation }: PageProps) {
       return false;
     }
 
+    if(!agreedToTerms) {
+      Alert.alert('Error', 'You must agree to terms to use this application.');
+      return false;
+    }
+
     return true;
   };
 
