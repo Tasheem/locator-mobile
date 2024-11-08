@@ -215,7 +215,6 @@ export default function RegisterScreen({ navigation }: PageProps) {
             value={agreedToTerms}
             style={style.checkbox}
             onValueChange={(isChecked) => {
-              console.log('isChecked:', isChecked);
               setAgreedToTerms(isChecked);
             }}
           />

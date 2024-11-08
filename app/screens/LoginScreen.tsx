@@ -30,16 +30,6 @@ export default function LoginScreen(navigationProp: NativeStackScreenProps<RootS
       {/* <Logo height={100 * widthRatio} width={100 * widthRatio} /> */}
       <Logo height={100} width={100} />
 
-      {
-        isLoggingIn ? (
-          <ActivityIndicator
-            animating={isLoggingIn}
-            color={BRAND_RED}
-            size={widthRatio > 1.5 ? 'large' : 'small'}
-          />
-        ) : null
-      }
-
       <View style={style.inputContainer}>
         {error && !isLoggingIn ? (
           <View style={style.errorContainer}>
@@ -69,30 +59,40 @@ export default function LoginScreen(navigationProp: NativeStackScreenProps<RootS
         />
       </View>
 
-      <LocatorButton
-        handler={async () => {
-          setIsLoggingIn(true);
-
-          try {
-            const response = await login(username, password);
-
-            if(!response.ok) {
-              setErrorMessage('Incorrect username/password.');
-              setError(true);
-            }
-          } catch (error: any) {
-            setErrorMessage('The server is down for maintainence. Please try again later.')
-            setError(true);
-            console.log(error);
-          } finally {
-            setIsLoggingIn(false);
-          }
-        }}
-        type='Primary'
-        // fontSize={20 * widthRatio}
-        padding='wide'
-        textValue='Login'
-      />
+      {
+        isLoggingIn ? (
+          <ActivityIndicator
+            animating={isLoggingIn}
+            color={BRAND_RED}
+            size={widthRatio > 1.5 ? 'large' : 'small'}
+          />
+        ) : (
+          <LocatorButton
+            handler={async () => {
+              setIsLoggingIn(true);
+    
+              try {
+                const response = await login(username, password);
+    
+                if(!response.ok) {
+                  setErrorMessage('Incorrect username/password.');
+                  setError(true);
+                }
+              } catch (error: any) {
+                setErrorMessage('The server is down for maintainence. Please try again later.')
+                setError(true);
+                console.log(error);
+              } finally {
+                setIsLoggingIn(false);
+              }
+            }}
+            type='Primary'
+            // fontSize={20 * widthRatio}
+            padding='wide'
+            textValue='Login'
+          />
+        )
+      }
 
       <LocatorButton
         type='Secondary'
