@@ -65,6 +65,9 @@ export default function LoginScreen(navigationProp: NativeStackScreenProps<RootS
             animating={isLoggingIn}
             color={BRAND_RED}
             size={widthRatio > 1.5 ? 'large' : 'small'}
+            style={{
+              margin: 8
+            }}
           />
         ) : (
           <LocatorButton
