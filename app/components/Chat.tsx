@@ -3,16 +3,21 @@ import { ChatMessage } from '../models/room'
 import { User } from '../models/user'
 import { CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors'
 import moment from 'moment'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type Props = {
     chatMessage: ChatMessage
     user: User | null
     timezone?: string
+    onLongPress?: () => void
 }
 
-export default function Chat({ chatMessage, user, timezone = 'UTC' }: Props) {
+export default function Chat({ chatMessage, user, timezone = 'UTC', onLongPress }: Props) {
     return (
-        <View style={chatMessage.source.id === user?.id ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}>
+        <TouchableOpacity
+            style={chatMessage.source.id === user?.id ? [style.messageContainer, style.redMessageContainer] : style.messageContainer}
+            onLongPress={onLongPress}
+        >
             <View style={chatMessage.source.id === user?.id ? [style.imageContainer, style.redImageContainer] : style.imageContainer}>
                 <Image 
                     source={chatMessage.source.profilePictureUrl ? { uri: chatMessage.source.profilePictureUrl } : require('../assets/no-profile-pic.png')}
@@ -47,7 +52,7 @@ export default function Chat({ chatMessage, user, timezone = 'UTC' }: Props) {
                     </Text>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

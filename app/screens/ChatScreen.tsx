@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, TextInput, ActivityIndicator, Keyboard, ViewStyle, Platform } from 'react-native';
+import { View, StyleSheet, ScrollView, TextInput, ActivityIndicator, Keyboard, ViewStyle, Platform, Alert } from 'react-native';
 import { BRAND_RED } from '../constants/colors';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../models/room';
@@ -107,7 +107,28 @@ export default function ChatScreen({ route }: Props) {
 
     const renderedElements = messages.map((item) => {
         return (
-            <Chat key={item.id} chatMessage={item} user={user} timezone={timezone} />
+            <Chat
+                key={item.id}
+                chatMessage={item}
+                user={user}
+                timezone={timezone}
+                onLongPress={() => {
+                    if(item.source.id === user?.id) {
+                        return;
+                    }
+
+                    Alert.prompt('Report a chat', 'Provide the reason for reporting this chat message and press the report button to submit the report.', [
+                        {
+                            'text': 'Cancel',
+                            'style': 'default'
+                        },
+                        {
+                            'text': 'Report',
+                            'style': 'destructive'
+                        }
+                    ]);
+                }}
+            />
         );
     });
 
