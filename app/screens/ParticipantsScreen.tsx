@@ -169,32 +169,41 @@ export default function ParticipantsScreen({ route }: Props) {
                   unblockUser(block.id)
                   .then((response) => {
                     if(response.ok) {
-                      if(!item.id) {
-                        return;
-                      }
-                      
                       blockedUsers.delete(item.id);
                       setBlockedUsers(new Map([...blockedUsers]));
                     }
                   });
                 }
 
-                const blockedText = isBlocked ? 'Unblock' : 'Block';
-                const blockedStyle = isBlocked ? 'default' : 'destructive';
-                const blockHandler = isBlocked ? unblockRequest : blockRequest;
-                Alert.prompt('Block user', 'Are you sure you want to block this user?',
-                  [
-                    {
-                      'text': 'Cancel',
-                      'style': 'default'
-                    },
-                    {
-                      'text': blockedText,
-                      'style': blockedStyle,
-                      'onPress': blockHandler
-                    }
-                  ]
-                );
+                if(isBlocked) {
+                  Alert.alert('Unblock User', 'Are you sure you want to unblock this user? This will remove any filtering of their chat messages.',
+                    [
+                      {
+                        'text': 'Cancel',
+                        'style': 'default'
+                      },
+                      {
+                        'text': 'Unblock',
+                        'style': 'destructive',
+                        'onPress': unblockRequest
+                      }
+                    ]
+                  )
+                } else {
+                  Alert.prompt('Block User', 'Are you sure you want to block this user? This will filter their chat messages. A reason can be given in the field below.',
+                    [
+                      {
+                        'text': 'Cancel',
+                        'style': 'default'
+                      },
+                      {
+                        'text': 'Block',
+                        'style': 'destructive',
+                        'onPress': blockRequest
+                      }
+                    ]
+                  );
+                }
               }}
             >
               <TouchableOpacity
