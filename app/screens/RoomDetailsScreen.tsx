@@ -6,8 +6,9 @@ import { RootStackParamList } from '../../App';
 import { Room } from '../models/room';
 import ParticipantsScreen from './ParticipantsScreen';
 import { NavigationProp, RouteProp } from '@react-navigation/native';
-import { useContext } from 'react';
-import { UserContext } from '../utils/context';
+import { useContext, useState } from 'react';
+import { BlockedContext, UserContext } from '../utils/context';
+import { Blocked } from '../models/user';
 
 type Props = {
     route: RouteProp<RootStackParamList, 'RoomDetails'>,
@@ -28,29 +29,32 @@ export type RoomDetailsParamList = {
 const Tab = createMaterialTopTabNavigator<RoomDetailsParamList>();
 
 export default function RoomDetailsScreen({ route }: Props) {
+    const [blockedUsers, setBlockedUsers] = useState<Map<number, Blocked>>(new Map());
     const room = route.params.room;
 
     return (
-        <Tab.Navigator
-        screenOptions={{
-            tabBarIndicatorStyle: {
-                backgroundColor: BRAND_RED
-            },
-            tabBarLabelStyle: {
-                color: BRAND_RED
-            }
-        }} >
-            <Tab.Screen name='Participants' component={ ParticipantsScreen } initialParams={{
-                room: room
-            }} />
-            <Tab.Screen name='Chat' component={ ChatScreen } initialParams={{
-                room: room
-            }} />
-            <Tab.Screen name='Recommended' component={ RecommendationScreen } initialParams={{
-                room: room
-            }} options={{
-                tabBarLabel: 'Food'
-            }} />
-        </Tab.Navigator>
+        <BlockedContext.Provider value={[blockedUsers, setBlockedUsers]}>
+            <Tab.Navigator
+            screenOptions={{
+                tabBarIndicatorStyle: {
+                    backgroundColor: BRAND_RED
+                },
+                tabBarLabelStyle: {
+                    color: BRAND_RED
+                }
+            }} >
+                <Tab.Screen name='Participants' component={ ParticipantsScreen } initialParams={{
+                    room: room
+                }} />
+                <Tab.Screen name='Chat' component={ ChatScreen } initialParams={{
+                    room: room
+                }} />
+                <Tab.Screen name='Recommended' component={ RecommendationScreen } initialParams={{
+                    room: room
+                }} options={{
+                    tabBarLabel: 'Food'
+                }} />
+            </Tab.Navigator>
+        </BlockedContext.Provider>
     );
 }

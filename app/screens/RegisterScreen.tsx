@@ -100,7 +100,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
       return;
     }
 
-    const payload: User = {
+    const payload: Omit<User, 'id'> = {
       username: username,
       password: password,
       firstname: firstName,

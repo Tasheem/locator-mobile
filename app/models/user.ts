@@ -2,7 +2,7 @@ import { PlaceType } from './places'
 import { Room } from './room'
 
 type User = {
-    id?: number
+    id: number
     username: string
     password: string
     firstname: string

@@ -8,7 +8,7 @@ import { RouteProp } from '@react-navigation/native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { getCalendars } from 'expo-localization';
 import Chat from '../components/Chat';
-import { ScreenContext, UserContext } from '../utils/context';
+import { BlockedContext, ScreenContext, UserContext } from '../utils/context';
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Chat', undefined>
@@ -19,6 +19,7 @@ export default function ChatScreen({ route }: Props) {
     const { widthRatio } = useContext(ScreenContext);
     const scrollViewRef = useRef<ScrollView>(null);
     const [user, setUser] = useContext(UserContext);
+    const [blockedUsers, setBlockedUsers] = useContext(BlockedContext);
 
     const room = route.params.room;
     const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -106,6 +107,10 @@ export default function ChatScreen({ route }: Props) {
     });
 
     const renderedElements = messages.map((item) => {
+        if(blockedUsers.has(item.source.id)) {
+            return null;
+        }
+
         return (
             <Chat
                 key={item.id}

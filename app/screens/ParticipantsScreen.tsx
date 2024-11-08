@@ -27,7 +27,7 @@ import {
   participantsObservable
 } from '../services/room-service';
 import { Room } from '../models/room';
-import { UserContext } from '../utils/context';
+import { BlockedContext, UserContext } from '../utils/context';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import PhotoModal from '../components/PhotoModal';
 import { LocatorImageData } from '../models/locator-media';
@@ -46,13 +46,13 @@ type Props = {
 
 export default function ParticipantsScreen({ route }: Props) {
   const [currentUser, setCurrentUser] = useContext(UserContext);
+  const [blockedUsers, setBlockedUsers] = useContext(BlockedContext);
 
   const room = route.params.room;
   const [members, setMembers] = useState<User[]>([]);
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
-  const [blockedUsers, setBlockedUsers] = useState<Map<number, Blocked>>(new Map());
 
   useEffect(() => {
     // Set initial list of members/participants with initial emit to the participants subject.
@@ -83,6 +83,8 @@ export default function ParticipantsScreen({ route }: Props) {
           blockedUsers.set(target.id, block);
         }
       }
+
+      setBlockedUsers(new Map([...blockedUsers]));
     })
 
     return () => {
@@ -101,6 +103,11 @@ export default function ParticipantsScreen({ route }: Props) {
 
     setMembers(updatedMembers);
   }, [currentUser]);
+
+  useEffect(() => {
+    console.log('Block Change...');
+    console.log(blockedUsers);
+  }, [blockedUsers]);
 
   return (
     <View style={style.rootContainer}>
@@ -131,7 +138,7 @@ export default function ParticipantsScreen({ route }: Props) {
           rowGap: 40,
         }}
         renderItem={({ item }) => {
-          const isBlocked = item.id ? blockedUsers.has(item.id) : false;
+          const isBlocked = blockedUsers.has(item.id);
           return (
             <TouchableOpacity
               style={
@@ -145,19 +152,11 @@ export default function ParticipantsScreen({ route }: Props) {
                 }
 
                 const blockRequest = (text?: string) => {
-                  if(!item.id) {
-                    return;
-                  }
-
                   blockUser(item.id, text)
                   .then((response) => {
                       return response.json() as Promise<Blocked>;
                   })
                   .then((blocked) => {
-                    if(!blocked.target.id) {
-                      return;
-                    }
-
                     blockedUsers.set(blocked.target.id, blocked);
                     setBlockedUsers(new Map([...blockedUsers]));
                   })
@@ -167,10 +166,6 @@ export default function ParticipantsScreen({ route }: Props) {
                 }
 
                 const unblockRequest = (text?: string) => {
-                  if(!item.id) {
-                    return;
-                  }
-
                   const block = blockedUsers.get(item.id);
                   if(!block) {
                     return;
@@ -243,7 +238,7 @@ export default function ParticipantsScreen({ route }: Props) {
                     : style.username)
                 }
               >
-                {item.username}
+                { item.username }
               </Text>
               {/* {
                 !isBlocked ? (

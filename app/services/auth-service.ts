@@ -35,7 +35,7 @@ const logout = () => {
     emitUser(null);
 }
 
-const register = async (payload: User) => {
+const register = async (payload: Omit<User, 'id'>) => {
     const options: RequestInit = {
         method: 'POST',
         headers: {
