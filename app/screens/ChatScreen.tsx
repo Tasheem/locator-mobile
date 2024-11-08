@@ -58,9 +58,6 @@ export default function ChatScreen({ route }: Props) {
                 const startCoordinates = keyboardEvent.startCoordinates;
                 const endCoordinates = keyboardEvent.endCoordinates;
                 const keyboardHeight = keyboardEvent.endCoordinates.height;
-                
-                console.log('Start coordinates:', startCoordinates);
-                console.log('End coordinates:', endCoordinates);
     
                 setMovableInputStyle({
                     height: keyboardHeight,
