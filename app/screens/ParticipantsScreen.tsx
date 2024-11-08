@@ -4,7 +4,8 @@ import {
   View,
   Image,
   Text,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { RouteProp } from '@react-navigation/native';
@@ -16,7 +17,7 @@ import {
   CARD_SECONDARY_COLOR,
 } from '../constants/colors';
 import { useContext, useEffect, useState } from 'react';
-import { User } from '../models/user';
+import { Blocked, User } from '../models/user';
 import {
   disconnectParticipantsSocket,
   emitParticipants,
@@ -32,6 +33,7 @@ import PhotoModal from '../components/PhotoModal';
 import { LocatorImageData } from '../models/locator-media';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchModal from '../components/SearchModal';
+import { blockUser, getBlockedUsers, unblockUser } from '../services/user-service';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -50,6 +52,7 @@ export default function ParticipantsScreen({ route }: Props) {
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [blockedUsers, setBlockedUsers] = useState<Map<number, Blocked>>(new Map());
 
   useEffect(() => {
     // Set initial list of members/participants with initial emit to the participants subject.
@@ -68,6 +71,19 @@ export default function ParticipantsScreen({ route }: Props) {
           emitRooms(rooms);
         });
     });
+    
+    getBlockedUsers()
+    .then((response) => {
+      return response.json() as Promise<Blocked[]>
+    })
+    .then((blocks) => {
+      for(let block of blocks) {
+        const target = block.target;
+        if(target.id) {
+          blockedUsers.set(target.id, block);
+        }
+      }
+    })
 
     return () => {
       subscription.unsubscribe();
@@ -114,54 +130,131 @@ export default function ParticipantsScreen({ route }: Props) {
           marginTop: 15,
           rowGap: 40,
         }}
-        renderItem={({ item }) => (
-          <View
-            style={
-              item.id === currentUser?.id
-                ? [style.itemContainer, style.itemContainerUser]
-                : style.itemContainer
-            }
-          >
+        renderItem={({ item }) => {
+          const isBlocked = item.id ? blockedUsers.has(item.id) : false;
+          return (
             <TouchableOpacity
-              onPress={() => {
-                if(item.profilePictureUrl) {
-                  setImageInFocus({
-                    publicUrl: item.profilePictureUrl,
-                    imageType: '',
-                    createDate: ''
-                  });
-
-                  setImageModalVisible(true);
+              style={
+                isBlocked ? ([style.itemContainer, style.blockedContainer]) : (item.id === currentUser?.id
+                  ? [style.itemContainer, style.itemContainerUser]
+                  : style.itemContainer)
+              }
+              onLongPress={() => {
+                if(item.id === currentUser?.id) {
+                  return;
                 }
+
+                const blockRequest = (text?: string) => {
+                  if(!item.id) {
+                    return;
+                  }
+
+                  blockUser(item.id, text)
+                  .then((response) => {
+                      return response.json() as Promise<Blocked>;
+                  })
+                  .then((blocked) => {
+                    if(!blocked.target.id) {
+                      return;
+                    }
+
+                    blockedUsers.set(blocked.target.id, blocked);
+                    setBlockedUsers(new Map([...blockedUsers]));
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+                }
+
+                const unblockRequest = (text?: string) => {
+                  if(!item.id) {
+                    return;
+                  }
+
+                  const block = blockedUsers.get(item.id);
+                  if(!block) {
+                    return;
+                  }
+
+                  unblockUser(block.id)
+                  .then((response) => {
+                    if(response.ok) {
+                      if(!item.id) {
+                        return;
+                      }
+                      
+                      blockedUsers.delete(item.id);
+                      setBlockedUsers(new Map([...blockedUsers]));
+                    }
+                  });
+                }
+
+                const blockedText = isBlocked ? 'Unblock' : 'Block';
+                const blockedStyle = isBlocked ? 'default' : 'destructive';
+                const blockHandler = isBlocked ? unblockRequest : blockRequest;
+                Alert.prompt('Block user', 'Are you sure you want to block this user?',
+                  [
+                    {
+                      'text': 'Cancel',
+                      'style': 'default'
+                    },
+                    {
+                      'text': blockedText,
+                      'style': blockedStyle,
+                      'onPress': blockHandler
+                    }
+                  ]
+                );
               }}
             >
-              <Image
-                source={
-                    item.profilePictureUrl ? 
-                    {
-                      uri: item.profilePictureUrl
-                    } : require('../assets/no-profile-pic.png')
-                }
-                style={{
-                  width: 50,
-                  height: 50,
-                  borderRadius: 40,
-                  borderColor: 'black',
-                  borderWidth: 2
+              <TouchableOpacity
+                onPress={() => {
+                  if(item.profilePictureUrl) {
+                    setImageInFocus({
+                      publicUrl: item.profilePictureUrl,
+                      imageType: '',
+                      createDate: ''
+                    });
+
+                    setImageModalVisible(true);
+                  }
                 }}
-              />
+              >
+                <Image
+                  source={
+                      item.profilePictureUrl ? 
+                      {
+                        uri: item.profilePictureUrl
+                      } : require('../assets/no-profile-pic.png')
+                  }
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 40,
+                    borderColor: 'black',
+                    borderWidth: 2
+                  }}
+                />
+              </TouchableOpacity>
+              <Text
+                style={
+                  isBlocked ? ([style.username, style.blockedUser]) : (item.id === currentUser?.id
+                    ? [style.username, style.mainUser]
+                    : style.username)
+                }
+              >
+                {item.username}
+              </Text>
+              {/* {
+                !isBlocked ? (
+                  <Ionicons
+                    name=''
+                  />
+                ) : null
+              } */}
             </TouchableOpacity>
-            <Text
-              style={
-                item.id === currentUser?.id
-                  ? [style.username, style.mainUser]
-                  : style.username
-              }
-            >
-              {item.username}
-            </Text>
-          </View>
-        )}
+          );
+        }}
       />
 
       <PhotoModal
@@ -225,5 +318,12 @@ const style = StyleSheet.create({
   addBtnTouchable: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  blockedContainer: {
+    borderColor: 'rgba(28, 28, 28, 1)',
+    backgroundColor: 'rgba(54, 53, 53, 0.9)'
+  },
+  blockedUser: {
+    color: 'white'
   }
 });

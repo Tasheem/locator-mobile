@@ -39,4 +39,25 @@ const deleteUser = async () => {
     return sendRequest(serverPrefix, options);
 }
 
-export { requestUser, getUserPreferences, updateUserPreferences, deleteUser }
+const getBlockedUsers = async () => {
+    return sendRequest(`${serverPrefix}/block`);
+}
+
+const blockUser = async (targetUserId: number, reason?: string) => {
+    const options = {
+        method: 'POST',
+        body: reason
+    } as RequestInit
+
+    return sendRequest(`${serverPrefix}/block/${targetUserId}`, options);
+}
+
+const unblockUser = async (blockId: number) => {
+    const options = {
+        method: 'DELETE'
+    } as RequestInit
+
+    return sendRequest(`${serverPrefix}/block/${blockId}`, options);
+}
+
+export { requestUser, getUserPreferences, updateUserPreferences, deleteUser, getBlockedUsers, blockUser, unblockUser }

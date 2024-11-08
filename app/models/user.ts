@@ -1,7 +1,7 @@
 import { PlaceType } from './places'
 import { Room } from './room'
 
-export type User = {
+type User = {
     id?: number
     username: string
     password: string
@@ -15,7 +15,7 @@ export type User = {
     lastLogin?: string
 }
 
-export type UserSearchResult = {
+type UserSearchResult = {
     id: number
     username: string
     firstname: string
@@ -25,3 +25,13 @@ export type UserSearchResult = {
     firstnameHighlight?: string
     lastnameHighlight?: string
 }
+
+type Blocked = {
+    id: number
+    source: User
+    target: User
+    reason?: string
+    date: string
+}
+
+export { User, UserSearchResult, Blocked };
