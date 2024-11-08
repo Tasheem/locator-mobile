@@ -42,7 +42,7 @@ export default function RoomDetailsScreen({ route }: Props) {
                 tabBarLabelStyle: {
                     color: BRAND_RED
                 }
-            }} >
+            }}>
                 <Tab.Screen name='Participants' component={ ParticipantsScreen } initialParams={{
                     room: room
                 }} />

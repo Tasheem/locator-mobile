@@ -104,11 +104,6 @@ export default function ParticipantsScreen({ route }: Props) {
     setMembers(updatedMembers);
   }, [currentUser]);
 
-  useEffect(() => {
-    console.log('Block Change...');
-    console.log(blockedUsers);
-  }, [blockedUsers]);
-
   return (
     <View style={style.rootContainer}>
       <View style={style.addBtnContainer}>
