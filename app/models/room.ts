@@ -24,4 +24,11 @@ type JoinRoom = {
     createDate: string
 }
 
-export { Room, ChatMessage, JoinRoom }
+type ReportedChat = {
+    id: number
+    chat: ChatMessage
+    reporter: User
+    reason: string
+}
+
+export { Room, ChatMessage, JoinRoom, ReportedChat }

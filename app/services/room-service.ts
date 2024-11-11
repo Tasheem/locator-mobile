@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Client, StompSubscription } from '@stomp/stompjs';
-import { ChatMessage, JoinRoom, Room } from '../models/room';
+import { ChatMessage, JoinRoom, ReportedChat, Room } from '../models/room';
 import { BehaviorSubject } from 'rxjs';
 import { sendRequest } from '../utils/requestUtil';
 import { User } from '../models/user';
@@ -184,6 +184,26 @@ const sendChatMessage = async (message: string, roomId: number) => {
     return sendRequest(`${serverPrefix}/id/${roomId}/chat`, options);
 }
 
+const reportChat = async (reportedChat: Omit<ReportedChat, 'id' | 'reporter'>) => {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(reportedChat)
+    } as RequestInit;
+
+    return sendRequest(`${serverPrefix}/chat/report`, options);
+}
+
+const getUserReports = async () => {
+    const options = {
+        method: 'GET'
+    } as RequestInit;
+
+    return sendRequest(`${serverPrefix}/chat/report`, options);
+}
+
 const establishChatConnection = (roomId: number) => {
     AsyncStorage.getItem('bearerToken')
     .then(token => {
@@ -336,5 +356,7 @@ export {
     emitJoinRequests,
     addRoomAndEmit,
     updateRoomAndEmit,
-    deleteRoomAndEmit
+    deleteRoomAndEmit,
+    reportChat,
+    getUserReports
 }

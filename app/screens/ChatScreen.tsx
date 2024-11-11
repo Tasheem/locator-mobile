@@ -2,7 +2,7 @@ import { View, StyleSheet, ScrollView, TextInput, ActivityIndicator, Keyboard, V
 import { BRAND_RED } from '../constants/colors';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../models/room';
-import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, sendChatMessage } from '../services/room-service';
+import { chatObservable, disconnectChat, emitChats, establishChatConnection, getChatMessages, reportChat, sendChatMessage } from '../services/room-service';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp } from '@react-navigation/native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
@@ -126,7 +126,50 @@ export default function ChatScreen({ route }: Props) {
                         },
                         {
                             'text': 'Report',
-                            'style': 'destructive'
+                            'style': 'destructive',
+                            'onPress': (text) => {
+                                if(!text) {
+                                    Alert.alert('Error', 'A reason must be provided for reporting a chat.',
+                                        [
+                                            {
+                                                text: 'OK'
+                                            }
+                                        ]
+                                    );
+                                    return;
+                                }
+
+                                reportChat({
+                                    chat: item,
+                                    reason: text
+                                }).then((response) => {
+                                    if(response.ok) {
+                                        Alert.alert('Success', 'Thank you for reporting chats you find inappropriate. This report will be reviewed and further action may be taken.',
+                                            [
+                                                {
+                                                    text: 'OK'
+                                                }
+                                            ]
+                                        );
+                                    } else {
+                                        Alert.alert('Error', 'An error has occurred while reporting this chat. Please try again later.',
+                                            [
+                                                {
+                                                    text: 'OK'
+                                                }
+                                            ]
+                                        );
+                                    }
+                                }).catch((err) => {
+                                    Alert.alert('Error', 'An error has occurred while reporting this chat. Please try again later.',
+                                        [
+                                            {
+                                                text: 'OK'
+                                            }
+                                        ]
+                                    );
+                                });
+                            }
                         }
                     ]);
                 }}
