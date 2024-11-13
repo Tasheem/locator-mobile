@@ -27,14 +27,6 @@ export default function SearchModal({ modalVisible, onClose, room }: Props) {
     const [displayingPhotoModal, setDisplayingPhotoModal] = useState(false);
     const [photoInFocus, setPhotoInFocus] = useState<LocatorImageData | null>(null);
     const [searchInFocus, setSearchInFocus] = useState(false);
-
-    const testData = [{
-        id: 1,
-        username: 'Tasheem18',
-        firstname: 'Tasheem',
-        lastname: 'Hargrove',
-        profilePictureUrl: ''
-    }];
     const [searchResults, setSearchResults] = useState<UserSearchResult[]>([]);
 
     const onChangeText = (text: string) => {
@@ -173,7 +165,7 @@ export default function SearchModal({ modalVisible, onClose, room }: Props) {
                                                         if (response.status === 201) {
                                                         Alert.alert(
                                                             'Success',
-                                                            'The request has been sent successfully.'
+                                                            'The request has been sent.'
                                                         );
                                                         } else if (response.status === 409) {
                                                         Alert.alert(
