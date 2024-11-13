@@ -23,6 +23,7 @@ import { fetchPlaceTypes } from '../services/places-service';
 import { ScreenContext } from '../utils/context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Checkbox from 'expo-checkbox';
+import EULA from '../components/EULA';
 
 type PageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
@@ -36,13 +37,14 @@ export default function RegisterScreen({ navigation }: PageProps) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [preferencesModalVisible, setPreferencesModalVisible] = useState(false);
   const [creatingUser, setCreatingUser] = useState(false);
   const [displayingSuccess, setDisplayingSuccess] = useState(false);
   const [placeTypes, setPlaceTypes] = useState<PlaceType[]>([]);
   const [placeTypesLoading, setPlaceTypesLoading] = useState(false);
   const [selectedPreferences, setSelectedPreferences] = useState(new Set<number>());
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [eulaModalVisible, setEulaModalVisible] = useState(false);
 
   useEffect(() => {
     setPlaceTypesLoading(true);
@@ -224,7 +226,9 @@ export default function RegisterScreen({ navigation }: PageProps) {
               I agree to the terms of the
             </Text>
             <TouchableOpacity
-              onPress={() => {}}
+              onPress={() => {
+                setEulaModalVisible(true);
+              }}
             >
               <Text style={{color: BRAND_RED}}>
                 Locator User Agreement
@@ -239,7 +243,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
             type='Secondary'
             textValue='Preferences'
             handler={() => {
-              setModalVisible(true);
+              setPreferencesModalVisible(true);
             }}
           />
 
@@ -279,9 +283,9 @@ export default function RegisterScreen({ navigation }: PageProps) {
 
         <Modal
           animationType='fade'
-          visible={modalVisible}
+          visible={preferencesModalVisible}
           onRequestClose={() => {
-            setModalVisible(false);
+            setPreferencesModalVisible(false);
           }}
         >
           <SafeAreaView>
@@ -290,7 +294,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 type='Secondary'
                 textValue='Close'
                 handler={() => {
-                  setModalVisible(false);
+                  setPreferencesModalVisible(false);
                 }}
               />
 
@@ -300,6 +304,32 @@ export default function RegisterScreen({ navigation }: PageProps) {
                 selectedPlaceTypes={selectedPreferences}
                 setSelectedPreferences={setSelectedPreferences}
               />
+            </ScrollView>
+          </SafeAreaView>
+        </Modal>
+
+        <Modal
+          animationType='fade'
+          visible={eulaModalVisible}
+          onRequestClose={() => {
+            setEulaModalVisible(false);
+          }}
+        >
+          <SafeAreaView>
+            <ScrollView>
+              <TouchableOpacity
+                style={style.backArrowContainer}
+                onPress={() => {
+                  setEulaModalVisible(false);
+                }}
+              >
+                <Ionicons
+                  name='arrow-back-circle'
+                  color={BRAND_RED}
+                  size={30}
+                />
+              </TouchableOpacity>
+              <EULA />
             </ScrollView>
           </SafeAreaView>
         </Modal>
@@ -377,6 +407,11 @@ const getStyle = (widthRatio: number) => {
       marginTop: 15,
       marginBottom: 15
     },
+    backArrowContainer: {
+      flexDirection: 'row',
+      marginLeft: 10,
+      marginTop: 10
+    }
   })
   
   return style;
