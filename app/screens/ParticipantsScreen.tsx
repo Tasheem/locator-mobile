@@ -5,7 +5,9 @@ import {
   Image,
   Text,
   FlatList,
-  Alert
+  Modal,
+  SafeAreaView,
+  TouchableOpacity
 } from 'react-native';
 import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { RouteProp } from '@react-navigation/native';
@@ -28,12 +30,12 @@ import {
 } from '../services/room-service';
 import { Room } from '../models/room';
 import { BlockedContext, UserContext } from '../utils/context';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import PhotoModal from '../components/PhotoModal';
 import { LocatorImageData } from '../models/locator-media';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchModal from '../components/SearchModal';
 import { blockUser, getBlockedUsers, unblockUser } from '../services/user-service';
+import Confirmation from '../components/Confirmation';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -53,6 +55,9 @@ export default function ParticipantsScreen({ route }: Props) {
   const [imageModalVisible, setImageModalVisible] = useState(false);
   const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [blockModalVisible, setBlockModalVisible] = useState(false);
+  const [blockUserTarget, setBlockUserTarget] = useState<User | undefined | null>();
+  const [blockUserHandler, setBlockHandler] = useState<((text?: string) => Promise<void>) | null>(null);
 
   useEffect(() => {
     // Set initial list of members/participants with initial emit to the participants subject.
@@ -146,64 +151,35 @@ export default function ParticipantsScreen({ route }: Props) {
                   return;
                 }
 
-                const blockRequest = (text?: string) => {
-                  blockUser(item.id, text)
-                  .then((response) => {
-                      return response.json() as Promise<Blocked>;
-                  })
-                  .then((blocked) => {
-                    blockedUsers.set(blocked.target.id, blocked);
-                    setBlockedUsers(new Map([...blockedUsers]));
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-                }
+                setBlockUserTarget(item);
+                
+                const blockRequest = async (text?: string) => {
+                  const response = await blockUser(item.id, text);
+                  const blocked = await response.json() as Blocked;
 
-                const unblockRequest = (text?: string) => {
+                  blockedUsers.set(blocked.target.id, blocked);
+                  setBlockedUsers(new Map([...blockedUsers]));
+                }
+                
+                const unblockRequest = async (text?: string) => {
                   const block = blockedUsers.get(item.id);
                   if(!block) {
                     return;
                   }
-
-                  unblockUser(block.id)
-                  .then((response) => {
-                    if(response.ok) {
-                      blockedUsers.delete(item.id);
-                      setBlockedUsers(new Map([...blockedUsers]));
-                    }
-                  });
+                  
+                  const response = await unblockUser(block.id);
+                  if(response.ok) {
+                    blockedUsers.delete(item.id);
+                    setBlockedUsers(new Map([...blockedUsers]));
+                  }
                 }
-
+                
                 if(isBlocked) {
-                  Alert.alert('Unblock User', 'Are you sure you want to unblock this user? This will remove any filtering of their chat messages.',
-                    [
-                      {
-                        'text': 'Cancel',
-                        'style': 'default'
-                      },
-                      {
-                        'text': 'Unblock',
-                        'style': 'destructive',
-                        'onPress': unblockRequest
-                      }
-                    ]
-                  )
+                  setBlockHandler(unblockRequest);
                 } else {
-                  Alert.prompt('Block User', 'Are you sure you want to block this user? This will filter their chat messages. A reason can be given in the field below.',
-                    [
-                      {
-                        'text': 'Cancel',
-                        'style': 'default'
-                      },
-                      {
-                        'text': 'Block',
-                        'style': 'destructive',
-                        'onPress': blockRequest
-                      }
-                    ]
-                  );
+                  setBlockHandler(blockRequest);
                 }
+                setBlockModalVisible(true);
               }}
             >
               <TouchableOpacity
@@ -244,13 +220,45 @@ export default function ParticipantsScreen({ route }: Props) {
               >
                 { item.username }
               </Text>
-              {/* {
-                !isBlocked ? (
-                  <Ionicons
-                    name=''
+              
+              <Modal
+                animationType='fade'
+                visible={blockModalVisible}
+                onRequestClose={() => {
+                  setBlockUserTarget(null);
+                  setBlockHandler(null);
+                  setBlockModalVisible(false);
+                }}
+              >
+                <SafeAreaView>
+                  <TouchableOpacity
+                    style={style.backArrowContainer}
+                    onPress={() => {
+                      setBlockUserTarget(null);
+                      setBlockHandler(null);
+                      setBlockModalVisible(false);
+                    }}
+                  >
+                    <Ionicons
+                      name='arrow-back-circle'
+                      color={BRAND_RED}
+                      size={30}
+                    />
+                  </TouchableOpacity>
+
+                  <Confirmation
+                    title={`Block ${blockUserTarget?.username}`}
+                    prompt={
+                      blockUserTarget && blockedUsers.has(blockUserTarget?.id) ?
+                      `Are you sure you want to unblock ${blockUserTarget.username}? This will remove any filtering of their chat messages.` :
+                      `Are you sure you want to block ${blockUserTarget?.username}? This will filter their chat messages. A reason can be given in the field below.`
+                    }
+                    inputPlaceholder='Reason'
+                    submitText='Block'
+                    submitHandler={blockUserHandler}
                   />
-                ) : null
-              } */}
+                </SafeAreaView>
+              </Modal>
             </TouchableOpacity>
           );
         }}
@@ -324,5 +332,10 @@ const style = StyleSheet.create({
   },
   blockedUser: {
     color: 'white'
+  },
+  backArrowContainer: {
+    flexDirection: 'row',
+    marginLeft: 10,
+    marginTop: 10
   }
 });
