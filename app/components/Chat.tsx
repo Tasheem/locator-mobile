@@ -1,9 +1,8 @@
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { ChatMessage } from '../models/room'
 import { User } from '../models/user'
 import { CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDARY_COLOR, CARD_SECONDARY_COLOR } from '../constants/colors'
 import moment from 'moment'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 type Props = {
     chatMessage: ChatMessage
@@ -98,8 +97,7 @@ const style = StyleSheet.create({
         borderBottomWidth: 2,
         paddingLeft: 5,
         paddingRight: 5,
-        flexWrap: 'wrap',
-        flex: 1
+        flexWrap: 'wrap'
     },
     nameContainer: {
         flex: 1

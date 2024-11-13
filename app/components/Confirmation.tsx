@@ -9,9 +9,10 @@ type Props = {
     inputPlaceholder?: string
     submitText?: string
     submitHandler?: ((text?: string) => Promise<void>)
+    elementInFocus?: React.JSX.Element
 }
 
-export default function Confirmation({ title, prompt, inputPlaceholder, submitText, submitHandler }: Props) {
+export default function Confirmation({ title, prompt, inputPlaceholder, submitText, submitHandler, elementInFocus }: Props) {
     const [userInput, setUserInput] = useState<string | undefined>();
     const [runningHandler, setRunningHandler] = useState(false);
 
@@ -24,6 +25,14 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
             <View style={style.promptContainer}>
                 <Text style={style.prompt}>{ prompt }</Text>
             </View>
+            
+            {
+                elementInFocus ? (
+                    <View style={style.elementContainer}>
+                        { elementInFocus }
+                    </View>
+                ) : null
+            }
 
             <View
                 style={style.formContainer}
@@ -54,7 +63,7 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
                                 }
                                 
                                 setRunningHandler(true);
-                                submitHandler()
+                                submitHandler(userInput)
                                 .then(() => {
                                     setRunningHandler(false);
                                 })
@@ -73,9 +82,12 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
 const style = StyleSheet.create({
     rootContainer: {
         padding: 10,
-        justifyContent: 'center',
-        height: '90%',
-        gap: 20
+        height: '80%',
+        gap: 40,
+        justifyContent: 'center'
+    },
+    elementContainer: {
+        justifyContent: 'center'
     },
     titleContainer: {
         flexDirection: 'row',
@@ -87,7 +99,7 @@ const style = StyleSheet.create({
     },
     promptContainer: {},
     prompt: {
-        fontWeight: '600',
+        fontWeight: '500',
         fontSize: 18
     },
     formContainer: {

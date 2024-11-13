@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, TextInput, ActivityIndicator, Keyboard, ViewStyle, Platform, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TextInput, ActivityIndicator, Keyboard, ViewStyle, Platform, Alert, Modal, SafeAreaView, TouchableOpacity } from 'react-native';
 import { BRAND_RED } from '../constants/colors';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ChatMessage } from '../models/room';
@@ -9,6 +9,8 @@ import { RoomDetailsParamList } from './RoomDetailsScreen';
 import { getCalendars } from 'expo-localization';
 import Chat from '../components/Chat';
 import { BlockedContext, ScreenContext, UserContext } from '../utils/context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Confirmation from '../components/Confirmation';
 
 type Props = {
     navigation: NativeStackNavigationProp<RoomDetailsParamList, 'Chat', undefined>
@@ -32,6 +34,8 @@ export default function ChatScreen({ route }: Props) {
         alignItems: 'center',
         justifyContent: 'center',
     });
+    const [reportChatModalVisible, setReportChatModalVisible] = useState(false);
+    const [reportChatTarget, setReportChatTarget] = useState<ChatMessage | null>(null);
 
     useEffect(() => {
         setIsLoading(true);
@@ -100,6 +104,11 @@ export default function ChatScreen({ route }: Props) {
             paddingLeft: 10,
             height: 40,
             width: '90%'
+        },
+        backArrowContainer: {
+            flexDirection: 'row',
+            marginLeft: 10,
+            marginTop: 10
         }
     });
 
@@ -119,59 +128,8 @@ export default function ChatScreen({ route }: Props) {
                         return;
                     }
 
-                    Alert.prompt('Report a chat', 'Provide the reason for reporting this chat message and press the report button to submit the report.', [
-                        {
-                            'text': 'Cancel',
-                            'style': 'default'
-                        },
-                        {
-                            'text': 'Report',
-                            'style': 'destructive',
-                            'onPress': (text) => {
-                                if(!text) {
-                                    Alert.alert('Error', 'A reason must be provided for reporting a chat.',
-                                        [
-                                            {
-                                                text: 'OK'
-                                            }
-                                        ]
-                                    );
-                                    return;
-                                }
-
-                                reportChat({
-                                    chat: item,
-                                    reason: text
-                                }).then((response) => {
-                                    if(response.ok) {
-                                        Alert.alert('Success', 'Thank you for reporting chats you find inappropriate. This report will be reviewed and further action may be taken.',
-                                            [
-                                                {
-                                                    text: 'OK'
-                                                }
-                                            ]
-                                        );
-                                    } else {
-                                        Alert.alert('Error', 'An error has occurred while reporting this chat. Please try again later.',
-                                            [
-                                                {
-                                                    text: 'OK'
-                                                }
-                                            ]
-                                        );
-                                    }
-                                }).catch((err) => {
-                                    Alert.alert('Error', 'An error has occurred while reporting this chat. Please try again later.',
-                                        [
-                                            {
-                                                text: 'OK'
-                                            }
-                                        ]
-                                    );
-                                });
-                            }
-                        }
-                    ]);
+                    setReportChatTarget(item);
+                    setReportChatModalVisible(true);
                 }}
             />
         );
@@ -229,6 +187,99 @@ export default function ChatScreen({ route }: Props) {
                     autoCapitalize='none'
                 />
             </View>
+
+            <Modal
+                animationType='fade'
+                visible={reportChatModalVisible}
+                onRequestClose={() => {
+                    setReportChatTarget(null);
+                    setReportChatModalVisible(false);
+                }}
+            >
+                <SafeAreaView>
+                    <TouchableOpacity
+                        style={style.backArrowContainer}
+                        onPress={() => {
+                            setReportChatTarget(null);
+                            setReportChatModalVisible(false);
+                        }}
+                    >
+                        <Ionicons
+                            name='arrow-back-circle'
+                            color={BRAND_RED}
+                            size={30}
+                        />
+                    </TouchableOpacity>
+
+                    <Confirmation
+                        title='Report Chat'
+                        prompt={
+                            `Are you sure you want to report this chat sent by ${reportChatTarget?.source.username}?`
+                        }
+                        inputPlaceholder='Reason'
+                        submitText='Report'
+                        submitHandler={async (reason?: string) => {
+                            if(!reportChatTarget) {
+                                return;
+                            }
+
+                            if(!reason) {
+                                Alert.alert('Error', 'A reason must be provided for reporting a chat.',
+                                    [
+                                        {
+                                            text: 'OK'
+                                        }
+                                    ]
+                                );
+                                return;
+                            }
+
+                            try {
+                                const response = await reportChat({
+                                    chat: reportChatTarget,
+                                    reason: reason
+                                });
+
+                                if(response.ok) {
+                                    Alert.alert('Success', 'Thank you for reporting chats you find inappropriate. This report will be reviewed and further action may be taken.',
+                                        [
+                                            {
+                                                text: 'OK',
+                                                onPress: () => {
+                                                    setReportChatModalVisible(false);
+                                                }
+                                            }
+                                        ]
+                                    );
+                                } else {
+                                    Alert.alert('Error', 'An error has occurred while reporting this chat. Please try again later.',
+                                        [
+                                            {
+                                                text: 'OK'
+                                            }
+                                        ]
+                                    );
+                                }
+                            } catch(err) {
+                                Alert.alert('Error', 'An error has occurred while reporting this chat. Please try again later.',
+                                    [
+                                        {
+                                            text: 'OK'
+                                        }
+                                    ]
+                                );
+                            }
+                        }}
+                        elementInFocus={reportChatTarget ? (
+                            <Chat
+                                chatMessage={reportChatTarget}
+                                user={user}
+                                timezone={timezone}
+                            />
+                        ) : undefined}
+                    />
+                </SafeAreaView>
+            </Modal>
         </View>
-    )
+    );
 }
