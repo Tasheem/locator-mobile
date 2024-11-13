@@ -56,8 +56,11 @@ export default function ParticipantsScreen({ route }: Props) {
   const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const [blockModalVisible, setBlockModalVisible] = useState(false);
-  const [blockUserTarget, setBlockUserTarget] = useState<User | undefined | null>();
-  const [blockUserHandler, setBlockHandler] = useState<((text?: string) => Promise<void>) | null>(null);
+  const [blockUserTarget, setBlockUserTarget] = useState<{
+    target: User,
+    isBlocked: boolean
+    handler: ((text?: string) => Promise<void>)
+  } | null>(null);
 
   useEffect(() => {
     // Set initial list of members/participants with initial emit to the participants subject.
@@ -138,11 +141,10 @@ export default function ParticipantsScreen({ route }: Props) {
           rowGap: 40,
         }}
         renderItem={({ item }) => {
-          const isBlocked = blockedUsers.has(item.id);
           return (
             <TouchableOpacity
               style={
-                isBlocked ? ([style.itemContainer, style.blockedContainer]) : (item.id === currentUser?.id
+                blockedUsers.has(item.id) ? ([style.itemContainer, style.blockedContainer]) : (item.id === currentUser?.id
                   ? [style.itemContainer, style.itemContainerUser]
                   : style.itemContainer)
               }
@@ -150,15 +152,16 @@ export default function ParticipantsScreen({ route }: Props) {
                 if(item.id === currentUser?.id) {
                   return;
                 }
-
-                setBlockUserTarget(item);
                 
                 const blockRequest = async (text?: string) => {
                   const response = await blockUser(item.id, text);
-                  const blocked = await response.json() as Blocked;
-
-                  blockedUsers.set(blocked.target.id, blocked);
-                  setBlockedUsers(new Map([...blockedUsers]));
+                  if(response.ok) {
+                    const blocked = await response.json() as Blocked;
+  
+                    blockedUsers.set(blocked.target.id, blocked);
+                    setBlockedUsers(new Map([...blockedUsers]));
+                    setBlockModalVisible(false);
+                  }
                 }
                 
                 const unblockRequest = async (text?: string) => {
@@ -171,14 +174,15 @@ export default function ParticipantsScreen({ route }: Props) {
                   if(response.ok) {
                     blockedUsers.delete(item.id);
                     setBlockedUsers(new Map([...blockedUsers]));
+                    setBlockModalVisible(false);
                   }
                 }
                 
-                if(isBlocked) {
-                  setBlockHandler(unblockRequest);
-                } else {
-                  setBlockHandler(blockRequest);
-                }
+                setBlockUserTarget({
+                  target: item,
+                  isBlocked: blockedUsers.has(item.id),
+                  handler: blockedUsers.has(item.id) ? unblockRequest : blockRequest
+                });
                 setBlockModalVisible(true);
               }}
             >
@@ -213,52 +217,13 @@ export default function ParticipantsScreen({ route }: Props) {
               </TouchableOpacity>
               <Text
                 style={
-                  isBlocked ? ([style.username, style.blockedUser]) : (item.id === currentUser?.id
+                  blockedUsers.has(item.id) ? ([style.username, style.blockedUser]) : (item.id === currentUser?.id
                     ? [style.username, style.mainUser]
                     : style.username)
                 }
               >
                 { item.username }
               </Text>
-              
-              <Modal
-                animationType='fade'
-                visible={blockModalVisible}
-                onRequestClose={() => {
-                  setBlockUserTarget(null);
-                  setBlockHandler(null);
-                  setBlockModalVisible(false);
-                }}
-              >
-                <SafeAreaView>
-                  <TouchableOpacity
-                    style={style.backArrowContainer}
-                    onPress={() => {
-                      setBlockUserTarget(null);
-                      setBlockHandler(null);
-                      setBlockModalVisible(false);
-                    }}
-                  >
-                    <Ionicons
-                      name='arrow-back-circle'
-                      color={BRAND_RED}
-                      size={30}
-                    />
-                  </TouchableOpacity>
-
-                  <Confirmation
-                    title={`Block ${blockUserTarget?.username}`}
-                    prompt={
-                      blockUserTarget && blockedUsers.has(blockUserTarget?.id) ?
-                      `Are you sure you want to unblock ${blockUserTarget.username}? This will remove any filtering of their chat messages.` :
-                      `Are you sure you want to block ${blockUserTarget?.username}? This will filter their chat messages. A reason can be given in the field below.`
-                    }
-                    inputPlaceholder='Reason'
-                    submitText='Block'
-                    submitHandler={blockUserHandler}
-                  />
-                </SafeAreaView>
-              </Modal>
             </TouchableOpacity>
           );
         }}
@@ -280,6 +245,43 @@ export default function ParticipantsScreen({ route }: Props) {
         }}
         room={room}
       />
+
+      <Modal
+        animationType='fade'
+        visible={blockModalVisible}
+        onRequestClose={() => {
+          setBlockUserTarget(null);
+          setBlockModalVisible(false);
+        }}
+      >
+        <SafeAreaView>
+          <TouchableOpacity
+            style={style.backArrowContainer}
+            onPress={() => {
+              setBlockUserTarget(null);
+              setBlockModalVisible(false);
+            }}
+          >
+            <Ionicons
+              name='arrow-back-circle'
+              color={BRAND_RED}
+              size={30}
+            />
+          </TouchableOpacity>
+
+          <Confirmation
+            title={`${blockUserTarget?.isBlocked ? 'Unblock' : 'Block'} ${blockUserTarget?.target.username}`}
+            prompt={
+              blockUserTarget?.isBlocked ?
+              `Are you sure you want to unblock ${blockUserTarget.target.username}? This will remove any filtering of their chat messages.` :
+              `Are you sure you want to block ${blockUserTarget?.target.username}? This will filter their chat messages. A reason can be given in the field below.`
+            }
+            inputPlaceholder='Reason'
+            submitText={blockUserTarget?.isBlocked ? 'Unblock' : 'Block'}
+            submitHandler={blockUserTarget?.handler}
+          />
+        </SafeAreaView>
+      </Modal>
     </View>
   );
 }

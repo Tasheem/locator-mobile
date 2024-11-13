@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput } from "react-native"
+import { StyleSheet, Text, View, TextInput, ActivityIndicator } from "react-native"
 import LocatorButton from "./LocatorButton";
 import { useState } from "react";
 import { BRAND_RED } from "../constants/colors";
@@ -8,7 +8,7 @@ type Props = {
     prompt?: string
     inputPlaceholder?: string
     submitText?: string
-    submitHandler: ((text?: string) => Promise<void>) | null
+    submitHandler?: ((text?: string) => Promise<void>)
 }
 
 export default function Confirmation({ title, prompt, inputPlaceholder, submitText, submitHandler }: Props) {
@@ -36,24 +36,35 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
                     autoCapitalize='none'
                 />
 
-                <LocatorButton
-                    textValue={submitText ? submitText : 'Submit'}
-                    type='Primary'
-                    handler={() => {
-                        if(!submitHandler) {
-                            return;
-                        }
-                        
-                        setRunningHandler(true);
-                        submitHandler()
-                        .then(() => {
-                            setRunningHandler(false);
-                        })
-                        .catch(err => {
-                            setRunningHandler(false);
-                        });
-                    }}
-                />
+                {
+                    runningHandler ? (
+                        <ActivityIndicator
+                            animating={runningHandler}
+                            color={BRAND_RED}
+                            style={{ width: 130 }}
+                        />
+                    ) : (
+                        <LocatorButton
+                            textValue={submitText ? submitText : 'Submit'}
+                            type='Primary'
+                            width={130}
+                            handler={() => {
+                                if(!submitHandler) {
+                                    return;
+                                }
+                                
+                                setRunningHandler(true);
+                                submitHandler()
+                                .then(() => {
+                                    setRunningHandler(false);
+                                })
+                                .catch(err => {
+                                    setRunningHandler(false);
+                                });
+                            }}
+                        />
+                    )
+                }
             </View>
         </View>
     );
