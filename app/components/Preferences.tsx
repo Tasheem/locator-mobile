@@ -85,8 +85,7 @@ const style = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        color: CARD_RED_SECONDARY_COLOR,
-        marginTop: 15
+        color: CARD_RED_SECONDARY_COLOR
     },
     itemContainer: {
         flexDirection: 'row',

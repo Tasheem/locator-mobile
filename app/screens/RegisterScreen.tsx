@@ -290,13 +290,18 @@ export default function RegisterScreen({ navigation }: PageProps) {
         >
           <SafeAreaView>
             <ScrollView>
-              <LocatorButton
-                type='Secondary'
-                textValue='Close'
-                handler={() => {
+              <TouchableOpacity
+                style={[style.backArrowContainer]}
+                onPress={() => {
                   setPreferencesModalVisible(false);
                 }}
-              />
+              >
+                <Ionicons
+                  name='arrow-back-circle'
+                  color={BRAND_RED}
+                  size={30}
+                />
+              </TouchableOpacity>
 
               <Preferences 
                 placeTypes={placeTypes}
@@ -412,8 +417,7 @@ const getStyle = (widthRatio: number) => {
       marginLeft: 10,
       marginTop: 10
     }
-  })
+  });
   
   return style;
 }
-
