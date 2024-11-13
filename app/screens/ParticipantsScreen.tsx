@@ -100,6 +100,7 @@ export default function ParticipantsScreen({ route }: Props) {
     };
   }, []);
 
+  // This was added mainly to update the profile pic on this screen if the user updated their profile pic.
   useEffect(() => {
     const updatedMembers = [...room.members];
     for(let index in updatedMembers) {
