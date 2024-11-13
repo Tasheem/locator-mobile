@@ -41,13 +41,13 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
                         <ActivityIndicator
                             animating={runningHandler}
                             color={BRAND_RED}
-                            style={{ width: 130 }}
+                            style={{ width: style.locatorButtonWidth.width }}
                         />
                     ) : (
                         <LocatorButton
                             textValue={submitText ? submitText : 'Submit'}
                             type='Primary'
-                            width={130}
+                            width={style.locatorButtonWidth.width}
                             handler={() => {
                                 if(!submitHandler) {
                                     return;
@@ -102,5 +102,8 @@ const style = StyleSheet.create({
         borderRadius: 10,
         flex: 1,
         padding: 10
+    },
+    locatorButtonWidth: {
+        width: 130
     }
 });
