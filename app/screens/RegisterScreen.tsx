@@ -24,6 +24,7 @@ import { ScreenContext } from '../utils/context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Checkbox from 'expo-checkbox';
 import EULA from '../components/EULA';
+import Logo from '../components/Logo';
 
 type PageProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Register'>;
@@ -152,12 +153,11 @@ export default function RegisterScreen({ navigation }: PageProps) {
   return (
     <SafeAreaView>
       <View style={style.rootContainer}>
-        {displayingSuccess ? (
-          <Text style={style.successMessage}>
-            Profile Successfully Created...
-          </Text>
-        ) : null}
-        <Text style={style.title}>Create Profile</Text>
+        <Logo height={100} width={100} />
+
+        <Text style={style.successMessage}>
+          { displayingSuccess ? 'Profile Successfully Created...' : ''}
+        </Text>
 
         <View style={style.formContainer}>
           <View style={style.leftContainer}>
@@ -347,10 +347,11 @@ const getStyle = (widthRatio: number) => {
   const style = StyleSheet.create({
     successMessage: {
       color: 'green',
-      fontSize: 20
+      fontSize: 20,
+      padding: 10
     },
     rootContainer: {
-      height: '100%',
+      height: '95%',
       justifyContent: 'center',
       alignItems: 'center'
     },
