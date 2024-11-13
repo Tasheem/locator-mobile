@@ -72,7 +72,7 @@ export default function PhotosScreen({}: Props) {
                                 style: 'cancel'
                             },
                             {
-                                text: 'Set Profile Pic',
+                                text: 'Set As Profile Pic',
                                 style: 'default',
                                 onPress: async () => {
                                     const response = await setProfilePicture(imageData);
