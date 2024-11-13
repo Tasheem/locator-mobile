@@ -86,7 +86,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
     }
 
     if(!agreedToTerms) {
-      Alert.alert('Error', 'You must agree to terms to use this application.');
+      Alert.alert('EULA', 'You must agree to the terms of the Locator User Agreement to use this application.');
       return false;
     }
 
