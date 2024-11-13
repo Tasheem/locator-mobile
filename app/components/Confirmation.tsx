@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View, TextInput, ActivityIndicator } from "react-native"
 import LocatorButton from "./LocatorButton";
 import { useState } from "react";
-import { BRAND_RED } from "../constants/colors";
+import { BRAND_RED, CARD_SECONDARY_COLOR } from "../constants/colors";
 
 type Props = {
     title: string
     prompt?: string
     inputPlaceholder?: string
     submitText?: string
-    submitHandler?: ((text?: string) => Promise<void>)
+    submitHandler?: (text?: string) => Promise<void>
     elementInFocus?: React.JSX.Element
     useTextField?: boolean
 }
@@ -47,7 +47,7 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
             justifyContent: useTextField ? 'flex-start' : 'center'
         },
         textInput: {
-            borderColor: BRAND_RED,
+            borderColor: CARD_SECONDARY_COLOR,
             borderStyle: 'solid',
             borderWidth: 2,
             borderRadius: 10,
@@ -97,13 +97,14 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
                         <ActivityIndicator
                             animating={runningHandler}
                             color={BRAND_RED}
-                            style={{ width: style.locatorButtonWidth.width }}
+                            style={{ width: style.locatorButtonWidth.width, marginTop: 10, marginBottom: 10 }}
                         />
                     ) : (
                         <LocatorButton
                             textValue={submitText ? submitText : 'Submit'}
                             type='Primary'
                             width={style.locatorButtonWidth.width}
+                            fontSize={20}
                             handler={() => {
                                 if(!submitHandler) {
                                     return;
