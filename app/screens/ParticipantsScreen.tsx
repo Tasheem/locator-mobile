@@ -36,6 +36,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import SearchModal from '../components/SearchModal';
 import { blockUser, getBlockedUsers, unblockUser } from '../services/user-service';
 import Confirmation from '../components/Confirmation';
+import Participant from '../components/Participant';
 
 type Props = {
   navigation: NativeStackNavigationProp<
@@ -142,12 +143,22 @@ export default function ParticipantsScreen({ route }: Props) {
         }}
         renderItem={({ item }) => {
           return (
-            <TouchableOpacity
-              style={
-                blockedUsers.has(item.id) ? ([style.itemContainer, style.blockedContainer]) : (item.id === currentUser?.id
-                  ? [style.itemContainer, style.itemContainerUser]
-                  : style.itemContainer)
-              }
+            <Participant
+              isBlockedUser={blockedUsers.has(item.id)}
+              isCurrentUser={item.id === currentUser?.id}
+              imageUrl={item.profilePictureUrl}
+              username={item.username}
+              onImagePress={() => {
+                if(item.profilePictureUrl) {
+                  setImageInFocus({
+                    publicUrl: item.profilePictureUrl,
+                    imageType: '',
+                    createDate: ''
+                  });
+
+                  setImageModalVisible(true);
+                }
+              }}
               onLongPress={() => {
                 if(item.id === currentUser?.id) {
                   return;
@@ -185,46 +196,7 @@ export default function ParticipantsScreen({ route }: Props) {
                 });
                 setBlockModalVisible(true);
               }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  if(item.profilePictureUrl) {
-                    setImageInFocus({
-                      publicUrl: item.profilePictureUrl,
-                      imageType: '',
-                      createDate: ''
-                    });
-
-                    setImageModalVisible(true);
-                  }
-                }}
-              >
-                <Image
-                  source={
-                      item.profilePictureUrl ? 
-                      {
-                        uri: item.profilePictureUrl
-                      } : require('../assets/no-profile-pic.png')
-                  }
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    borderColor: 'black',
-                    borderWidth: 2
-                  }}
-                />
-              </TouchableOpacity>
-              <Text
-                style={
-                  blockedUsers.has(item.id) ? ([style.username, style.blockedUser]) : (item.id === currentUser?.id
-                    ? [style.username, style.mainUser]
-                    : style.username)
-                }
-              >
-                { item.username }
-              </Text>
-            </TouchableOpacity>
+            />
           );
         }}
       />
