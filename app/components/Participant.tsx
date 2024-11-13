@@ -4,8 +4,8 @@ import { BRAND_RED, CARD_PRIMARY_COLOR, CARD_RED_PRIMARY_COLOR, CARD_RED_SECONDA
 type Props = {
     isBlockedUser: boolean
     isCurrentUser: boolean // Flag used to tell whether the participant is the currently logged in user
-    onImagePress: () => void
-    onLongPress: () => void
+    onImagePress?: () => void
+    onLongPress?: () => void
     imageUrl?: string
     username: string
 }

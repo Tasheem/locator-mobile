@@ -250,6 +250,25 @@ export default function ParticipantsScreen({ route }: Props) {
             submitText={blockUserTarget?.isBlocked ? 'Unblock' : 'Block'}
             submitHandler={blockUserTarget?.handler}
             useTextField={!blockUserTarget?.isBlocked}
+            elementInFocus={(
+              <Participant
+                isBlockedUser={blockUserTarget != null && blockedUsers.has(blockUserTarget.target.id)}
+                isCurrentUser={blockUserTarget?.target.id === currentUser?.id}
+                imageUrl={blockUserTarget?.target.profilePictureUrl}
+                username={blockUserTarget?.target.username ?? ''}
+                onImagePress={() => {
+                  if(blockUserTarget?.target.profilePictureUrl) {
+                    setImageInFocus({
+                      publicUrl: blockUserTarget.target.profilePictureUrl,
+                      imageType: '',
+                      createDate: ''
+                    });
+
+                    setImageModalVisible(true);
+                  }
+                }}
+              />
+            )}
           />
         </SafeAreaView>
       </Modal>
