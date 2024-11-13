@@ -5,7 +5,6 @@ import Checkbox from 'expo-checkbox';
 import { useContext } from 'react';
 import { ScreenContext } from '../utils/context';
 
-
 type Props = {
     placeTypes: PlaceType[]
     placeTypesLoading: boolean
@@ -105,4 +104,4 @@ const style = StyleSheet.create({
         borderRadius: 15,
         padding: 10
     }
-})
+});

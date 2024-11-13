@@ -291,7 +291,7 @@ export default function RegisterScreen({ navigation }: PageProps) {
           <SafeAreaView>
             <ScrollView>
               <TouchableOpacity
-                style={[style.backArrowContainer]}
+                style={style.backArrowContainer}
                 onPress={() => {
                   setPreferencesModalVisible(false);
                 }}
