@@ -10,11 +10,54 @@ type Props = {
     submitText?: string
     submitHandler?: ((text?: string) => Promise<void>)
     elementInFocus?: React.JSX.Element
+    useTextField?: boolean
 }
 
-export default function Confirmation({ title, prompt, inputPlaceholder, submitText, submitHandler, elementInFocus }: Props) {
+export default function Confirmation({ title, prompt, inputPlaceholder, submitText, submitHandler, elementInFocus, useTextField }: Props) {
     const [userInput, setUserInput] = useState<string | undefined>();
     const [runningHandler, setRunningHandler] = useState(false);
+
+    const style = StyleSheet.create({
+        rootContainer: {
+            padding: 10,
+            height: '80%',
+            gap: 40,
+            justifyContent: 'center'
+        },
+        elementContainer: {
+            justifyContent: 'center'
+        },
+        titleContainer: {
+            flexDirection: 'row',
+            justifyContent: 'center'
+        },
+        title: {
+            fontWeight: 'bold',
+            fontSize: 25
+        },
+        promptContainer: {},
+        prompt: {
+            fontWeight: '500',
+            fontSize: 18
+        },
+        formContainer: {
+            flexDirection: 'row',
+            width: '100%',
+            columnGap: 20,
+            justifyContent: useTextField ? 'flex-start' : 'center'
+        },
+        textInput: {
+            borderColor: BRAND_RED,
+            borderStyle: 'solid',
+            borderWidth: 2,
+            borderRadius: 10,
+            flex: 1,
+            padding: 10
+        },
+        locatorButtonWidth: {
+            width: 130
+        }
+    });
 
     return (
         <View style={style.rootContainer}>
@@ -37,13 +80,17 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
             <View
                 style={style.formContainer}
             >
-                <TextInput
-                    placeholder={inputPlaceholder}
-                    value={userInput}
-                    onChangeText={setUserInput}
-                    style={style.textInput}
-                    autoCapitalize='none'
-                />
+                {
+                    useTextField ? (
+                        <TextInput
+                            placeholder={inputPlaceholder}
+                            value={userInput}
+                            onChangeText={setUserInput}
+                            style={style.textInput}
+                            autoCapitalize='none'
+                        />
+                    ) : null
+                }
 
                 {
                     runningHandler ? (
@@ -78,44 +125,3 @@ export default function Confirmation({ title, prompt, inputPlaceholder, submitTe
         </View>
     );
 }
-
-const style = StyleSheet.create({
-    rootContainer: {
-        padding: 10,
-        height: '80%',
-        gap: 40,
-        justifyContent: 'center'
-    },
-    elementContainer: {
-        justifyContent: 'center'
-    },
-    titleContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center'
-    },
-    title: {
-        fontWeight: 'bold',
-        fontSize: 25
-    },
-    promptContainer: {},
-    prompt: {
-        fontWeight: '500',
-        fontSize: 18
-    },
-    formContainer: {
-        flexDirection: 'row',
-        width: '100%',
-        columnGap: 20
-    },
-    textInput: {
-        borderColor: BRAND_RED,
-        borderStyle: 'solid',
-        borderWidth: 2,
-        borderRadius: 10,
-        flex: 1,
-        padding: 10
-    },
-    locatorButtonWidth: {
-        width: 130
-    }
-});

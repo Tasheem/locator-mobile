@@ -2,8 +2,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   StyleSheet,
   View,
-  Image,
-  Text,
   FlatList,
   Modal,
   SafeAreaView,
@@ -251,6 +249,7 @@ export default function ParticipantsScreen({ route }: Props) {
             inputPlaceholder='Reason'
             submitText={blockUserTarget?.isBlocked ? 'Unblock' : 'Block'}
             submitHandler={blockUserTarget?.handler}
+            useTextField={!blockUserTarget?.isBlocked}
           />
         </SafeAreaView>
       </Modal>

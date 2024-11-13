@@ -218,6 +218,7 @@ export default function ChatScreen({ route }: Props) {
                         }
                         inputPlaceholder='Reason'
                         submitText='Report'
+                        useTextField={true}
                         submitHandler={async (reason?: string) => {
                             if(!reportChatTarget) {
                                 return;
