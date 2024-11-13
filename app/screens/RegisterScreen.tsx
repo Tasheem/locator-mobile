@@ -67,6 +67,30 @@ export default function RegisterScreen({ navigation }: PageProps) {
   }, []);
 
   const isFormValid: () => boolean = () => {
+    if(username.length < 3) {
+      Alert.alert(
+        'Invalid',
+        'Your username must be at least 3 characters long.'
+      );
+      return false;
+    }
+
+    if(username.includes(' ')) {
+      Alert.alert(
+        'Invalid',
+        'Your username must not contain any whitespace.'
+      );
+      return false;
+    }
+
+    if(!email.includes('@') || !email.includes('.')) {
+      Alert.alert(
+        'Invalid',
+        'Please enter a valid email address.'
+      );
+      return false;
+    }
+
     if (password.length < 3) {
       Alert.alert(
         'Invalid',
