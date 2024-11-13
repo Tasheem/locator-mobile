@@ -52,6 +52,7 @@ export default function ParticipantsScreen({ route }: Props) {
   const room = route.params.room;
   const [members, setMembers] = useState<User[]>([]);
   const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [blockModalImageVisible, setBlockModalImageVisible] = useState(false); // This is for the modal that can opened while in the block user modal.
   const [imageInFocus, setImageInFocus] = useState<LocatorImageData | null>(null);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const [blockModalVisible, setBlockModalVisible] = useState(false);
@@ -252,23 +253,34 @@ export default function ParticipantsScreen({ route }: Props) {
             submitHandler={blockUserTarget?.handler}
             useTextField={!blockUserTarget?.isBlocked}
             elementInFocus={(
-              <Participant
-                isBlockedUser={blockUserTarget != null && blockedUsers.has(blockUserTarget.target.id)}
-                isCurrentUser={blockUserTarget?.target.id === currentUser?.id}
-                imageUrl={blockUserTarget?.target.profilePictureUrl}
-                username={blockUserTarget?.target.username ?? ''}
-                onImagePress={() => {
-                  if(blockUserTarget?.target.profilePictureUrl) {
-                    setImageInFocus({
-                      publicUrl: blockUserTarget.target.profilePictureUrl,
-                      imageType: '',
-                      createDate: ''
-                    });
+              <View>
+                <Participant
+                  isBlockedUser={blockUserTarget != null && blockedUsers.has(blockUserTarget.target.id)}
+                  isCurrentUser={blockUserTarget?.target.id === currentUser?.id}
+                  imageUrl={blockUserTarget?.target.profilePictureUrl}
+                  username={blockUserTarget?.target.username ?? ''}
+                  onImagePress={() => {
+                    if(blockUserTarget?.target.profilePictureUrl) {
+                      setImageInFocus({
+                        publicUrl: blockUserTarget.target.profilePictureUrl,
+                        imageType: '',
+                        createDate: ''
+                      });
+  
+                      setBlockModalImageVisible(true);
+                    }
+                  }}
+                />
 
-                    setImageModalVisible(true);
-                  }
-                }}
-              />
+                <PhotoModal
+                  modalVisible={blockModalImageVisible}
+                  photo={imageInFocus}
+                  onClose={() => {
+                    setBlockModalImageVisible(false);
+                    setImageInFocus(null);
+                  }}
+                />
+              </View>
             )}
           />
         </SafeAreaView>
