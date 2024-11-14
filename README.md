@@ -52,6 +52,14 @@ Run this to test production build on iOS simulator:
 ```bash
 npm run ios
 ```
+Run production build in XCode:
+- Go to Product at the top bar.
+- In the dropdown, go to Scheme.
+- Then select the **Edit Scheme** option
+  - A window should pop up.
+- Go to the **Run** tab on the left.
+- Under the **info** tab in the main section, change **Build Configuration** from Debug to Release.
+  - This will get the app to run with the .env.production file.
 
 ## Note
 There maybe a prompt to install TypeScript, and sometimes it leads to an infinite loop, installing TypeScript over and over again when you select yes. If this happens, select no. The npm script will stop running and throw an error. After this, run the command again and it should succeed the second time.
